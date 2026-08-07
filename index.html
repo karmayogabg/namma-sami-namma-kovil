@@ -17,6 +17,8 @@
     
     <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="dashboard.css">
+    <!-- Chart.js for Visual Analytics Reports -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -24,7 +26,7 @@
     <div id="auth-overlay" class="modal-overlay active" style="z-index: 2000; background: rgba(7, 9, 19, 0.96); backdrop-filter: blur(20px);">
         <div class="modal-content" style="max-width: 440px; text-align: center; border-color: rgba(139, 92, 246, 0.4); position: relative;">
             <div style="position: absolute; top: 16px; right: 16px;" class="brand-badge">
-                <span style="color: #6ee7b7; font-weight:700;">v3.1</span>
+                <span style="color: #6ee7b7; font-weight:700;">v4.0</span>
             </div>
             <div class="brand-logo" style="margin: 0 auto 16px auto; width: 56px; height: 56px;">
                 <i data-lucide="lock" style="width:28px; height:28px;"></i>
@@ -40,7 +42,7 @@
                 </button>
             </form>
             <div style="margin-top: 14px; font-size: 0.78rem; color: var(--text-muted);">
-                Namma Sami Namma Kovil Explorer <span style="color:#6ee7b7; font-weight:700;">v3.1</span>
+                Namma Sami Namma Kovil Explorer <span style="color:#6ee7b7; font-weight:700;">v4.0</span>
             </div>
         </div>
     </div>
@@ -59,7 +61,7 @@
             </a>
             <div style="display:flex; align-items:center; gap:10px;">
                 <div class="brand-badge" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); color: #6ee7b7; font-weight:700;">
-                    v3.1
+                    v4.0
                 </div>
                 <div class="brand-badge">
                     <i data-lucide="database" style="width:14px; height:14px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>
@@ -121,7 +123,10 @@
         <section class="controls-panel">
             <!-- Top Action Tools Bar (Before Search Option) -->
             <div class="top-actions-bar" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; padding-bottom:14px; border-bottom:1px solid rgba(255, 255, 255, 0.08);">
-                <a href="print_sheets.html" target="_blank" class="toggle-btn" style="background: rgba(139, 92, 246, 0.2); border-color: rgba(139, 92, 246, 0.4); color: #c4b5fd; text-decoration:none; padding:9px 15px; font-weight:600;">
+                <button id="toggle-analytics-btn" class="toggle-btn" style="background: rgba(139, 92, 246, 0.25); border-color: rgba(139, 92, 246, 0.5); color: #c4b5fd; padding:9px 15px; font-weight:700;" onclick="toggleAnalyticsPanel()">
+                    <i data-lucide="bar-chart-2" style="width:16px; height:16px; vertical-align:middle;"></i> Analytics Report 📊
+                </button>
+                <a href="print_sheets.html" target="_blank" class="toggle-btn" style="background: rgba(139, 92, 246, 0.15); border-color: rgba(139, 92, 246, 0.35); color: #c4b5fd; text-decoration:none; padding:9px 15px; font-weight:600;">
                     <i data-lucide="file-text" style="width:16px; height:16px; vertical-align:middle;"></i> PDF Call Sheets 📄
                 </a>
                 <button id="download-zip-btn" class="toggle-btn" style="background: rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.4); color: #6ee7b7; padding:9px 15px; font-weight:600;" onclick="downloadAllPDFsZip()">
@@ -136,6 +141,59 @@
                 <button id="export-excel-btn" class="toggle-btn" style="background: rgba(59, 130, 246, 0.2); border-color: rgba(59, 130, 246, 0.4); color: #93c5fd; padding:9px 15px; font-weight:600;" onclick="exportToExcel()">
                     <i data-lucide="download" style="width:16px; height:16px; vertical-align:middle;"></i> Export Excel (.xlsx) 📊
                 </button>
+            </div>
+
+            <!-- Clickable Visual Analytics Panel -->
+            <div id="analytics-panel" style="display:none; margin-bottom: 20px; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 12px; padding: 18px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+                    <div>
+                        <h3 style="margin:0; font-family:'Outfit'; color:#f8fafc; font-size:1.15rem; display:flex; align-items:center; gap:8px;">
+                            <i data-lucide="pie-chart" style="color:#a78bfa;"></i> Interactive Visual Analytics Reports
+                        </h3>
+                        <p style="margin:4px 0 0 0; font-size:0.8rem; color:var(--text-muted);">
+                            Click on any bar or slice to instantly filter members by <strong>மண்டலம்</strong>, <strong>மாவட்டம்</strong>, <strong>ஒன்றியம்</strong>, or <strong>Grade</strong>!
+                        </p>
+                    </div>
+                    <div id="chart-filter-status" style="display:flex; align-items:center; gap:8px;">
+                        <button id="reset-chart-filter-btn" class="toggle-btn" style="display:none; background:rgba(239,68,68,0.2); border-color:rgba(239,68,68,0.4); color:#fca5a5;" onclick="resetChartFilters()">
+                            Reset Chart Filter ✖
+                        </button>
+                    </div>
+                </div>
+
+                <div class="chart-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:16px;">
+                    <!-- Chart 1: Mandalam (Region) Person Count -->
+                    <div class="chart-card" style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px;">
+                        <h4 style="margin:0 0 10px 0; font-size:0.9rem; color:#c4b5fd;">மண்டலம் (Region) Person Counts</h4>
+                        <div style="position:relative; height:200px;">
+                            <canvas id="chart-region"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Chart 2: Mavattam (District) Headcount Ranking -->
+                    <div class="chart-card" style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px;">
+                        <h4 style="margin:0 0 10px 0; font-size:0.9rem; color:#6ee7b7;">Top 10 மாவட்டம் (District) Headcounts</h4>
+                        <div style="position:relative; height:200px;">
+                            <canvas id="chart-district"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Chart 3: Ondriyam (Union) Headcount Ranking -->
+                    <div class="chart-card" style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px;">
+                        <h4 style="margin:0 0 10px 0; font-size:0.9rem; color:#93c5fd;">Top 10 ஒன்றியம் (Union) Headcounts</h4>
+                        <div style="position:relative; height:200px;">
+                            <canvas id="chart-union"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Chart 4: Person Classification Grade Donut -->
+                    <div class="chart-card" style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px;">
+                        <h4 style="margin:0 0 10px 0; font-size:0.9rem; color:#fde047;">Grade Distribution (A/B/C Classification)</h4>
+                        <div style="position:relative; height:200px;">
+                            <canvas id="chart-grade"></canvas>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="search-box-wrapper">

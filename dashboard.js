@@ -738,3 +738,226 @@ function downloadAllPDFsZip() {
     }, 300);
 }
 window.downloadAllPDFsZip = downloadAllPDFsZip;
+
+// Interactive Clickable Analytics & Graph System (v4.0)
+let chartRegionInst = null, chartDistrictInst = null, chartUnionInst = null, chartGradeInst = null;
+let activeChartFilter = null;
+
+function toggleAnalyticsPanel() {
+    const panel = document.getElementById('analytics-panel');
+    if (!panel) return;
+    const isHidden = panel.style.display === 'none';
+    panel.style.display = isHidden ? 'block' : 'none';
+    
+    if (isHidden) {
+        renderAnalyticsCharts();
+        showToast('Interactive Visual Analytics Report expanded!');
+    }
+}
+window.toggleAnalyticsPanel = toggleAnalyticsPanel;
+
+function renderAnalyticsCharts() {
+    if (typeof Chart === 'undefined' || !allData || allData.length === 0) return;
+
+    // 1. Aggregation Engine
+    const regionCounts = {}, districtCounts = {}, unionCounts = {};
+    const gradeCounts = { A: 0, B: 0, C: 0, Ungraded: 0 };
+
+    allData.forEach(item => {
+        if (item.region) regionCounts[item.region] = (regionCounts[item.region] || 0) + 1;
+        if (item.district) districtCounts[item.district] = (districtCounts[item.district] || 0) + 1;
+        if (item.union) unionCounts[item.union] = (unionCounts[item.union] || 0) + 1;
+
+        const grade = (item.survey && item.survey.overallGrade) ? item.survey.overallGrade : 'Ungraded';
+        gradeCounts[grade] = (gradeCounts[grade] || 0) + 1;
+    });
+
+    // Helper for sorting top items
+    const getTopSorted = (obj, topN = 10) => {
+        return Object.entries(obj)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, topN);
+    };
+
+    const topRegions = Object.entries(regionCounts).sort((a,b) => b[1] - a[1]);
+    const topDistricts = getTopSorted(districtCounts, 10);
+    const topUnions = getTopSorted(unionCounts, 10);
+
+    // Chart Options Base Config
+    const chartBaseOpts = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                titleColor: '#6ee7b7',
+                bodyColor: '#f8fafc',
+                borderColor: 'rgba(139, 92, 246, 0.4)',
+                borderWidth: 1
+            }
+        }
+    };
+
+    // 1. Region Chart
+    const ctxRegion = document.getElementById('chart-region');
+    if (ctxRegion) {
+        if (chartRegionInst) chartRegionInst.destroy();
+        chartRegionInst = new Chart(ctxRegion, {
+            type: 'bar',
+            data: {
+                labels: topRegions.map(r => r[0]),
+                datasets: [{
+                    label: 'Persons',
+                    data: topRegions.map(r => r[1]),
+                    backgroundColor: 'rgba(167, 139, 250, 0.7)',
+                    borderColor: '#a78bfa',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                ...chartBaseOpts,
+                onClick: (e, elements) => {
+                    if (elements.length > 0) {
+                        const idx = elements[0].index;
+                        const region = topRegions[idx][0];
+                        applyChartFilter('region', region);
+                    }
+                }
+            }
+        });
+    }
+
+    // 2. District Chart
+    const ctxDistrict = document.getElementById('chart-district');
+    if (ctxDistrict) {
+        if (chartDistrictInst) chartDistrictInst.destroy();
+        chartDistrictInst = new Chart(ctxDistrict, {
+            type: 'bar',
+            data: {
+                labels: topDistricts.map(d => d[0]),
+                datasets: [{
+                    label: 'Persons',
+                    data: topDistricts.map(d => d[1]),
+                    backgroundColor: 'rgba(110, 231, 183, 0.7)',
+                    borderColor: '#6ee7b7',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                ...chartBaseOpts,
+                onClick: (e, elements) => {
+                    if (elements.length > 0) {
+                        const idx = elements[0].index;
+                        const district = topDistricts[idx][0];
+                        applyChartFilter('district', district);
+                    }
+                }
+            }
+        });
+    }
+
+    // 3. Union Chart
+    const ctxUnion = document.getElementById('chart-union');
+    if (ctxUnion) {
+        if (chartUnionInst) chartUnionInst.destroy();
+        chartUnionInst = new Chart(ctxUnion, {
+            type: 'bar',
+            data: {
+                labels: topUnions.map(u => u[0]),
+                datasets: [{
+                    label: 'Persons',
+                    data: topUnions.map(u => u[1]),
+                    backgroundColor: 'rgba(147, 197, 253, 0.7)',
+                    borderColor: '#93c5fd',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                ...chartBaseOpts,
+                onClick: (e, elements) => {
+                    if (elements.length > 0) {
+                        const idx = elements[0].index;
+                        const union = topUnions[idx][0];
+                        applyChartFilter('union', union);
+                    }
+                }
+            }
+        });
+    }
+
+    // 4. Grade Distribution Donut Chart
+    const ctxGrade = document.getElementById('chart-grade');
+    if (ctxGrade) {
+        if (chartGradeInst) chartGradeInst.destroy();
+        chartGradeInst = new Chart(ctxGrade, {
+            type: 'doughnut',
+            data: {
+                labels: ['Grade A (High)', 'Grade B (Moderate)', 'Grade C (Guidance)', 'Ungraded'],
+                datasets: [{
+                    data: [gradeCounts.A, gradeCounts.B, gradeCounts.C, gradeCounts.Ungraded],
+                    backgroundColor: [
+                        'rgba(16, 185, 129, 0.8)',
+                        'rgba(59, 130, 246, 0.8)',
+                        'rgba(245, 158, 11, 0.8)',
+                        'rgba(148, 163, 184, 0.5)'
+                    ],
+                    borderColor: ['#10b981', '#3b82f6', '#f59e0b', '#94a3b8'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                ...chartBaseOpts,
+                plugins: {
+                    legend: { display: true, position: 'right', labels: { color: '#f8fafc', font: { size: 10 } } }
+                },
+                onClick: (e, elements) => {
+                    if (elements.length > 0) {
+                        const idx = elements[0].index;
+                        const gradesMap = ['A', 'B', 'C', 'Ungraded'];
+                        applyChartFilter('grade', gradesMap[idx]);
+                    }
+                }
+            }
+        });
+    }
+}
+
+function applyChartFilter(type, value) {
+    activeChartFilter = { type, value };
+
+    if (type === 'region') {
+        if (filterRegion) filterRegion.value = value;
+    } else if (type === 'district') {
+        if (filterDistrict) filterDistrict.value = value;
+    } else if (type === 'union') {
+        if (searchInput) searchInput.value = value;
+    } else if (type === 'grade') {
+        if (filterGrade) filterGrade.value = value;
+    }
+
+    const resetBtn = document.getElementById('reset-chart-filter-btn');
+    if (resetBtn) {
+        resetBtn.style.display = 'inline-block';
+        resetBtn.textContent = `Filtered by ${type.toUpperCase()}: ${value} ✖`;
+    }
+
+    applyFilters();
+    showToast(`Chart Filter Applied: ${type.toUpperCase()} = "${value}"`);
+}
+window.applyChartFilter = applyChartFilter;
+
+function resetChartFilters() {
+    activeChartFilter = null;
+    if (filterRegion) filterRegion.value = '';
+    if (filterDistrict) filterDistrict.value = '';
+    if (filterGrade) filterGrade.value = '';
+    if (searchInput) searchInput.value = '';
+
+    const resetBtn = document.getElementById('reset-chart-filter-btn');
+    if (resetBtn) resetBtn.style.display = 'none';
+
+    applyFilters();
+    showToast('All Chart Filters Reset!');
+}
+window.resetChartFilters = resetChartFilters;
