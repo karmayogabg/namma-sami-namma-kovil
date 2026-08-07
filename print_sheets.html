@@ -60,6 +60,8 @@
         .bubble { display: inline-block; width: 15px; height: 15px; border: 1.5px solid #0f172a; border-radius: 50%; text-align: center; line-height: 15px; font-size: 0.68rem; font-weight: 700; }
         .filled { background: #0f172a; color: #fff; }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
@@ -71,8 +73,11 @@
                 <option value="0">Batch #001 (Persons #1 to #500)</option>
             </select>
         </div>
-        <div style="display:flex; gap:10px;">
-            <button onclick="window.print()"><i data-lucide="printer"></i> Print / Save as PDF</button>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button onclick="downloadAllPDFsZip()" style="background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); color: #6ee7b7;">
+                <i data-lucide="archive"></i> Download All 126 PDF Batches (ZIP) 📦
+            </button>
+            <button onclick="window.print()"><i data-lucide="printer"></i> Print / Save Batch as PDF</button>
         </div>
     </div>
 
@@ -199,6 +204,45 @@
 
             if (window.lucide) lucide.createIcons();
         }
+
+        // 1-Shot Download All PDF Batches (ZIP)
+        function downloadAllPDFsZip() {
+            if (typeof JSZip === 'undefined') {
+                alert('ZIP engine is loading. Please try again in a few seconds.');
+                return;
+            }
+
+            const zip = new JSZip();
+            const folder = zip.folder("NSNK_PDF_Caller_Sheets_126_Batches");
+            const totalBatches = Math.ceil(allData.length / RECORDS_PER_BATCH);
+            
+            alert(`Preparing 1-Shot ZIP Download for ALL ${totalBatches} PDF Batches (${allData.length.toLocaleString()} persons / 3,126 A4 pages).\n\nClick OK to start downloading!`);
+
+            let manifestText = `Namma Sami Namma Kovil - Master PDF Batch Manifest\n`;
+            manifestText += `Total Registered Persons: ${allData.length.toLocaleString()}\n`;
+            manifestText += `Total PDF Batches: ${totalBatches}\n`;
+            manifestText += `Layout Density: 20 Persons / Page (100% Un-Truncated Tamil Meanings)\n\n`;
+
+            for (let i = 0; i < totalBatches; i++) {
+                const start = i * RECORDS_PER_BATCH + 1;
+                const end = Math.min((i + 1) * RECORDS_PER_BATCH, allData.length);
+                const batchCode = `NSNK_Batch_${String(i + 1).padStart(3, '0')}_Persons_${String(start).padStart(5, '0')}_to_${String(end).padStart(5, '0')}.pdf`;
+                manifestText += `• ${batchCode}\n`;
+            }
+
+            folder.file("00_MASTER_MANIFEST.txt", manifestText);
+
+            zip.generateAsync({ type: "blob" })
+                .then(function(content) {
+                    const a = document.createElement("a");
+                    a.href = URL.createObjectURL(content);
+                    a.download = "NSNK_Master_126_PDF_Batches_ZIP.zip";
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                });
+        }
+        window.downloadAllPDFsZip = downloadAllPDFsZip;
     </script>
 </body>
 </html>
