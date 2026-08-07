@@ -98,7 +98,6 @@ function populateFilters() {
         if (numA !== numB) return numA - numB;
         return a.localeCompare(b);
     });
-    const districts = Array.from(new Set(allData.map(d => d.district).filter(Boolean))).sort();
 
     regions.forEach(r => {
         const opt = document.createElement('option');
@@ -107,12 +106,30 @@ function populateFilters() {
         filterRegion.appendChild(opt);
     });
 
+    updateDistrictOptions();
+}
+
+// Dynamically filter District options based on selected Region
+function updateDistrictOptions() {
+    const currentSelected = selectedDistrict;
+    filterDistrict.innerHTML = '<option value="">All Districts / மாவட்டம்</option>';
+
+    const sourceData = selectedRegion ? allData.filter(d => d.region === selectedRegion) : allData;
+    const districts = Array.from(new Set(sourceData.map(d => d.district).filter(Boolean))).sort();
+
     districts.forEach(d => {
         const opt = document.createElement('option');
         opt.value = d;
         opt.textContent = d;
         filterDistrict.appendChild(opt);
     });
+
+    if (districts.includes(currentSelected)) {
+        filterDistrict.value = currentSelected;
+    } else {
+        selectedDistrict = "";
+        filterDistrict.value = "";
+    }
 }
 
 // Setup Event Listeners
@@ -138,6 +155,7 @@ function setupEventListeners() {
     // Dropdown filters
     filterRegion.addEventListener('change', (e) => {
         selectedRegion = e.target.value;
+        updateDistrictOptions();
         applyFilters();
     });
 
