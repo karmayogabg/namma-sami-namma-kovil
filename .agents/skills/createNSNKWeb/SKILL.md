@@ -125,32 +125,46 @@ Open `http://localhost:3000` to test search, Tamil letter quick filters, and det
 
 ---
 
-## 6. Page Versioning & Protocol Rules
+## 6. Version History & Upgrade Protocol
 
-Whenever any update is made to the dataset, UI layout, components, or features, **you MUST increment the navbar version badge** (`v1.0` ➔ `v1.1` ➔ `v1.2` ... `v2.0`).
+Whenever any update is made to the dataset, UI layout, components, or features, **you MUST increment the navbar version badge** (`v1.0` ➔ `v1.1` ... `v4.4`).
 
-### Current Version Protocol:
-- **`v2.0`**: Person Classification, 3-Question Grading System, PDF Caller Sheets Generator (500 persons/file, 20 persons/page un-truncated), and Gemini Vision AI Photo OCR Upload Scanner.
+### Version Release Log:
+- **`v1.0` - `v1.7`**: Core Glassmorphic Web Dashboard, 62,526 Tamil Name Meanings dataset, search engine, Tamil prefix letter chips, and SheetJS Excel Export (`.xlsx`).
+- **`v1.8`**: `[ Expand All ]` / `[ Collapse All ]` button behavior overriding pagination limits.
+- **`v2.0` - `v2.4`**: 3-Question Person Grading Engine, Sequential PDF Caller Sheets Generator (`print_sheets.html` with 500 persons/batch across 126 PDF files), bundled `NSNK_Master_126_PDF_Batches_ZIP.zip` (11.97 MB), and Gemini Vision AI Photo OCR Scanner (`process_photo_ocr.js`).
+- **`v2.5` - `v2.8`**: Prominent Top Action Bar placed before search box, laptop screen responsive flex-wrap layout.
+- **`v3.0` - `v3.1`**: 100% exact DOM match marked PDF caller sheet photo (`sample_marked_sheet.jpg` matching `CODE: NSNK-B001-P01`).
+- **`v4.0` - `v4.1`**: Interactive Clickable Visual Analytics Report System (`Chart.js` integration for மண்டலம், மாவட்டம், ஒன்றியம், and Grade A/B/C charts with click-to-filter dataset interactivity).
+- **`v4.2`**: Dark / Light Theme Toggle System (`[ 🌙 Dark / ☀️ Light ]`) with CSS design system tokens and `localStorage` persistence.
+- **`v4.3`**: Ultra-wide Screen Scaling & Fluid Layout (`max-width: 1800px` & `95%` container width) for 1080p, 1440p, 4K, and ultrawide monitors.
+- **`v4.4`**: Fullscreen Pop-Up Chart Modal (`[ ⛶ Fullscreen ]` / `[ ✖ Close ]`) on all analytics chart cards with preserved click-to-filter interactivity.
 
 ---
 
-## 7. 3-Question Grading & PDF Caller Sheets Architecture (v2.0)
+## 7. Core System Specs & Architecture (v4.4 Summary)
 
-### 1. The 3 Survey Questions & Overall Grade Calculation
+### 1. 3-Question Grading & Classification Engine
 - **Q1**: Meaning of your Name? *(உங்கள் பெயரின் பொருள் தெரியுமா?)*
 - **Q2**: Do you know your Parampara? *(உங்கள் பரம்பரை தெரியுமா?)*
 - **Q3**: Do you know your Gothram? *(உங்கள் கோத்திரம் தெரியுமா?)*
+- **Points**: `A` = 2 pts, `B` = 1 pt, `C` = 0 pt.
+- **Grade A** (🟢 5–6 pts), **Grade B** (🔵 3–4 pts), **Grade C** (🟠 0–2 pts).
 
-Points: `A` = 2 pts, `B` = 1 pt, `C` = 0 pt.
-- **Grade A** (🟢 5–6 pts): High Knowledge Champion
-- **Grade B** (🔵 3–4 pts): Moderate Awareness
-- **Grade C** (🟠 0–2 pts): Needs Guidance / Orientation
-
-### 2. PDF Caller Sheets Generator (`print_sheets.html`)
-- **Sequential JSON Order**: Preserves exact sequence from record #1 to #62,521.
-- **Batch Size**: 500 persons per PDF file (25 A4 pages). Total 126 PDF files.
-- **Dual Tracking Header**: Barcode + `CODE: NSNK-B[Batch]-P[Page]` on every printed page.
-- **100% Un-Truncated Meanings**: Full Tamil meaning script box printed on every row.
+### 2. Sequential PDF Batch Generator (`build_real_pdf_zip.js` & `print_sheets.html`)
+- **Total Batches**: 126 PDF files covering all 62,521 persons in exact sequential JSON order.
+- **Density**: 20 persons per A4 page (25 pages / 500 persons per PDF file).
+- **Dual Tracking Code**: Barcode SVG + `CODE: NSNK-B[Batch]-P[Page]`.
+- **Master ZIP**: Hosted at `NSNK_Master_126_PDF_Batches_ZIP.zip` (11.97 MB).
 
 ### 3. AI Photo OCR Scanner (`process_photo_ocr.js`)
-- Uses **Gemini 1.5 Flash Vision API** to read filled paper sheet photos, decode header barcodes/codes, extract checked bubbles, and update `namma_sami_namma_kovil_full.json` automatically.
+- Utilizes **Gemini 1.5 Flash Vision API** (`gemini-1.5-flash:generateContent`) to scan filled caller sheet photos (`sample_marked_sheet.jpg`), decode barcodes, read row numbers, extract marked bubbles `(A)(B)(C)`, and auto-calculate grades.
+
+### 4. Interactive Clickable Visual Analytics Reports
+- **Graphs**: மண்டலம் (Region) Person Count, Top 10 மாவட்டம் (District) Headcounts, Top 10 ஒன்றியம் (Union) Headcounts, and Grade A/B/C Distribution Donut.
+- **Click-to-Filter**: Clicking any bar/slice cross-filters cards and table view live.
+- **Fullscreen Modal**: Every chart card features a `[ ⛶ Fullscreen ]` pop-up button.
+
+### 5. Theme & Ultra-Wide Scaling Engine
+- **Theme**: Seamless Dark Mode / Light Mode with `data-theme` CSS tokens & `localStorage`.
+- **Scaling**: Responsive container expanding up to `1800px` and `95%` fluid width for 1080p, 1440p, 4K, and ultrawide monitors.
