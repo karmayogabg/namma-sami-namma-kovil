@@ -342,10 +342,15 @@ function toggleExpandAll() {
     if (isExpandedAll) {
         if (cardsGrid) cardsGrid.classList.add('is-expanded');
         if (tableContainer) tableContainer.classList.add('is-expanded');
+        pageSize = filteredData.length > 0 ? Math.min(filteredData.length, 1000) : 500;
     } else {
         if (cardsGrid) cardsGrid.classList.remove('is-expanded');
         if (tableContainer) tableContainer.classList.remove('is-expanded');
+        pageSize = parseInt(filterPageSize ? filterPageSize.value : 48, 10) || 48;
     }
+
+    currentPage = 1;
+    renderPage();
 }
 window.toggleExpandAll = toggleExpandAll;
 
