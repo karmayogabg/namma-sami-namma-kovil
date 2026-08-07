@@ -739,25 +739,41 @@ function downloadAllPDFsZip() {
 }
 window.downloadAllPDFsZip = downloadAllPDFsZip;
 
-// Interactive Clickable Analytics & Graph System (v4.0)
+// Interactive Clickable Analytics & Graph System (v4.1)
 let chartRegionInst = null, chartDistrictInst = null, chartUnionInst = null, chartGradeInst = null;
 let activeChartFilter = null;
 
 function toggleAnalyticsPanel() {
     const panel = document.getElementById('analytics-panel');
-    if (!panel) return;
-    const isHidden = panel.style.display === 'none';
+    if (!panel) {
+        console.error('analytics-panel element not found');
+        return;
+    }
+    
+    const isHidden = (panel.style.display === 'none' || panel.style.display === '');
     panel.style.display = isHidden ? 'block' : 'none';
     
     if (isHidden) {
-        renderAnalyticsCharts();
-        showToast('Interactive Visual Analytics Report expanded!');
+        if (typeof Chart === 'undefined') {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+            script.onload = () => renderAnalyticsCharts();
+            document.head.appendChild(script);
+            showToast('Loading Analytics Chart Engine...');
+        } else {
+            renderAnalyticsCharts();
+            showToast('Interactive Visual Analytics Report expanded!');
+        }
     }
 }
 window.toggleAnalyticsPanel = toggleAnalyticsPanel;
 
 function renderAnalyticsCharts() {
-    if (typeof Chart === 'undefined' || !allData || allData.length === 0) return;
+    if (!allData || allData.length === 0) {
+        setTimeout(renderAnalyticsCharts, 400);
+        return;
+    }
+    if (typeof Chart === 'undefined') return;
 
     // 1. Aggregation Engine
     const regionCounts = {}, districtCounts = {}, unionCounts = {};
