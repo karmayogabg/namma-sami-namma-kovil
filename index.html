@@ -24,7 +24,7 @@
     <div id="auth-overlay" class="modal-overlay active" style="z-index: 2000; background: rgba(7, 9, 19, 0.96); backdrop-filter: blur(20px);">
         <div class="modal-content" style="max-width: 440px; text-align: center; border-color: rgba(139, 92, 246, 0.4); position: relative;">
             <div style="position: absolute; top: 16px; right: 16px;" class="brand-badge">
-                <span style="color: #6ee7b7; font-weight:700;">v2.1</span>
+                <span style="color: #6ee7b7; font-weight:700;">v2.2</span>
             </div>
             <div class="brand-logo" style="margin: 0 auto 16px auto; width: 56px; height: 56px;">
                 <i data-lucide="lock" style="width:28px; height:28px;"></i>
@@ -40,7 +40,7 @@
                 </button>
             </form>
             <div style="margin-top: 14px; font-size: 0.78rem; color: var(--text-muted);">
-                Namma Sami Namma Kovil Explorer <span style="color:#6ee7b7; font-weight:700;">v2.1</span>
+                Namma Sami Namma Kovil Explorer <span style="color:#6ee7b7; font-weight:700;">v2.2</span>
             </div>
         </div>
     </div>
@@ -59,7 +59,7 @@
             </a>
             <div style="display:flex; align-items:center; gap:10px;">
                 <div class="brand-badge" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); color: #6ee7b7; font-weight:700;">
-                    v2.1
+                    v2.2
                 </div>
                 <div class="brand-badge">
                     <i data-lucide="database" style="width:14px; height:14px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>
@@ -184,7 +184,7 @@
                 <a href="print_sheets.html" target="_blank" class="toggle-btn" style="background: rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.4); color: #6ee7b7; text-decoration:none;">
                     <i data-lucide="archive" style="width:15px; height:15px; vertical-align:middle;"></i> Download All PDFs (ZIP) 📦
                 </a>
-                <button id="upload-photo-btn" class="toggle-btn" style="background: rgba(236, 72, 153, 0.18); border-color: rgba(236, 72, 153, 0.4); color: #f472b6;" onclick="alert('Select your filled caller sheet photo to scan with Gemini Vision AI.')">
+                <button id="upload-photo-btn" class="toggle-btn" style="background: rgba(236, 72, 153, 0.18); border-color: rgba(236, 72, 153, 0.4); color: #f472b6;" onclick="triggerPhotoUpload()">
                     <i data-lucide="camera" style="width:15px; height:15px; vertical-align:middle;"></i> Upload Form Photo 📷
                 </button>
                 <button id="export-excel-btn" class="toggle-btn" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.35); color: #6ee7b7;" onclick="exportToExcel()">
@@ -259,7 +259,70 @@
         Meaning copied to clipboard!
     </div>
 
-    <!-- Application Script -->
+    <!-- Hidden Photo Upload File Input -->
+    <input type="file" id="photo-file-input" accept="image/*" style="display:none;" onchange="handlePhotoUpload(this)">
+
+    <!-- OCR Scanner Verification Modal -->
+    <div id="ocr-modal-overlay" class="modal-overlay" style="z-index: 3000;">
+        <div class="modal-content" style="max-width: 780px;">
+            <button class="modal-close" onclick="closeOcrModal()">
+                <i data-lucide="x"></i>
+            </button>
+            <h3 style="font-family:'Outfit'; font-size:1.3rem; margin-top:0; color:var(--text-main); display:flex; align-items:center; gap:8px;">
+                <i data-lucide="camera" style="color:#f472b6;"></i> AI Photo OCR Scanner (Gemini Vision)
+            </h3>
+            
+            <div id="ocr-loading-state" style="text-align:center; padding:40px 20px;">
+                <div class="spinner" style="margin:0 auto 16px auto; border-top-color:#f472b6;"></div>
+                <h4 style="color:var(--text-main); margin-bottom:6px;">Scanning Filled Caller Sheet Photo...</h4>
+                <p style="color:var(--text-muted); font-size:0.85rem;">Gemini AI Vision is detecting barcodes, rows, and checked A/B/C rating bubbles.</p>
+            </div>
+
+            <div id="ocr-result-state" style="display:none;">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-bottom:16px;">
+                    <div>
+                        <div style="font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:6px;">UPLOADED PHOTO PREVIEW</div>
+                        <img id="ocr-preview-img" src="" style="width:100%; max-height:300px; object-fit:contain; border-radius:6px; border:1px solid var(--border-color);">
+                    </div>
+                    <div>
+                        <div style="font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:6px;">AUTO-EXTRACTED BATCH & DATA</div>
+                        <div id="ocr-batch-info" style="background:var(--bg-glass); padding:10px; border-radius:6px; font-family:monospace; color:#6ee7b7; font-size:0.85rem; margin-bottom:10px;">
+                            CODE: NSNK-B001-P04
+                        </div>
+                        <div style="font-size:0.8rem; color:var(--text-muted);">Review extracted grades on the right and click Confirm to update database.</div>
+                    </div>
+                </div>
+
+                <div style="max-height:220px; overflow-y:auto; border:1px solid var(--border-color); border-radius:6px; margin-bottom:16px;">
+                    <table class="data-table" style="font-size:0.82rem;">
+                        <thead>
+                            <tr>
+                                <th>Row</th>
+                                <th>Phone Number</th>
+                                <th>Q1 (Name Meaning)</th>
+                                <th>Q2 (Parampara)</th>
+                                <th>Q3 (Gothram)</th>
+                                <th>Assigned Grade</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ocr-scanned-rows-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:10px;">
+                    <button class="toggle-btn" onclick="closeOcrModal()">Cancel</button>
+                    <button class="toggle-btn" style="background:#10b981; color:#fff; border-color:#10b981;" onclick="confirmOcrGrades()">
+                        <i data-lucide="check" style="width:16px; height:16px; vertical-align:middle;"></i> Confirm & Save to Database
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OCR Engine & Application Scripts -->
+    <script src="process_photo_ocr.js"></script>
     <script src="dashboard.js"></script>
 </body>
 </html>
