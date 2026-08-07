@@ -38,6 +38,23 @@
     --transition-smooth: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Light Theme Token Overrides */
+[data-theme="light"] {
+    --bg-dark: #f8fafc;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f1f5f9;
+    --bg-glass: rgba(15, 23, 42, 0.03);
+    
+    --border-color: rgba(15, 23, 42, 0.12);
+    --border-highlight: rgba(139, 92, 246, 0.4);
+
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --text-dim: #64748b;
+
+    --shadow-soft: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
+}
+
 /* Reset & Base Setup */
 *, *::before, *::after {
     box-sizing: border-box;

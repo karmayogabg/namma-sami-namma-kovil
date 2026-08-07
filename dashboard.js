@@ -977,3 +977,30 @@ function resetChartFilters() {
     showToast('All Chart Filters Reset!');
 }
 window.resetChartFilters = resetChartFilters;
+
+// Theme Toggle Engine (Dark / Light) (v4.2)
+function initTheme() {
+    const savedTheme = localStorage.getItem('nsnk_theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeUI(savedTheme);
+}
+
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('nsnk_theme', newTheme);
+    updateThemeUI(newTheme);
+    showToast(`Switched to ${newTheme.toUpperCase()} Mode!`);
+}
+window.toggleTheme = toggleTheme;
+
+function updateThemeUI(theme) {
+    const textEl = document.getElementById('theme-text');
+    if (textEl) textEl.textContent = theme === 'dark' ? 'Dark' : 'Light';
+    if (window.lucide) lucide.createIcons();
+}
+
+// Initialize theme immediately
+initTheme();
