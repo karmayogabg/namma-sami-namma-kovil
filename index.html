@@ -24,7 +24,7 @@
     <div id="auth-overlay" class="modal-overlay active" style="z-index: 2000; background: rgba(7, 9, 19, 0.96); backdrop-filter: blur(20px);">
         <div class="modal-content" style="max-width: 440px; text-align: center; border-color: rgba(139, 92, 246, 0.4); position: relative;">
             <div style="position: absolute; top: 16px; right: 16px;" class="brand-badge">
-                <span style="color: #6ee7b7; font-weight:700;">v1.8</span>
+                <span style="color: #6ee7b7; font-weight:700;">v2.0</span>
             </div>
             <div class="brand-logo" style="margin: 0 auto 16px auto; width: 56px; height: 56px;">
                 <i data-lucide="lock" style="width:28px; height:28px;"></i>
@@ -40,7 +40,7 @@
                 </button>
             </form>
             <div style="margin-top: 14px; font-size: 0.78rem; color: var(--text-muted);">
-                Namma Sami Namma Kovil Explorer <span style="color:#6ee7b7; font-weight:700;">v1.8</span>
+                Namma Sami Namma Kovil Explorer <span style="color:#6ee7b7; font-weight:700;">v2.0</span>
             </div>
         </div>
     </div>
@@ -59,7 +59,7 @@
             </a>
             <div style="display:flex; align-items:center; gap:10px;">
                 <div class="brand-badge" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); color: #6ee7b7; font-weight:700;">
-                    v1.8
+                    v2.0
                 </div>
                 <div class="brand-badge">
                     <i data-lucide="database" style="width:14px; height:14px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>
@@ -136,6 +136,14 @@
                     <option value="">All Districts / மாவட்டம்</option>
                 </select>
 
+                <select id="filter-grade" class="select-custom" style="border-color: rgba(139, 92, 246, 0.4);">
+                    <option value="">All Grades / அனைத்து தரங்கள்</option>
+                    <option value="A">Grade A (High Knowledge 🟢)</option>
+                    <option value="B">Grade B (Moderate Awareness 🔵)</option>
+                    <option value="C">Grade C (Needs Guidance 🟠)</option>
+                    <option value="Ungraded">Ungraded (Pending Calls ⚪)</option>
+                </select>
+
                 <select id="filter-page-size" class="select-custom" style="min-width: 130px; margin-left: auto;">
                     <option value="48">48 per page</option>
                     <option value="96">96 per page</option>
@@ -169,7 +177,13 @@
             <div class="results-count" id="results-count">
                 Showing <strong>0</strong> names
             </div>
-            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                <a href="print_sheets.html" target="_blank" class="toggle-btn" style="background: rgba(139, 92, 246, 0.2); border-color: rgba(139, 92, 246, 0.4); color: #c4b5fd; text-decoration:none;">
+                    <i data-lucide="file-text" style="width:15px; height:15px; vertical-align:middle;"></i> PDF Call Sheets 📄
+                </a>
+                <button id="upload-photo-btn" class="toggle-btn" style="background: rgba(236, 72, 153, 0.18); border-color: rgba(236, 72, 153, 0.4); color: #f472b6;" onclick="alert('Select your filled caller sheet photo to scan with Gemini Vision AI.')">
+                    <i data-lucide="camera" style="width:15px; height:15px; vertical-align:middle;"></i> Upload Form Photo 📷
+                </button>
                 <button id="export-excel-btn" class="toggle-btn" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.35); color: #6ee7b7;" onclick="exportToExcel()">
                     <i data-lucide="download" style="width:15px; height:15px; vertical-align:middle;"></i> Export Excel (.xlsx)
                 </button>

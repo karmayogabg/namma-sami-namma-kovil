@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Namma Sami Namma Kovil - PDF Caller Sheets Generator (20 Persons / Page)</title>
+    <!-- Google Fonts & Lucide Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+
+    <style>
+        @page { size: A4 portrait; margin: 8mm; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Noto Sans Tamil', -apple-system, BlinkMacSystemFont, sans-serif; padding: 10px; background: #f8fafc; color: #0f172a; margin: 0; font-size: 11px; }
+
+        /* Control Bar (Hidden when printing) */
+        .no-print { background: #0f172a; color: #fff; padding: 12px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .no-print button { background: #8b5cf6; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; }
+        .no-print button:hover { background: #7c3aed; }
+        .no-print select { padding: 8px 12px; border-radius: 6px; border: 1px solid #475569; background: #1e293b; color: #fff; font-size: 0.9rem; }
+
+        /* Printable Page Frame */
+        .page-container { background: #fff; width: 210mm; min-height: 297mm; margin: 0 auto 20px auto; padding: 10mm; border: 1px solid #cbd5e1; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); page-break-after: always; position: relative; }
+        @media print {
+            .no-print { display: none !important; }
+            body { background: #fff; padding: 0; }
+            .page-container { border: none; box-shadow: none; margin: 0; padding: 0; width: 100%; min-height: auto; }
+        }
+
+        /* Dual Tracking Page Header */
+        .sheet-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0f172a; padding-bottom: 6px; margin-bottom: 8px; }
+        .sheet-title h2 { margin: 0; font-size: 1.15rem; font-family: 'Outfit', sans-serif; font-weight: 700; color: #0f172a; }
+        .sheet-title p { margin: 3px 0 0 0; font-size: 0.75rem; color: #475569; }
+        .header-code-badge { display: inline-block; background: #0f172a; color: #6ee7b7; font-family: monospace; font-weight: 700; font-size: 0.85rem; padding: 2px 8px; border-radius: 4px; margin-top: 4px; }
+
+        .barcode-container { text-align: right; }
+        .barcode-img { height: 32px; }
+
+        /* Members Table Layout */
+        table.records-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+        table.records-table td { border: 1px solid #0f172a; padding: 5px 7px; text-align: left; vertical-align: top; }
+        
+        .member-row-header { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+        .member-meta-group { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+        .member-idx { font-weight: 700; font-size: 0.8rem; background: #0f172a; color: #fff; padding: 1px 5px; border-radius: 3px; }
+        .member-name { font-weight: 700; font-size: 0.92rem; color: #0f172a; margin-right: 2px; }
+        .member-phone { font-size: 0.75rem; color: #1e293b; font-weight: 600; }
+        .loc-tag { font-size: 0.7rem; background: #f1f5f9; color: #334155; padding: 1px 5px; border-radius: 3px; border: 1px solid #cbd5e1; }
+
+        /* Tamil Name Meaning Full Script Box */
+        .meaning-full-box { margin-top: 3px; font-size: 0.8rem; line-height: 1.4; color: #1e293b; background: #f8fafc; padding: 4px 7px; border-left: 3px solid #8b5cf6; border-radius: 0 4px 4px 0; }
+
+        /* Rating Bubbles Box */
+        .rating-box { display: flex; gap: 8px; align-items: center; background: #fff; padding: 2px 6px; border: 1.5px solid #0f172a; border-radius: 4px; flex-shrink: 0; }
+        .q-item { display: flex; align-items: center; gap: 2px; }
+        .q-lbl { font-size: 0.68rem; font-weight: 700; color: #0f172a; }
+        .bubble { display: inline-block; width: 15px; height: 15px; border: 1.5px solid #0f172a; border-radius: 50%; text-align: center; line-height: 15px; font-size: 0.68rem; font-weight: 700; }
+        .filled { background: #0f172a; color: #fff; }
+    </style>
+</head>
+<body>
+
+    <!-- Control Bar (Screen Only) -->
+    <div class="no-print">
+        <div style="display:flex; align-items:center; gap:12px;">
+            <h3 style="margin:0; font-family:'Outfit'; font-size:1.1rem; color:#f8fafc;">Namma Sami Namma Kovil - PDF Caller Sheets</h3>
+            <select id="batch-select" onchange="loadBatch(this.value)">
+                <option value="0">Batch #001 (Persons #1 to #500)</option>
+            </select>
+        </div>
+        <div style="display:flex; gap:10px;">
+            <button onclick="window.print()"><i data-lucide="printer"></i> Print / Save as PDF</button>
+        </div>
+    </div>
+
+    <!-- Container where pages render dynamically -->
+    <div id="pages-render-target"></div>
+
+    <script>
+        let allData = [];
+        const RECORDS_PER_PAGE = 20;
+        const RECORDS_PER_BATCH = 500;
+
+        // Fetch Master Dataset
+        fetch('namma_sami_namma_kovil_full.json')
+            .then(res => res.json())
+            .then(data => {
+                allData = data;
+                populateBatchOptions();
+                loadBatch(0);
+            })
+            .catch(err => console.error('Error loading dataset:', err));
+
+        function populateBatchOptions() {
+            const select = document.getElementById('batch-select');
+            select.innerHTML = '';
+            const totalBatches = Math.ceil(allData.length / RECORDS_PER_BATCH);
+            for (let i = 0; i < totalBatches; i++) {
+                const start = i * RECORDS_PER_BATCH + 1;
+                const end = Math.min((i + 1) * RECORDS_PER_BATCH, allData.length);
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = `Batch #${String(i + 1).padStart(3, '0')} (Persons #${start.toLocaleString()} to #${end.toLocaleString()})`;
+                select.appendChild(opt);
+            }
+        }
+
+        function loadBatch(batchIdx) {
+            batchIdx = parseInt(batchIdx, 10);
+            const renderTarget = document.getElementById('pages-render-target');
+            renderTarget.innerHTML = '';
+
+            const batchStart = batchIdx * RECORDS_PER_BATCH;
+            const batchEnd = Math.min((batchIdx + 1) * RECORDS_PER_BATCH, allData.length);
+            const batchData = allData.slice(batchStart, batchEnd);
+
+            const totalPages = Math.ceil(batchData.length / RECORDS_PER_PAGE);
+
+            for (let p = 0; p < totalPages; p++) {
+                const pageStart = p * RECORDS_PER_PAGE;
+                const pageEnd = Math.min((p + 1) * RECORDS_PER_PAGE, batchData.length);
+                const pageRecords = batchData.slice(pageStart, pageEnd);
+
+                const pageCode = `NSNK-B${String(batchIdx + 1).padStart(3, '0')}-P${String(p + 1).padStart(2, '0')}`;
+                
+                const pageDiv = document.createElement('div');
+                pageDiv.className = 'page-container';
+
+                let rowsHtml = '';
+                pageRecords.forEach((item, rIdx) => {
+                    const globalIdx = batchStart + pageStart + rIdx + 1;
+                    const survey = item.survey || {};
+                    const q1 = survey.q1 || '';
+                    const q2 = survey.q2 || '';
+                    const q3 = survey.q3 || '';
+
+                    rowsHtml += `
+                        <tr>
+                            <td style="width: 25px; text-align: center; vertical-align: middle; background: #f8fafc; padding: 2px;">
+                                <span class="member-idx">${globalIdx}</span>
+                            </td>
+                            <td>
+                                <div class="member-row-header">
+                                    <div class="member-meta-group">
+                                        <span class="member-name">${item.name || ''}</span>
+                                        <span class="member-phone">📞 ${item.mobile || 'N/A'}</span>
+                                        ${item.region ? `<span class="loc-tag">மண்டலம்: ${item.region}</span>` : ''}
+                                        ${item.district ? `<span class="loc-tag">மாவட்டம்: ${item.district}</span>` : ''}
+                                        ${item.union ? `<span class="loc-tag">ஒன்றியம்: ${item.union}</span>` : ''}
+                                    </div>
+                                    <div class="rating-box">
+                                        <div class="q-item"><span class="q-lbl">Q1:</span><span class="bubble ${q1==='A'?'filled':''}">A</span><span class="bubble ${q1==='B'?'filled':''}">B</span><span class="bubble ${q1==='C'?'filled':''}">C</span></div>
+                                        <div class="q-item"><span class="q-lbl">Q2:</span><span class="bubble ${q2==='A'?'filled':''}">A</span><span class="bubble ${q2==='B'?'filled':''}">B</span><span class="bubble ${q2==='C'?'filled':''}">C</span></div>
+                                        <div class="q-item"><span class="q-lbl">Q3:</span><span class="bubble ${q3==='A'?'filled':''}">A</span><span class="bubble ${q3==='B'?'filled':''}">B</span><span class="bubble ${q3==='C'?'filled':''}">C</span></div>
+                                    </div>
+                                </div>
+                                <div class="meaning-full-box">
+                                    <strong>தமிழ் பொருள்:</strong> ${item.meaning || 'விளக்கம் சேகரிக்கப்படுகிறது.'}
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                pageDiv.innerHTML = `
+                    <div class="sheet-header">
+                        <div class="sheet-title">
+                            <h2>நம்ம சாமி நம்ம கோவில் - உறுப்பினர்கள் கேள்விகள் & மதிப்பீட்டுத் தாள்</h2>
+                            <p>Persons #${batchStart + pageStart + 1} to #${batchStart + pageEnd} • Batch #${String(batchIdx + 1).padStart(3, '0')} • Page ${p + 1} of ${totalPages}</p>
+                            <div class="header-code-badge">CODE: ${pageCode}</div>
+                        </div>
+                        <div class="barcode-container">
+                            <svg class="barcode-img" id="barcode-${pageCode}"></svg>
+                        </div>
+                    </div>
+
+                    <table class="records-table">
+                        <tbody>
+                            ${rowsHtml}
+                        </tbody>
+                    </table>
+                `;
+
+                renderTarget.appendChild(pageDiv);
+
+                // Generate Barcode
+                try {
+                    JsBarcode(`#barcode-${pageCode}`, pageCode, {
+                        format: "CODE128",
+                        height: 28,
+                        displayValue: false,
+                        margin: 0
+                    });
+                } catch(e) {}
+            }
+
+            if (window.lucide) lucide.createIcons();
+        }
+    </script>
+</body>
+</html>

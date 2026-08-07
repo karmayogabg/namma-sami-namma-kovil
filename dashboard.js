@@ -10,7 +10,30 @@ let pageSize = 48;
 let selectedLetter = "";
 let selectedRegion = "";
 let selectedDistrict = "";
+let selectedGrade = "";
 let searchQuery = "";
+
+// Compute Overall Grade from Q1, Q2, Q3
+function computeOverallGrade(q1, q2, q3) {
+    if (!q1 || !q2 || !q3) return 'Ungraded';
+    const points = { 'A': 2, 'B': 1, 'C': 0 };
+    const totalScore = (points[q1] || 0) + (points[q2] || 0) + (points[q3] || 0);
+    if (totalScore >= 5) return 'A';
+    if (totalScore >= 3) return 'B';
+    return 'C';
+}
+window.computeOverallGrade = computeOverallGrade;
+
+// Get Grade Badge HTML
+function getGradeBadgeHtml(survey) {
+    survey = survey || {};
+    const grade = survey.overallGrade || computeOverallGrade(survey.q1, survey.q2, survey.q3);
+    if (grade === 'A') return '<span class="grade-badge grade-badge-a">Grade A</span>';
+    if (grade === 'B') return '<span class="grade-badge grade-badge-b">Grade B</span>';
+    if (grade === 'C') return '<span class="grade-badge grade-badge-c">Grade C</span>';
+    return '<span class="grade-badge grade-badge-u">Ungraded</span>';
+}
+window.getGradeBadgeHtml = getGradeBadgeHtml;
 
 // DOM Elements
 const loadingSpinner = document.getElementById('loading-spinner');
@@ -206,6 +229,14 @@ function setupEventListeners() {
         applyFilters();
     });
 
+    const filterGrade = document.getElementById('filter-grade');
+    if (filterGrade) {
+        filterGrade.addEventListener('change', (e) => {
+            selectedGrade = e.target.value;
+            applyFilters();
+        });
+    }
+
     filterPageSize.addEventListener('change', (e) => {
         pageSize = parseInt(e.target.value, 10);
         currentPage = 1;
@@ -285,6 +316,17 @@ function applyFilters() {
         if (selectedLetter) {
             if (!item.name.startsWith(selectedLetter)) {
                 return false;
+            }
+        }
+
+        // Grade Filter (v2.0)
+        if (selectedGrade) {
+            const survey = item.survey || {};
+            const grade = survey.overallGrade || computeOverallGrade(survey.q1, survey.q2, survey.q3);
+            if (selectedGrade === 'Ungraded') {
+                if (grade !== 'Ungraded') return false;
+            } else {
+                if (grade !== selectedGrade) return false;
             }
         }
 
@@ -437,10 +479,12 @@ function renderPage() {
             pageItems.forEach((item, idx) => {
                 const displayMeaning = item.meaning || 'தமிழ் பொருள் இல்லை';
                 const globalNum = startIdx + idx + 1;
+                const gradeBadge = getGradeBadgeHtml(item.survey);
                 tableHtml += `
                     <tr onclick="openModal(allData[${allData.indexOf(item)}])">
                         <td style="color:var(--text-muted); font-size:0.8rem;">${globalNum}</td>
                         <td class="table-name">${escapeHtml(item.name)}</td>
+                        <td>${gradeBadge}</td>
                         <td>${escapeHtml(item.region)}</td>
                         <td><span class="card-tag">${escapeHtml(item.district)}</span></td>
                         <td>${escapeHtml(item.union)}</td>
@@ -478,12 +522,16 @@ function renderPage() {
                 card.onclick = () => openModal(item);
 
                 const displayMeaning = item.meaning || 'தமிழ் பொருள் இல்லை';
+                const gradeBadge = getGradeBadgeHtml(item.survey);
 
                 card.innerHTML = `
                     <div>
                         <div class="card-header">
                             <div class="card-title">${escapeHtml(item.name)}</div>
-                            ${item.district ? `<div class="card-tag">${escapeHtml(item.district)}</div>` : ''}
+                            <div style="display:flex; gap:6px; align-items:center;">
+                                ${gradeBadge}
+                                ${item.district ? `<div class="card-tag">${escapeHtml(item.district)}</div>` : ''}
+                            </div>
                         </div>
 
                         <div class="card-details">

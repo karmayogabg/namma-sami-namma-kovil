@@ -125,15 +125,32 @@ Open `http://localhost:3000` to test search, Tamil letter quick filters, and det
 
 ---
 
-## 6. Page Versioning Protocol (`v1.0`, `v1.1`, ...)
+## 6. Page Versioning & Protocol Rules
 
-Whenever any update, bug fix, or feature enhancement is made to the website, codebase, or dataset:
-1. **Increment Version**: Increment the version number badge (e.g. `v1.0` ➔ `v1.1` ➔ `v1.2`).
-2. **Update HTML**: Update the version badge in the navbar header of both `index.html` and `dashboard.html`:
-   ```html
-   <div class="brand-badge" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); color: #6ee7b7; font-weight:700;">
-       v1.1
-   </div>
-   ```
-3. **Commit Message**: Include the version number in git commit message (e.g. `Bump version to v1.1`).
+Whenever any update is made to the dataset, UI layout, components, or features, **you MUST increment the navbar version badge** (`v1.0` ➔ `v1.1` ➔ `v1.2` ... `v2.0`).
 
+### Current Version Protocol:
+- **`v2.0`**: Person Classification, 3-Question Grading System, PDF Caller Sheets Generator (500 persons/file, 20 persons/page un-truncated), and Gemini Vision AI Photo OCR Upload Scanner.
+
+---
+
+## 7. 3-Question Grading & PDF Caller Sheets Architecture (v2.0)
+
+### 1. The 3 Survey Questions & Overall Grade Calculation
+- **Q1**: Meaning of your Name? *(உங்கள் பெயரின் பொருள் தெரியுமா?)*
+- **Q2**: Do you know your Parampara? *(உங்கள் பரம்பரை தெரியுமா?)*
+- **Q3**: Do you know your Gothram? *(உங்கள் கோத்திரம் தெரியுமா?)*
+
+Points: `A` = 2 pts, `B` = 1 pt, `C` = 0 pt.
+- **Grade A** (🟢 5–6 pts): High Knowledge Champion
+- **Grade B** (🔵 3–4 pts): Moderate Awareness
+- **Grade C** (🟠 0–2 pts): Needs Guidance / Orientation
+
+### 2. PDF Caller Sheets Generator (`print_sheets.html`)
+- **Sequential JSON Order**: Preserves exact sequence from record #1 to #62,521.
+- **Batch Size**: 500 persons per PDF file (25 A4 pages). Total 126 PDF files.
+- **Dual Tracking Header**: Barcode + `CODE: NSNK-B[Batch]-P[Page]` on every printed page.
+- **100% Un-Truncated Meanings**: Full Tamil meaning script box printed on every row.
+
+### 3. AI Photo OCR Scanner (`process_photo_ocr.js`)
+- Uses **Gemini 1.5 Flash Vision API** to read filled paper sheet photos, decode header barcodes/codes, extract checked bubbles, and update `namma_sami_namma_kovil_full.json` automatically.
