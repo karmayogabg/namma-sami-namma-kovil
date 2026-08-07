@@ -349,6 +349,41 @@ function toggleExpandAll() {
 }
 window.toggleExpandAll = toggleExpandAll;
 
+// Export Current Filtered / Full Dataset to Excel (.xlsx)
+function exportToExcel() {
+    if (!filteredData || filteredData.length === 0) {
+        alert('No records available to export.');
+        return;
+    }
+
+    if (typeof XLSX === 'undefined') {
+        alert('Excel export library is loading. Please try again in a moment.');
+        return;
+    }
+
+    const exportRows = filteredData.map((item, idx) => ({
+        'S.No': idx + 1,
+        'Name / பெயர்': item.name || '',
+        'Mobile / தொடர்பு எண்': item.mobile || '',
+        'Region / மண்டலம்': item.region || '',
+        'District / மாவட்டம்': item.district || '',
+        'Union / ஒன்றியம்': item.union || '',
+        'Pincode / அஞ்சல் குறியீடு': item.pincode || '',
+        'Tamil Meaning / தமிழ் பெயர் விளக்கம்': item.meaning || ''
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(exportRows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Tamil Name Meanings');
+
+    const fileName = filteredData.length === allData.length
+        ? 'namma_sami_namma_kovil_full_dataset.xlsx'
+        : 'namma_sami_namma_kovil_filtered_dataset.xlsx';
+
+    XLSX.writeFile(workbook, fileName);
+}
+window.exportToExcel = exportToExcel;
+
 // Render Current Page Grid / Table
 function renderPage() {
     const totalItems = filteredData.length;
