@@ -50,6 +50,8 @@ async function buildAllPdfBatches() {
 function createPdfBuffer(records, batchNum, startIdx, endIdx, totalRecords) {
     return new Promise((resolve, reject) => {
         const doc = new PDFDocument({ size: 'A4', margin: 20 });
+        doc.registerFont('Tamil', path.join(__dirname, 'NotoSansTamil-Regular.ttf'));
+        doc.registerFont('Tamil-Bold', path.join(__dirname, 'NotoSansTamil-Bold.ttf'));
         const buffers = [];
 
         doc.on('data', buffers.push.bind(buffers));
@@ -67,14 +69,14 @@ function createPdfBuffer(records, batchNum, startIdx, endIdx, totalRecords) {
             const pageCode = `NSNK-B${batchNum}-P${String(p + 1).padStart(2, '0')}`;
 
             // Header
-            doc.fontSize(12).font('Helvetica-Bold').fillColor('#0f172a')
+            doc.fontSize(12).font('Tamil-Bold').fillColor('#0f172a')
                .text(`Namma Sami Namma Kovil - PDF Caller Sheets (Batch #${batchNum})`, 20, 20);
             
-            doc.fontSize(8).font('Helvetica').fillColor('#475569')
+            doc.fontSize(8).font('Tamil').fillColor('#475569')
                .text(`Persons #${startIdx + pStart + 1} to #${startIdx + pEnd}  |  Page ${p + 1} of ${totalPages}  |  CODE: ${pageCode}`, 20, 36);
 
             doc.rect(480, 18, 95, 24).fillAndStroke('#0f172a', '#0f172a');
-            doc.fontSize(8).font('Helvetica-Bold').fillColor('#6ee7b7')
+            doc.fontSize(8).font('Tamil-Bold').fillColor('#6ee7b7')
                .text(pageCode, 485, 26, { width: 85, align: 'center' });
 
             doc.moveTo(20, 48).lineTo(575, 48).lineWidth(1).strokeColor('#0f172a').stroke();
@@ -93,7 +95,7 @@ function createPdfBuffer(records, batchNum, startIdx, endIdx, totalRecords) {
 
                 // Index Badge
                 doc.rect(20, y, 24, 34).fill('#0f172a');
-                doc.fontSize(8).font('Helvetica-Bold').fillColor('#ffffff')
+                doc.fontSize(8).font('Tamil-Bold').fillColor('#ffffff')
                    .text(`${globalIdx}`, 20, y + 11, { width: 24, align: 'center' });
 
                 // Details Line
@@ -101,17 +103,17 @@ function createPdfBuffer(records, batchNum, startIdx, endIdx, totalRecords) {
                 const mobile = item.mobile ? `Ph: ${item.mobile}` : '';
                 const loc = [item.region, item.district, item.union].filter(Boolean).join(' | ');
 
-                doc.fontSize(8.5).font('Helvetica-Bold').fillColor('#0f172a')
+                doc.fontSize(8.5).font('Tamil-Bold').fillColor('#0f172a')
                    .text(`${name}   ${mobile}   ${loc}`, 50, y + 4, { width: 370 });
 
                 // Rating Box (Right aligned)
                 doc.rect(425, y + 3, 145, 14).lineWidth(1).strokeColor('#0f172a').stroke();
-                doc.fontSize(6.5).font('Helvetica-Bold').fillColor('#0f172a')
+                doc.fontSize(6.5).font('Tamil-Bold').fillColor('#0f172a')
                    .text(`Q1: [A][B][C]  Q2: [A][B][C]  Q3: [A][B][C]`, 428, y + 7, { width: 140, align: 'center' });
 
                 // Meaning Line
                 const meaningText = item.meaning ? `Meaning: ${item.meaning}` : 'Meaning script loading...';
-                doc.fontSize(7.5).font('Helvetica').fillColor('#334155')
+                doc.fontSize(7.5).font('Tamil').fillColor('#334155')
                    .text(meaningText, 50, y + 18, { width: 520, height: 13, ellipsis: true });
 
                 y += 36;

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <title>NSNK - Exact PDF Caller Sheet Page 1 (Marked Sample)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <style>
+        @page { size: A4 portrait; margin: 0; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Noto Sans Tamil', sans-serif; background: #fff; color: #0f172a; margin: 0; padding: 15px; font-size: 11px; width: 794px; }
+
+        .sheet-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0f172a; padding-bottom: 6px; margin-bottom: 8px; }
+        .sheet-title h2 { margin: 0; font-size: 1.15rem; font-family: 'Outfit', sans-serif; font-weight: 700; color: #0f172a; }
+        .sheet-title p { margin: 3px 0 0 0; font-size: 0.75rem; color: #475569; }
+        .header-code-badge { display: inline-block; background: #0f172a; color: #6ee7b7; font-family: monospace; font-weight: 700; font-size: 0.85rem; padding: 2px 8px; border-radius: 4px; margin-top: 4px; }
+
+        .barcode-container { text-align: right; }
+        .barcode-img { height: 32px; }
+
+        table.records-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+        table.records-table td { border: 1px solid #0f172a; padding: 5px 7px; text-align: left; vertical-align: top; }
+        
+        .member-meta-group { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+        .member-idx { font-weight: 700; font-size: 0.8rem; background: #0f172a; color: #fff; padding: 1px 5px; border-radius: 3px; }
+        .member-name { font-weight: 700; font-size: 0.92rem; color: #0f172a; margin-right: 2px; }
+        .member-phone { font-size: 0.75rem; color: #1e293b; font-weight: 600; }
+        .loc-tag { font-size: 0.7rem; background: #f1f5f9; color: #334155; padding: 1px 5px; border-radius: 3px; border: 1px solid #cbd5e1; }
+
+        .meaning-full-box { margin-top: 3px; font-size: 0.8rem; line-height: 1.4; color: #1e293b; background: #f8fafc; padding: 4px 7px; border-left: 3px solid #8b5cf6; border-radius: 0 4px 4px 0; }
+
+        .rating-box { display: flex; gap: 8px; align-items: center; background: #fff; padding: 2px 6px; border: 1.5px solid #0f172a; border-radius: 4px; flex-shrink: 0; }
+        .q-item { display: flex; align-items: center; gap: 2px; }
+        .q-lbl { font-size: 0.68rem; font-weight: 700; color: #0f172a; }
+        .bubble { display: inline-block; width: 15px; height: 15px; border: 1.5px solid #0f172a; border-radius: 50%; text-align: center; line-height: 14px; font-size: 0.68rem; font-weight: 700; }
+        .filled-a { background: #1e3a8a; color: #fff; border-color: #1e3a8a; }
+        .filled-b { background: #1e3a8a; color: #fff; border-color: #1e3a8a; }
+        .filled-c { background: #1e3a8a; color: #fff; border-color: #1e3a8a; }
+    </style>
+</head>
+<body>
+
+    <div class="sheet-header">
+        <div class="sheet-title">
+            <h2>நம்ம சாமி நம்ம கோவில் - உறுப்பினர்கள் கேள்விகள் & மதிப்பீட்டுத் தாள்</h2>
+            <p>Persons #1 to #20 • Batch #001 • Page 1 of 25</p>
+            <div class="header-code-badge">CODE: NSNK-B001-P01</div>
+        </div>
+        <div class="barcode-container">
+            <svg class="barcode-img" id="barcode-NSNK-B001-P01"></svg>
+        </div>
+    </div>
+
+    <table class="records-table">
+        <tbody id="rows-body"></tbody>
+    </table>
+
+    <script>
+        fetch('namma_sami_namma_kovil_full.json')
+            .then(res => res.json())
+            .then(data => {
+                const pageRecords = data.slice(0, 20);
+                const sampleAnswers = [
+                    {q1: 'A', q2: 'A', q3: 'B'},
+                    {q1: 'A', q2: 'B', q3: 'A'},
+                    {q1: 'B', q2: 'B', q3: 'C'},
+                    {q1: 'A', q2: 'A', q3: 'A'},
+                    {q1: 'C', q2: 'C', q3: 'B'},
+                    {q1: 'A', q2: 'B', q3: 'B'},
+                    {q1: 'B', q2: 'A', q3: 'A'},
+                    {q1: 'A', q2: 'A', q3: 'C'},
+                    {q1: 'B', q2: 'C', q3: 'B'},
+                    {q1: 'A', q2: 'B', q3: 'A'},
+                    {q1: 'C', q2: 'B', q3: 'A'},
+                    {q1: 'A', q2: 'A', q3: 'B'},
+                    {q1: 'B', q2: 'B', q3: 'B'},
+                    {q1: 'A', q2: 'C', q3: 'A'},
+                    {q1: 'A', q2: 'A', q3: 'A'},
+                    {q1: 'B', q2: 'A', q3: 'C'},
+                    {q1: 'C', q2: 'C', q3: 'C'},
+                    {q1: 'A', q2: 'B', q3: 'B'},
+                    {q1: 'B', q2: 'B', q3: 'A'},
+                    {q1: 'A', q2: 'A', q3: 'B'}
+                ];
+
+                let html = '';
+                pageRecords.forEach((item, idx) => {
+                    const ans = sampleAnswers[idx] || {q1:'A', q2:'B', q3:'A'};
+                    const locs = [item.region, item.district, item.union].filter(Boolean).map(l => `<span class="loc-tag">${l}</span>`).join(' ');
+                    
+                    html += `
+                        <tr>
+                            <td>
+                                <div class="member-row-header">
+                                    <div class="member-meta-group">
+                                        <span class="member-idx">#${idx + 1}</span>
+                                        <span class="member-name">${item.name || ''}</span>
+                                        <span class="member-phone">📞 ${item.mobile || ''}</span>
+                                        ${locs}
+                                    </div>
+                                    <div class="rating-box">
+                                        <div class="q-item">
+                                            <span class="q-lbl">1:</span>
+                                            <span class="bubble ${ans.q1 === 'A' ? 'filled-a' : ''}">A</span>
+                                            <span class="bubble ${ans.q1 === 'B' ? 'filled-b' : ''}">B</span>
+                                            <span class="bubble ${ans.q1 === 'C' ? 'filled-c' : ''}">C</span>
+                                        </div>
+                                        <div class="q-item">
+                                            <span class="q-lbl">2:</span>
+                                            <span class="bubble ${ans.q2 === 'A' ? 'filled-a' : ''}">A</span>
+                                            <span class="bubble ${ans.q2 === 'B' ? 'filled-b' : ''}">B</span>
+                                            <span class="bubble ${ans.q2 === 'C' ? 'filled-c' : ''}">C</span>
+                                        </div>
+                                        <div class="q-item">
+                                            <span class="q-lbl">3:</span>
+                                            <span class="bubble ${ans.q3 === 'A' ? 'filled-a' : ''}">A</span>
+                                            <span class="bubble ${ans.q3 === 'B' ? 'filled-b' : ''}">B</span>
+                                            <span class="bubble ${ans.q3 === 'C' ? 'filled-c' : ''}">C</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="meaning-full-box">
+                                    <strong>பொருள்:</strong> ${item.meaning || 'விளக்கம் சேமிக்கப்படவில்லை'}
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                document.getElementById('rows-body').innerHTML = html;
+
+                JsBarcode("#barcode-NSNK-B001-P01", "NSNK-B001-P01", {
+                    format: "CODE128",
+                    height: 28,
+                    displayValue: false,
+                    margin: 0
+                });
+            });
+    </script>
+</body>
+</html>
