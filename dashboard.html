@@ -58,7 +58,7 @@
             </a>
             <div style="display:flex; align-items:center; gap:10px;">
                 <div class="brand-badge" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); color: #6ee7b7; font-weight:700;">
-                    v1.5
+                    v1.6
                 </div>
                 <div class="brand-badge">
                     <i data-lucide="database" style="width:14px; height:14px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>
@@ -169,6 +169,9 @@
                 Showing <strong>0</strong> names
             </div>
             <div style="display:flex; align-items:center; gap:12px;">
+                <button id="expand-all-btn" class="toggle-btn" onclick="toggleExpandAll()">
+                    <i data-lucide="maximize-2" style="width:15px; height:15px; vertical-align:middle;"></i> <span id="expand-all-text">Expand All</span>
+                </button>
                 <div class="view-toggle">
                     <button id="view-cards-btn" class="toggle-btn active" onclick="switchView('cards')">
                         <i data-lucide="layout-grid" style="width:15px; height:15px;"></i> Cards

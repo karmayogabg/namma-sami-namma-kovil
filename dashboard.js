@@ -319,6 +319,36 @@ function switchView(mode) {
 
 window.switchView = switchView;
 
+let isExpandedAll = false;
+
+function toggleExpandAll() {
+    isExpandedAll = !isExpandedAll;
+    const expandBtn = document.getElementById('expand-all-btn');
+    const expandText = document.getElementById('expand-all-text');
+
+    if (expandBtn) {
+        if (isExpandedAll) {
+            expandBtn.classList.add('active');
+            if (expandText) expandText.textContent = 'Collapse All';
+        } else {
+            expandBtn.classList.remove('active');
+            if (expandText) expandText.textContent = 'Expand All';
+        }
+    }
+
+    const cardsGrid = document.getElementById('cards-grid');
+    const tableContainer = document.getElementById('table-container');
+
+    if (isExpandedAll) {
+        if (cardsGrid) cardsGrid.classList.add('is-expanded');
+        if (tableContainer) tableContainer.classList.add('is-expanded');
+    } else {
+        if (cardsGrid) cardsGrid.classList.remove('is-expanded');
+        if (tableContainer) tableContainer.classList.remove('is-expanded');
+    }
+}
+window.toggleExpandAll = toggleExpandAll;
+
 // Render Current Page Grid / Table
 function renderPage() {
     const totalItems = filteredData.length;

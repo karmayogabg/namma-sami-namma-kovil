@@ -727,6 +727,35 @@ body {
     min-width: 300px;
 }
 
+/* Expand All Modes */
+.cards-grid.is-expanded {
+    grid-template-columns: 1fr !important;
+}
+
+.cards-grid.is-expanded .card-meaning {
+    font-size: 1.05rem;
+    padding: 18px;
+    line-height: 1.8;
+}
+
+.cards-grid.is-expanded .name-card {
+    border-color: var(--border-highlight);
+    background: var(--bg-card-hover);
+}
+
+.table-wrapper.is-expanded .table-meaning {
+    white-space: normal;
+    min-width: 400px;
+    font-size: 1rem;
+    line-height: 1.8;
+}
+
+.toggle-btn.active {
+    background: var(--accent-primary) !important;
+    color: #fff !important;
+    border-color: var(--accent-primary) !important;
+}
+
 /* Responsive Breakpoints */
 @media (max-width: 768px) {
     .brand-text h1 { font-size: 1.1rem; }
