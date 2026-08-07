@@ -46,9 +46,39 @@ const toast = document.getElementById('toast');
 
 let activeItemForModal = null;
 
+// Access Gate & Password Verification
+const ALLOWED_PASSCODES = ['ASM2026', 'nsnk2026', 'aram2026', '1234'];
+
+function checkAuth() {
+    const isAuthed = sessionStorage.getItem('nsnk_auth') === 'true';
+    const authOverlay = document.getElementById('auth-overlay');
+    if (isAuthed) {
+        if (authOverlay) authOverlay.classList.remove('active');
+        if (allData.length === 0) loadDataset();
+    } else {
+        if (authOverlay) authOverlay.classList.add('active');
+    }
+}
+
+function verifyPassword() {
+    const authInput = document.getElementById('auth-input');
+    const authError = document.getElementById('auth-error');
+    const authOverlay = document.getElementById('auth-overlay');
+    
+    const val = authInput ? authInput.value.trim() : '';
+    if (ALLOWED_PASSCODES.includes(val) || ALLOWED_PASSCODES.includes(val.toUpperCase())) {
+        sessionStorage.setItem('nsnk_auth', 'true');
+        if (authError) authError.style.display = 'none';
+        if (authOverlay) authOverlay.classList.remove('active');
+        if (allData.length === 0) loadDataset();
+    } else {
+        if (authError) authError.style.display = 'block';
+    }
+}
+
 // Initialize App
 document.addEventListener('DOMContentLoaded', () => {
-    loadDataset();
+    checkAuth();
     setupEventListeners();
 });
 

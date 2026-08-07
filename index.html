@@ -19,6 +19,25 @@
 </head>
 <body>
 
+    <!-- Password Access Gate Overlay -->
+    <div id="auth-overlay" class="modal-overlay active" style="z-index: 2000; background: rgba(7, 9, 19, 0.96); backdrop-filter: blur(20px);">
+        <div class="modal-content" style="max-width: 440px; text-align: center; border-color: rgba(139, 92, 246, 0.4);">
+            <div class="brand-logo" style="margin: 0 auto 16px auto; width: 56px; height: 56px;">
+                <i data-lucide="lock" style="width:28px; height:28px;"></i>
+            </div>
+            <h2 style="font-family: var(--font-heading); font-size: 1.4rem; color: var(--text-main); margin-bottom: 6px;">Protected Access / அனுமதி தேவை</h2>
+            <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 20px;">Enter access code to view database & name meanings</p>
+            
+            <form id="auth-form" onsubmit="event.preventDefault(); verifyPassword();" style="display:flex; flex-direction:column; gap:14px;">
+                <input type="password" id="auth-input" class="search-input" style="padding-left:16px; text-align:center; font-size:1.2rem; letter-spacing:2px;" placeholder="Enter Access Code" required autofocus>
+                <div id="auth-error" style="color: #ef4444; font-size: 0.85rem; display: none;">Incorrect access code. Please try again.</div>
+                <button type="submit" class="page-btn" style="background: var(--accent-primary); color: #fff; border: none; padding: 14px; font-size: 1rem; border-radius: var(--radius-md); cursor:pointer;">
+                    Unlock Access / உள்நுழைக
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- Header Navbar -->
     <header class="navbar">
         <div class="container navbar-inner">
@@ -33,7 +52,7 @@
             </a>
             <div style="display:flex; align-items:center; gap:10px;">
                 <div class="brand-badge" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); color: #6ee7b7; font-weight:700;">
-                    v1.1
+                    v1.2
                 </div>
                 <div class="brand-badge">
                     <i data-lucide="database" style="width:14px; height:14px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>
