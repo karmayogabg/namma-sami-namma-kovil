@@ -84,9 +84,16 @@ body {
 /* Container */
 .container {
     width: 100%;
-    max-width: 1380px;
+    max-width: 1800px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 32px;
+}
+
+@media (min-width: 2200px) {
+    .container {
+        max-width: 95%;
+        padding: 0 48px;
+    }
 }
 
 /* Header & Brand Navbar */
