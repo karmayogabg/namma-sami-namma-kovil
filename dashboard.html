@@ -31,7 +31,7 @@
             <form id="auth-form" onsubmit="event.preventDefault(); verifyPassword();" style="display:flex; flex-direction:column; gap:14px;">
                 <input type="password" id="auth-input" class="search-input" style="padding-left:16px; text-align:center; font-size:1.2rem; letter-spacing:2px;" placeholder="Enter Access Code" required autofocus>
                 <div id="auth-error" style="color: #ef4444; font-size: 0.85rem; display: none;">Incorrect access code. Please try again.</div>
-                <button type="submit" class="page-btn" style="background: var(--accent-primary); color: #fff; border: none; padding: 14px; font-size: 1rem; border-radius: var(--radius-md); cursor:pointer;">
+                <button type="button" onclick="verifyPassword()" class="page-btn" style="background: var(--accent-primary); color: #fff; border: none; padding: 14px; font-size: 1rem; border-radius: var(--radius-md); cursor:pointer;">
                     Unlock Access / உள்நுழைக
                 </button>
             </form>
@@ -52,7 +52,7 @@
             </a>
             <div style="display:flex; align-items:center; gap:10px;">
                 <div class="brand-badge" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); color: #6ee7b7; font-weight:700;">
-                    v1.3
+                    v1.4
                 </div>
                 <div class="brand-badge">
                     <i data-lucide="database" style="width:14px; height:14px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>

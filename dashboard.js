@@ -53,10 +53,16 @@ function checkAuth() {
     const isAuthed = sessionStorage.getItem('nsnk_auth') === 'true';
     const authOverlay = document.getElementById('auth-overlay');
     if (isAuthed) {
-        if (authOverlay) authOverlay.classList.remove('active');
+        if (authOverlay) {
+            authOverlay.classList.remove('active');
+            authOverlay.style.display = 'none';
+        }
         if (allData.length === 0) loadDataset();
     } else {
-        if (authOverlay) authOverlay.classList.add('active');
+        if (authOverlay) {
+            authOverlay.classList.add('active');
+            authOverlay.style.display = 'flex';
+        }
     }
 }
 
@@ -69,12 +75,18 @@ function verifyPassword() {
     if (ALLOWED_PASSCODES.includes(val) || ALLOWED_PASSCODES.includes(val.toUpperCase())) {
         sessionStorage.setItem('nsnk_auth', 'true');
         if (authError) authError.style.display = 'none';
-        if (authOverlay) authOverlay.classList.remove('active');
+        if (authOverlay) {
+            authOverlay.classList.remove('active');
+            authOverlay.style.display = 'none';
+        }
         if (allData.length === 0) loadDataset();
     } else {
         if (authError) authError.style.display = 'block';
     }
 }
+
+window.verifyPassword = verifyPassword;
+window.checkAuth = checkAuth;
 
 // Initialize App
 document.addEventListener('DOMContentLoaded', () => {
@@ -304,6 +316,8 @@ function switchView(mode) {
     }
     renderPage();
 }
+
+window.switchView = switchView;
 
 // Render Current Page Grid / Table
 function renderPage() {
