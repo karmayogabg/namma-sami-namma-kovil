@@ -102,15 +102,15 @@ git init
 git config user.name "karmayogabg"
 git config user.email "karmayogabg@gmail.com"
 
-# 2. Add Remote
-git remote add origin git@github.com:karmayogabg/gitajayanthi2026.git
+# 2. Add Remote for namma-sami-namma-kovil repository
+git remote add origin git@github.com:karmayogabg/namma-sami-namma-kovil.git
 
 # 3. Commit Codebase
 git add index.html dashboard.html dashboard.css dashboard.js namma_sami_namma_kovil_full.json README.md .gitignore .agents/
 git commit -m "Add Namma Sami Namma Kovil Web Dashboard & 62k Tamil Name Meanings Dataset"
 
-# 4. Push to Branch
-git push git@github.com:karmayogabg/gitajayanthi2026.git main:namma-sami-namma-kovil
+# 4. Push to Main Branch
+git push -u origin main
 ```
 
 ---
