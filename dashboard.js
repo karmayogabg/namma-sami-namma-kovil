@@ -721,19 +721,20 @@ function confirmOcrGrades() {
 }
 window.confirmOcrGrades = confirmOcrGrades;
 
-// 1-Shot Direct Download All PDF Batches (ZIP) (v2.4)
+// 1-Shot Direct Download All PDF Batches (ZIP) (v2.7)
 function downloadAllPDFsZip() {
-    showToast('Downloading Master ZIP containing ALL 126 actual PDF files (11.95 MB)...');
+    const zipUrl = new URL('NSNK_Master_126_PDF_Batches_ZIP.zip', window.location.href).href;
+    showToast('Downloading Master ZIP containing ALL 126 PDF files (11.97 MB)...');
     
     const a = document.createElement("a");
-    a.href = "NSNK_Master_126_PDF_Batches_ZIP.zip";
+    a.href = zipUrl;
     a.download = "NSNK_Master_126_PDF_Batches_ZIP.zip";
+    a.target = "_blank";
     document.body.appendChild(a);
     a.click();
-    document.body.removeChild(a);
 
     setTimeout(() => {
-        showToast('Master 1-Shot ZIP Download Started! Contains 126 actual PDF files.');
-    }, 1000);
+        if (a.parentNode) document.body.removeChild(a);
+    }, 300);
 }
 window.downloadAllPDFsZip = downloadAllPDFsZip;
