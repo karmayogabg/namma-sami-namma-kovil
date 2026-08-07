@@ -1004,3 +1004,68 @@ function updateThemeUI(theme) {
 
 // Initialize theme immediately
 initTheme();
+
+// Fullscreen Chart Modal Engine (v4.4)
+let fullscreenChartInst = null;
+
+function openChartFullscreen(type, title) {
+    const modal = document.getElementById('chart-fullscreen-modal');
+    const titleEl = document.getElementById('fullscreen-chart-title');
+    const canvas = document.getElementById('chart-fullscreen-canvas');
+
+    if (!modal || !canvas) return;
+
+    if (titleEl) titleEl.innerHTML = `<i data-lucide="bar-chart-2" style="color:#a78bfa;"></i> ${title}`;
+    modal.classList.add('active');
+
+    // Get source chart instance
+    let sourceChart = null;
+    if (type === 'region') sourceChart = chartRegionInst;
+    else if (type === 'district') sourceChart = chartDistrictInst;
+    else if (type === 'union') sourceChart = chartUnionInst;
+    else if (type === 'grade') sourceChart = chartGradeInst;
+
+    if (!sourceChart) return;
+
+    if (fullscreenChartInst) fullscreenChartInst.destroy();
+
+    fullscreenChartInst = new Chart(canvas, {
+        type: sourceChart.config.type,
+        data: JSON.parse(JSON.stringify(sourceChart.config.data)),
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: true, position: 'top', labels: { color: '#f8fafc', font: { size: 12 } } },
+                tooltip: sourceChart.config.options.plugins.tooltip
+            },
+            onClick: (e, elements) => {
+                if (elements.length > 0) {
+                    const idx = elements[0].index;
+                    const label = sourceChart.config.data.labels[idx];
+                    closeChartFullscreen();
+                    if (type === 'grade') {
+                        const gradesMap = ['A', 'B', 'C', 'Ungraded'];
+                        applyChartFilter('grade', gradesMap[idx] || label);
+                    } else {
+                        applyChartFilter(type, label);
+                    }
+                }
+            }
+        }
+    });
+
+    if (window.lucide) lucide.createIcons();
+    showToast(`Expanded ${title} in Fullscreen Mode!`);
+}
+window.openChartFullscreen = openChartFullscreen;
+
+function closeChartFullscreen() {
+    const modal = document.getElementById('chart-fullscreen-modal');
+    if (modal) modal.classList.remove('active');
+    if (fullscreenChartInst) {
+        fullscreenChartInst.destroy();
+        fullscreenChartInst = null;
+    }
+}
+window.closeChartFullscreen = closeChartFullscreen;

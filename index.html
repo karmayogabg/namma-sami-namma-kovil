@@ -64,7 +64,7 @@
                     <i data-lucide="moon" id="theme-icon" style="width:14px; height:14px; vertical-align:middle;"></i> <span id="theme-text">Dark</span>
                 </button>
                 <div class="brand-badge" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); color: #6ee7b7; font-weight:700;">
-                    v4.3
+                    v4.4
                 </div>
                 <div class="brand-badge">
                     <i data-lucide="database" style="width:14px; height:14px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>
@@ -167,7 +167,12 @@
                 <div class="chart-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:16px;">
                     <!-- Chart 1: Mandalam (Region) Person Count -->
                     <div class="chart-card" style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px;">
-                        <h4 style="margin:0 0 10px 0; font-size:0.9rem; color:#c4b5fd;">மண்டலம் (Region) Person Counts</h4>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                            <h4 style="margin:0; font-size:0.9rem; color:#c4b5fd;">மண்டலம் (Region) Person Counts</h4>
+                            <button class="toggle-btn" style="padding:3px 8px; font-size:0.75rem; background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.15);" onclick="openChartFullscreen('region', 'மண்டலம் (Region) Person Counts')">
+                                <i data-lucide="maximize-2" style="width:13px; height:13px; vertical-align:middle;"></i> Fullscreen
+                            </button>
+                        </div>
                         <div style="position:relative; height:200px;">
                             <canvas id="chart-region"></canvas>
                         </div>
@@ -175,7 +180,12 @@
 
                     <!-- Chart 2: Mavattam (District) Headcount Ranking -->
                     <div class="chart-card" style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px;">
-                        <h4 style="margin:0 0 10px 0; font-size:0.9rem; color:#6ee7b7;">Top 10 மாவட்டம் (District) Headcounts</h4>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                            <h4 style="margin:0; font-size:0.9rem; color:#6ee7b7;">Top 10 மாவட்டம் (District) Headcounts</h4>
+                            <button class="toggle-btn" style="padding:3px 8px; font-size:0.75rem; background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.15);" onclick="openChartFullscreen('district', 'Top 10 மாவட்டம் (District) Headcounts')">
+                                <i data-lucide="maximize-2" style="width:13px; height:13px; vertical-align:middle;"></i> Fullscreen
+                            </button>
+                        </div>
                         <div style="position:relative; height:200px;">
                             <canvas id="chart-district"></canvas>
                         </div>
@@ -183,7 +193,12 @@
 
                     <!-- Chart 3: Ondriyam (Union) Headcount Ranking -->
                     <div class="chart-card" style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px;">
-                        <h4 style="margin:0 0 10px 0; font-size:0.9rem; color:#93c5fd;">Top 10 ஒன்றியம் (Union) Headcounts</h4>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                            <h4 style="margin:0; font-size:0.9rem; color:#93c5fd;">Top 10 ஒன்றியம் (Union) Headcounts</h4>
+                            <button class="toggle-btn" style="padding:3px 8px; font-size:0.75rem; background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.15);" onclick="openChartFullscreen('union', 'Top 10 ஒன்றியம் (Union) Headcounts')">
+                                <i data-lucide="maximize-2" style="width:13px; height:13px; vertical-align:middle;"></i> Fullscreen
+                            </button>
+                        </div>
                         <div style="position:relative; height:200px;">
                             <canvas id="chart-union"></canvas>
                         </div>
@@ -191,7 +206,12 @@
 
                     <!-- Chart 4: Person Classification Grade Donut -->
                     <div class="chart-card" style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px;">
-                        <h4 style="margin:0 0 10px 0; font-size:0.9rem; color:#fde047;">Grade Distribution (A/B/C Classification)</h4>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                            <h4 style="margin:0; font-size:0.9rem; color:#fde047;">Grade Distribution (A/B/C Classification)</h4>
+                            <button class="toggle-btn" style="padding:3px 8px; font-size:0.75rem; background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.15);" onclick="openChartFullscreen('grade', 'Grade Distribution (A/B/C Classification)')">
+                                <i data-lucide="maximize-2" style="width:13px; height:13px; vertical-align:middle;"></i> Fullscreen
+                            </button>
+                        </div>
                         <div style="position:relative; height:200px;">
                             <canvas id="chart-grade"></canvas>
                         </div>
@@ -385,6 +405,23 @@
                         <i data-lucide="check" style="width:16px; height:16px; vertical-align:middle;"></i> Confirm & Save to Database
                     </button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fullscreen Chart Modal -->
+    <div id="chart-fullscreen-modal" class="modal-overlay" style="z-index: 4000;">
+        <div class="modal-content" style="max-width: 92vw; width: 1100px; height: 85vh; display: flex; flex-direction: column; padding: 20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border-color); padding-bottom:10px;">
+                <h3 id="fullscreen-chart-title" style="margin:0; font-family:'Outfit'; color:var(--text-main); font-size:1.25rem; display:flex; align-items:center; gap:8px;">
+                    <i data-lucide="bar-chart-2" style="color:#a78bfa;"></i> Fullscreen Analytics Chart
+                </h3>
+                <button class="modal-close" style="position:static;" onclick="closeChartFullscreen()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div style="flex:1; position:relative; width:100%; height:100%;">
+                <canvas id="chart-fullscreen-canvas"></canvas>
             </div>
         </div>
     </div>
