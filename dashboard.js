@@ -283,7 +283,29 @@ function applyFilters() {
     renderPage();
 }
 
-// Render Current Page Grid
+let currentView = 'cards'; // 'cards' or 'table'
+
+function switchView(mode) {
+    currentView = mode;
+    const cardsBtn = document.getElementById('view-cards-btn');
+    const tableBtn = document.getElementById('view-table-btn');
+    const tableContainer = document.getElementById('table-container');
+
+    if (mode === 'table') {
+        if (cardsBtn) cardsBtn.classList.remove('active');
+        if (tableBtn) tableBtn.classList.add('active');
+        cardsGrid.style.display = 'none';
+        if (tableContainer) tableContainer.style.display = 'block';
+    } else {
+        if (tableBtn) tableBtn.classList.remove('active');
+        if (cardsBtn) cardsBtn.classList.add('active');
+        if (tableContainer) tableContainer.style.display = 'none';
+        cardsGrid.style.display = 'grid';
+    }
+    renderPage();
+}
+
+// Render Current Page Grid / Table
 function renderPage() {
     const totalItems = filteredData.length;
     const totalPages = Math.ceil(totalItems / pageSize) || 1;
@@ -296,49 +318,109 @@ function renderPage() {
     const endIdx = startIdx + pageSize;
     const pageItems = filteredData.slice(startIdx, endIdx);
 
-    cardsGrid.innerHTML = '';
+    const tableContainer = document.getElementById('table-container');
 
-    if (pageItems.length === 0) {
-        cardsGrid.innerHTML = `
-            <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-muted);">
-                <i data-lucide="search-x" style="width:48px; height:48px; margin-bottom:12px; opacity:0.5;"></i>
-                <h3 style="font-size:1.2rem; color:var(--text-main); margin-bottom:6px;">No names found</h3>
-                <p>Try clearing filters or adjusting your search phrase.</p>
-            </div>
-        `;
-    } else {
-        pageItems.forEach(item => {
-            const card = document.createElement('div');
-            card.className = 'name-card';
-            card.onclick = () => openModal(item);
+    if (currentView === 'table') {
+        cardsGrid.style.display = 'none';
+        if (tableContainer) tableContainer.style.display = 'block';
 
-            const displayMeaning = item.meaning || 'தமிழ் பொருள் இல்லை';
-
-            card.innerHTML = `
-                <div>
-                    <div class="card-header">
-                        <div class="card-title">${escapeHtml(item.name)}</div>
-                        ${item.district ? `<div class="card-tag">${escapeHtml(item.district)}</div>` : ''}
-                    </div>
-
-                    <div class="card-details">
-                        ${item.region ? `<div class="detail-row"><i data-lucide="map" style="width:14px; height:14px;"></i> ${escapeHtml(item.region)}</div>` : ''}
-                        ${item.union ? `<div class="detail-row"><i data-lucide="navigation" style="width:14px; height:14px;"></i> ${escapeHtml(item.union)}</div>` : ''}
-                        ${item.mobile ? `<div class="detail-row"><i data-lucide="phone" style="width:14px; height:14px;"></i> ${escapeHtml(item.mobile)}</div>` : ''}
-                    </div>
-
-                    <div class="card-meaning">${escapeHtml(displayMeaning)}</div>
-                </div>
-
-                <div class="card-footer">
-                    <span style="font-size:0.75rem; color:var(--text-muted);">Click to view details</span>
-                    <button class="copy-btn" onclick="event.stopPropagation(); copyToClipboard('${escapeJsString(displayMeaning)}')">
-                        <i data-lucide="copy" style="width:14px; height:14px;"></i> Copy
-                    </button>
+        if (pageItems.length === 0) {
+            tableContainer.innerHTML = `
+                <div style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
+                    <i data-lucide="search-x" style="width:48px; height:48px; margin-bottom:12px; opacity:0.5;"></i>
+                    <h3 style="font-size:1.2rem; color:var(--text-main); margin-bottom:6px;">No names found</h3>
+                    <p>Try clearing filters or adjusting your search phrase.</p>
                 </div>
             `;
-            cardsGrid.appendChild(card);
-        });
+        } else {
+            let tableHtml = `
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>பெயர் (Name)</th>
+                            <th>மண்டலம் (Region)</th>
+                            <th>மாவட்டம் (District)</th>
+                            <th>ஒன்றியம் (Union)</th>
+                            <th>தொடர்பு எண்</th>
+                            <th>தமிழ் பெயர் விளக்கம் (Meaning Briefing)</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            pageItems.forEach((item, idx) => {
+                const displayMeaning = item.meaning || 'தமிழ் பொருள் இல்லை';
+                const globalNum = startIdx + idx + 1;
+                tableHtml += `
+                    <tr onclick="openModal(allData[${allData.indexOf(item)}])">
+                        <td style="color:var(--text-muted); font-size:0.8rem;">${globalNum}</td>
+                        <td class="table-name">${escapeHtml(item.name)}</td>
+                        <td>${escapeHtml(item.region)}</td>
+                        <td><span class="card-tag">${escapeHtml(item.district)}</span></td>
+                        <td>${escapeHtml(item.union)}</td>
+                        <td>${escapeHtml(item.mobile)}</td>
+                        <td class="table-meaning">${escapeHtml(displayMeaning)}</td>
+                        <td>
+                            <button class="copy-btn" onclick="event.stopPropagation(); copyToClipboard('${escapeJsString(displayMeaning)}')">
+                                <i data-lucide="copy" style="width:14px; height:14px;"></i> Copy
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tableHtml += `</tbody></table>`;
+            tableContainer.innerHTML = tableHtml;
+        }
+    } else {
+        if (tableContainer) tableContainer.style.display = 'none';
+        cardsGrid.style.display = 'grid';
+        cardsGrid.innerHTML = '';
+
+        if (pageItems.length === 0) {
+            cardsGrid.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-muted);">
+                    <i data-lucide="search-x" style="width:48px; height:48px; margin-bottom:12px; opacity:0.5;"></i>
+                    <h3 style="font-size:1.2rem; color:var(--text-main); margin-bottom:6px;">No names found</h3>
+                    <p>Try clearing filters or adjusting your search phrase.</p>
+                </div>
+            `;
+        } else {
+            pageItems.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'name-card';
+                card.onclick = () => openModal(item);
+
+                const displayMeaning = item.meaning || 'தமிழ் பொருள் இல்லை';
+
+                card.innerHTML = `
+                    <div>
+                        <div class="card-header">
+                            <div class="card-title">${escapeHtml(item.name)}</div>
+                            ${item.district ? `<div class="card-tag">${escapeHtml(item.district)}</div>` : ''}
+                        </div>
+
+                        <div class="card-details">
+                            ${item.region ? `<div class="detail-row"><i data-lucide="map" style="width:14px; height:14px;"></i> ${escapeHtml(item.region)}</div>` : ''}
+                            ${item.union ? `<div class="detail-row"><i data-lucide="navigation" style="width:14px; height:14px;"></i> ${escapeHtml(item.union)}</div>` : ''}
+                            ${item.mobile ? `<div class="detail-row"><i data-lucide="phone" style="width:14px; height:14px;"></i> ${escapeHtml(item.mobile)}</div>` : ''}
+                        </div>
+
+                        <div class="card-meaning">${escapeHtml(displayMeaning)}</div>
+                    </div>
+
+                    <div class="card-footer">
+                        <span style="font-size:0.75rem; color:var(--text-muted);">Click to view details</span>
+                        <button class="copy-btn" onclick="event.stopPropagation(); copyToClipboard('${escapeJsString(displayMeaning)}')">
+                            <i data-lucide="copy" style="width:14px; height:14px;"></i> Copy
+                        </button>
+                    </div>
+                `;
+                cardsGrid.appendChild(card);
+            });
+        }
     }
 
     // Update Pagination UI

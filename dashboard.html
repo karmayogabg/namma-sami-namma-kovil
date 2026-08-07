@@ -52,7 +52,7 @@
             </a>
             <div style="display:flex; align-items:center; gap:10px;">
                 <div class="brand-badge" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); color: #6ee7b7; font-weight:700;">
-                    v1.2
+                    v1.3
                 </div>
                 <div class="brand-badge">
                     <i data-lucide="database" style="width:14px; height:14px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>
@@ -157,13 +157,20 @@
             </div>
         </section>
 
-        <!-- Results Summary Bar -->
+        <!-- Results Summary & View Switcher Bar -->
         <div class="results-header">
             <div class="results-count" id="results-count">
                 Showing <strong>0</strong> names
             </div>
-            <div style="font-size: 0.85rem; color: var(--text-muted);">
-                Click any name card to view full detail & copy Tamil meaning
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div class="view-toggle">
+                    <button id="view-cards-btn" class="toggle-btn active" onclick="switchView('cards')">
+                        <i data-lucide="layout-grid" style="width:15px; height:15px;"></i> Cards
+                    </button>
+                    <button id="view-table-btn" class="toggle-btn" onclick="switchView('table')">
+                        <i data-lucide="table" style="width:15px; height:15px;"></i> Table
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -173,8 +180,11 @@
             <p>Loading 62,526 Tamil Name Meanings dataset...</p>
         </div>
 
-        <!-- Data Cards Grid -->
+        <!-- Data Cards Grid View -->
         <div id="cards-grid" class="cards-grid" style="display: none;"></div>
+
+        <!-- Data Table View -->
+        <div id="table-container" class="table-wrapper" style="display: none;"></div>
 
         <!-- Pagination Bar -->
         <div id="pagination" class="pagination" style="display: none;">
