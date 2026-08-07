@@ -17,10 +17,57 @@
         body { font-family: 'Noto Sans Tamil', -apple-system, BlinkMacSystemFont, sans-serif; padding: 10px; background: #f8fafc; color: #0f172a; margin: 0; font-size: 11px; }
 
         /* Control Bar (Hidden when printing) */
-        .no-print { background: #0f172a; color: #fff; padding: 12px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-        .no-print button { background: #8b5cf6; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; }
+        .no-print {
+            background: #0f172a;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .no-print-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            flex: 1 1 auto;
+        }
+        .no-print-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+        }
+        .no-print button {
+            background: #8b5cf6;
+            color: #fff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
         .no-print button:hover { background: #7c3aed; }
-        .no-print select { padding: 8px 12px; border-radius: 6px; border: 1px solid #475569; background: #1e293b; color: #fff; font-size: 0.9rem; }
+        .no-print select {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #475569;
+            background: #1e293b;
+            color: #fff;
+            font-size: 0.85rem;
+            max-width: 320px;
+        }
 
         /* Printable Page Frame */
         .page-container { background: #fff; width: 210mm; min-height: 297mm; margin: 0 auto 20px auto; padding: 10mm; border: 1px solid #cbd5e1; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); page-break-after: always; position: relative; }
@@ -67,17 +114,19 @@
 
     <!-- Control Bar (Screen Only) -->
     <div class="no-print">
-        <div style="display:flex; align-items:center; gap:12px;">
-            <h3 style="margin:0; font-family:'Outfit'; font-size:1.1rem; color:#f8fafc;">Namma Sami Namma Kovil - PDF Caller Sheets</h3>
+        <div class="no-print-left">
+            <h3 style="margin:0; font-family:'Outfit'; font-size:1.05rem; color:#f8fafc; white-space:nowrap;">Namma Sami Namma Kovil</h3>
             <select id="batch-select" onchange="loadBatch(this.value)">
                 <option value="0">Batch #001 (Persons #1 to #500)</option>
             </select>
         </div>
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <div class="no-print-right">
             <button onclick="downloadAllPDFsZip()" style="background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); color: #6ee7b7;">
-                <i data-lucide="archive"></i> Download All 126 PDF Batches (ZIP) 📦
+                <i data-lucide="archive" style="width:15px; height:15px;"></i> Download All 126 PDFs (ZIP) 📦
             </button>
-            <button onclick="window.print()"><i data-lucide="printer"></i> Print / Save Batch as PDF</button>
+            <button onclick="window.print()">
+                <i data-lucide="printer" style="width:15px; height:15px;"></i> Print / Save Batch as PDF
+            </button>
         </div>
     </div>
 
