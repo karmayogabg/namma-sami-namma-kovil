@@ -122,3 +122,18 @@ To verify the app locally:
 npx serve .
 ```
 Open `http://localhost:3000` to test search, Tamil letter quick filters, and detail modal copy functionality.
+
+---
+
+## 6. Page Versioning Protocol (`v1.0`, `v1.1`, ...)
+
+Whenever any update, bug fix, or feature enhancement is made to the website, codebase, or dataset:
+1. **Increment Version**: Increment the version number badge (e.g. `v1.0` ➔ `v1.1` ➔ `v1.2`).
+2. **Update HTML**: Update the version badge in the navbar header of both `index.html` and `dashboard.html`:
+   ```html
+   <div class="brand-badge" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); color: #6ee7b7; font-weight:700;">
+       v1.1
+   </div>
+   ```
+3. **Commit Message**: Include the version number in git commit message (e.g. `Bump version to v1.1`).
+
