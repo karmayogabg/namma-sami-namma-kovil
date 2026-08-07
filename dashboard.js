@@ -92,7 +92,12 @@ async function loadDataset() {
 
 // Populate Region & District Dropdowns
 function populateFilters() {
-    const regions = Array.from(new Set(allData.map(d => d.region).filter(Boolean))).sort();
+    const regions = Array.from(new Set(allData.map(d => d.region).filter(Boolean))).sort((a, b) => {
+        const numA = parseInt(a, 10) || 0;
+        const numB = parseInt(b, 10) || 0;
+        if (numA !== numB) return numA - numB;
+        return a.localeCompare(b);
+    });
     const districts = Array.from(new Set(allData.map(d => d.district).filter(Boolean))).sort();
 
     regions.forEach(r => {
