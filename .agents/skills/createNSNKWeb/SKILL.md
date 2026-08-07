@@ -127,7 +127,10 @@ Open `http://localhost:3000` to test search, Tamil letter quick filters, and det
 
 ## 6. Version History & Upgrade Protocol
 
-Whenever any update is made to the dataset, UI layout, components, or features, **you MUST increment the navbar version badge** (`v1.0` ➔ `v1.1` ... `v4.4`).
+Whenever any update is made to the dataset, UI layout, components, or features, **you MUST increment the navbar version badge** (`v1.0` ➔ `v1.1` ... `v4.5`).
+
+> [!IMPORTANT]
+> **Mandatory Publishing Output Requirement**: Whenever publishing to GitHub or finishing a release, **you MUST explicitly display the published version badge (e.g. `v4.5`) prominently at the end of your response to the user**.
 
 ### Version Release Log:
 - **`v1.0` - `v1.7`**: Core Glassmorphic Web Dashboard, 62,526 Tamil Name Meanings dataset, search engine, Tamil prefix letter chips, and SheetJS Excel Export (`.xlsx`).
@@ -139,10 +142,11 @@ Whenever any update is made to the dataset, UI layout, components, or features, 
 - **`v4.2`**: Dark / Light Theme Toggle System (`[ 🌙 Dark / ☀️ Light ]`) with CSS design system tokens and `localStorage` persistence.
 - **`v4.3`**: Ultra-wide Screen Scaling & Fluid Layout (`max-width: 1800px` & `95%` container width) for 1080p, 1440p, 4K, and ultrawide monitors.
 - **`v4.4`**: Fullscreen Pop-Up Chart Modal (`[ ⛶ Fullscreen ]` / `[ ✖ Close ]`) on all analytics chart cards with preserved click-to-filter interactivity.
+- **`v4.5`**: Embedded Noto Sans Tamil TTF fonts across all 126 PDF batch files and master ZIP package (`NSNK_Master_126_PDF_Batches_ZIP.zip`), eliminating UTF-8 font corruption on PDF caller sheets.
 
 ---
 
-## 7. Core System Specs & Architecture (v4.4 Summary)
+## 7. Core System Specs & Architecture (v4.5 Summary)
 
 ### 1. 3-Question Grading & Classification Engine
 - **Q1**: Meaning of your Name? *(உங்கள் பெயரின் பொருள் தெரியுமா?)*
@@ -153,9 +157,10 @@ Whenever any update is made to the dataset, UI layout, components, or features, 
 
 ### 2. Sequential PDF Batch Generator (`build_real_pdf_zip.js` & `print_sheets.html`)
 - **Total Batches**: 126 PDF files covering all 62,521 persons in exact sequential JSON order.
+- **Font Rendering**: Native Noto Sans Tamil TTF Unicode font embedding for clean Tamil script rendering.
 - **Density**: 20 persons per A4 page (25 pages / 500 persons per PDF file).
 - **Dual Tracking Code**: Barcode SVG + `CODE: NSNK-B[Batch]-P[Page]`.
-- **Master ZIP**: Hosted at `NSNK_Master_126_PDF_Batches_ZIP.zip` (11.97 MB).
+- **Master ZIP**: Hosted at `NSNK_Master_126_PDF_Batches_ZIP.zip` (12.79 MB).
 
 ### 3. AI Photo OCR Scanner (`process_photo_ocr.js`)
 - Utilizes **Gemini 1.5 Flash Vision API** (`gemini-1.5-flash:generateContent`) to scan filled caller sheet photos (`sample_marked_sheet.jpg`), decode barcodes, read row numbers, extract marked bubbles `(A)(B)(C)`, and auto-calculate grades.
