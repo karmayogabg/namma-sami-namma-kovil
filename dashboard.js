@@ -1106,23 +1106,27 @@ function initCallerAssignments() {
 }
 window.initCallerAssignments = initCallerAssignments;
 
-function saveCallerAssignment(batchIdx, nameVal) {
-    const cleanName = (nameVal || '').trim();
+function saveCallerAssignment(batchIdx, field, val) {
+    const cleanVal = (val || '').trim();
     if (!callerAssignments) callerAssignments = {};
-    if (cleanName) {
-        callerAssignments[batchIdx] = {
-            callerName: cleanName,
-            updatedAt: new Date().toISOString()
-        };
-    } else {
+    if (!callerAssignments[batchIdx]) {
+        callerAssignments[batchIdx] = {};
+    }
+    
+    callerAssignments[batchIdx][field] = cleanVal;
+    callerAssignments[batchIdx].updatedAt = new Date().toISOString();
+
+    if (!callerAssignments[batchIdx].callerName && !callerAssignments[batchIdx].fullTimeWorker) {
         delete callerAssignments[batchIdx];
     }
+
     try {
         localStorage.setItem('nsnk_caller_assignments', JSON.stringify(callerAssignments));
     } catch(e) {}
     
     updateOverallProgressStats();
-    showToast(`Saved assignment for Batch #${String(batchIdx + 1).padStart(3, '0')}: ${cleanName || 'Unassigned'}`);
+    const label = field === 'fullTimeWorker' ? 'Full-Time Worker' : 'Volunteer Caller';
+    showToast(`Saved ${label} for Batch #${String(batchIdx + 1).padStart(3, '0')}: ${cleanVal || 'Unassigned'}`);
 }
 window.saveCallerAssignment = saveCallerAssignment;
 
@@ -1212,13 +1216,14 @@ function renderCallerManagerModal() {
 
         const assignment = callerAssignments[b] || {};
         const callerName = assignment.callerName || '';
+        const fullTimeWorker = assignment.fullTimeWorker || '';
 
         // Status Filter
         if (statusVal !== 'all' && statusVal !== statusKey) continue;
 
-        // Search Filter (by caller name or batch number)
+        // Search Filter (by caller name, full time worker, or batch number)
         const batchNumStr = String(b + 1).padStart(3, '0');
-        const searchTarget = `batch #${batchNumStr} ${b + 1} ${callerName}`.toLowerCase();
+        const searchTarget = `batch #${batchNumStr} ${b + 1} ${callerName} ${fullTimeWorker}`.toLowerCase();
         if (searchVal && !searchTarget.includes(searchVal)) continue;
 
         matchCount++;
@@ -1239,12 +1244,21 @@ function renderCallerManagerModal() {
                     ${statusBadge}
                 </div>
 
-                <!-- Caller Assignment Input -->
-                <div>
-                    <label style="font-size:0.75rem; color:var(--text-muted); font-weight:600; display:block; margin-bottom:4px;">Assigned Volunteer Caller:</label>
-                    <div class="caller-input-box">
-                        <i data-lucide="user" style="width:14px; height:14px; color:#a78bfa;"></i>
-                        <input type="text" value="${escapeHtml(callerName)}" placeholder="Type Volunteer Name & Press Enter..." onchange="saveCallerAssignment(${b}, this.value)">
+                <!-- Two-Column Editable Assignment Inputs -->
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <div>
+                        <label style="font-size:0.73rem; color:var(--text-muted); font-weight:600; display:block; margin-bottom:4px;">Assigned Volunteer Caller:</label>
+                        <div class="caller-input-box">
+                            <i data-lucide="user-check" style="width:13px; height:13px; color:#a78bfa;"></i>
+                            <input type="text" value="${escapeHtml(callerName)}" placeholder="Volunteer Name..." onchange="saveCallerAssignment(${b}, 'callerName', this.value)">
+                        </div>
+                    </div>
+                    <div>
+                        <label style="font-size:0.73rem; color:var(--text-muted); font-weight:600; display:block; margin-bottom:4px;">Assigned Full-Time Worker:</label>
+                        <div class="caller-input-box">
+                            <i data-lucide="briefcase" style="width:13px; height:13px; color:#38bdf8;"></i>
+                            <input type="text" value="${escapeHtml(fullTimeWorker)}" placeholder="Full-Time Worker..." onchange="saveCallerAssignment(${b}, 'fullTimeWorker', this.value)">
+                        </div>
                     </div>
                 </div>
 
