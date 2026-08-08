@@ -6,3 +6,5 @@ node_modules/
 *.xlsx
 meanings_cache.json
 
+chrome/
+chrome/

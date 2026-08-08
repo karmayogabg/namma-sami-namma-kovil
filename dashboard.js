@@ -657,15 +657,16 @@ function handlePhotoUpload(input) {
         const base64Img = e.target.result;
         if (previewImg) previewImg.src = base64Img;
 
-        // AI Vision scanning processing
-        setTimeout(() => {
+        // Ensure Image is completely decoded in browser memory before analyzing
+        const scanImg = new Image();
+        scanImg.onload = function() {
             if (loadingState) loadingState.style.display = 'none';
             if (resultState) resultState.style.display = 'block';
 
             let scannedResult = null;
-            if (previewImg && typeof analyzeSheetImagePixels === 'function') {
+            if (typeof analyzeSheetImagePixels === 'function') {
                 try {
-                    scannedResult = analyzeSheetImagePixels(previewImg);
+                    scannedResult = analyzeSheetImagePixels(scanImg);
                 } catch(err) {
                     console.warn('Canvas pixel OCR analyzer error:', err);
                 }
@@ -681,37 +682,33 @@ function handlePhotoUpload(input) {
                 batchInfoEl.innerHTML = `🎯 Detected: Batch #${detectedBatchNum} • Page ${detectedPageNum} (${detectedRange}) • Code: ${detectedCode}`;
             }
 
-            const sampleScannedRows = (scannedResult && scannedResult.scannedRows && scannedResult.scannedRows.length > 0) 
-                ? scannedResult.scannedRows 
-                : [
-                    { rowIdx: 1, phone: "7010853258", q1: "A", q2: "B", q3: "A", overall: "A" },
-                    { rowIdx: 2, phone: "9363786428", q1: "A", q2: "A", q3: "B", overall: "A" },
-                    { rowIdx: 3, phone: "9363758615", q1: "B", q2: "B", q3: "C", overall: "B" },
-                    { rowIdx: 4, phone: "7358064179", q1: "A", q2: "B", q3: "A", overall: "A" },
-                    { rowIdx: 5, phone: "6380506458", q1: "C", q2: "B", q3: "B", overall: "B" }
-                ];
-
+            const sampleScannedRows = (scannedResult && scannedResult.scannedRows) ? scannedResult.scannedRows : [];
             pendingOcrScannedData = sampleScannedRows;
 
             const tbody = document.getElementById('ocr-scanned-rows-body');
             if (tbody) {
                 let html = '';
-                sampleScannedRows.forEach(r => {
-                    html += `
-                        <tr>
-                            <td>#${r.rowIdx}</td>
-                            <td>${r.phone}</td>
-                            <td><strong>${r.q1}</strong></td>
-                            <td><strong>${r.q2}</strong></td>
-                            <td><strong>${r.q3}</strong></td>
-                            <td>${getGradeBadgeHtml({ overallGrade: r.overall })}</td>
-                        </tr>
-                    `;
-                });
+                if (sampleScannedRows.length === 0) {
+                    html = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:20px;">No pen markings detected on sheet rows.</td></tr>`;
+                } else {
+                    sampleScannedRows.forEach(r => {
+                        html += `
+                            <tr>
+                                <td>#${r.rowIdx}</td>
+                                <td>${r.phone}</td>
+                                <td><strong>${r.q1}</strong></td>
+                                <td><strong>${r.q2}</strong></td>
+                                <td><strong>${r.q3}</strong></td>
+                                <td>${getGradeBadgeHtml({ overallGrade: r.overall })}</td>
+                            </tr>
+                        `;
+                    });
+                }
                 tbody.innerHTML = html;
             }
             if (window.lucide) lucide.createIcons();
-        }, 1000);
+        };
+        scanImg.src = base64Img;
     };
     reader.readAsDataURL(file);
 }
