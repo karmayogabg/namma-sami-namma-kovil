@@ -657,10 +657,10 @@ function handlePhotoUpload(input) {
             if (loadingState) loadingState.style.display = 'none';
             if (resultState) resultState.style.display = 'block';
 
-            const detectedCode = "NSNK-B001-P04";
+            const detectedCode = "NSNK-B001-P01";
             const detectedBatchNum = "001";
-            const detectedPageNum = "04";
-            const detectedRange = "Persons #61 to #80";
+            const detectedPageNum = "01";
+            const detectedRange = "Persons #1 to #20";
 
             const batchInfoEl = document.getElementById('ocr-batch-info');
             if (batchInfoEl) {
@@ -668,11 +668,11 @@ function handlePhotoUpload(input) {
             }
 
             const sampleScannedRows = [
-                { rowIdx: 1, phone: "9876543210", q1: "A", q2: "A", q3: "B", overall: "A" },
-                { rowIdx: 2, phone: "9876543211", q1: "A", q2: "B", q3: "A", overall: "A" },
-                { rowIdx: 3, phone: "9876543212", q1: "B", q2: "B", q3: "C", overall: "B" },
-                { rowIdx: 4, phone: "9876543213", q1: "A", q2: "A", q3: "A", overall: "A" },
-                { rowIdx: 5, phone: "9876543214", q1: "C", q2: "C", q3: "B", overall: "C" }
+                { rowIdx: 1, phone: "7010853258", q1: "A", q2: "B", q3: "A", overall: "A" },
+                { rowIdx: 2, phone: "9363786428", q1: "A", q2: "A", q3: "B", overall: "A" },
+                { rowIdx: 3, phone: "9363758615", q1: "B", q2: "B", q3: "C", overall: "B" },
+                { rowIdx: 4, phone: "7358064179", q1: "A", q2: "B", q3: "A", overall: "A" },
+                { rowIdx: 5, phone: "6380506458", q1: "C", q2: "B", q3: "B", overall: "B" }
             ];
 
             pendingOcrScannedData = sampleScannedRows;
