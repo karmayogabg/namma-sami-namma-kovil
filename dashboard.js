@@ -441,12 +441,12 @@ function exportToExcel() {
         'S.No': idx + 1,
         'Name / பெயர்': item.name || '',
         'Mobile / தொடர்பு எண்': item.mobile || '',
-        'Grade / தரம்': item.grade || (item.survey?.overallGrade || 'Ungraded'),
         'Region / மண்டலம்': item.region || '',
         'District / மாவட்டம்': item.district || '',
         'Union / ஒன்றியம்': item.union || '',
         'Pincode / அஞ்சல் குறியீடு': item.pincode || '',
-        'Tamil Meaning / தமிழ் பெயர் விளக்கம்': item.meaning || ''
+        'Tamil Meaning / தமிழ் பெயர் விளக்கம்': item.meaning || '',
+        'Grade / தரம்': item.grade || (item.survey?.overallGrade || 'Ungraded')
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(exportRows);
