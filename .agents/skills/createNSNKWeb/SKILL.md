@@ -170,10 +170,11 @@ Whenever any update is made to the dataset, UI layout, components, or features, 
 - **`v8.3`**: Streamlined Core Dashboard & Sample Cleanup (removed `testsample.jpg` button & asset files, removed Caller Assignments Manager modal/buttons to streamline UI focus on core survey explorer, printable call sheets, and AI OMR scanning).
 - **`v8.4`**: Interactive Grade Breakdown Bar (`Grade A`, `Grade B`, `Grade C`, `UnClassified` counts & percentages display directly below the Overall Survey Completion Progress bar with 1-click filter interactivity).
 - **`v8.5`**: Customized Grade Classification Labels (updated Grade A = *Interested to know more*, Grade B = *Interested but don't have time*, Grade C = *Not interested*, UnClassified across UI chips, dropdown filters, tooltips, and analytics charts).
+- **`v8.6`**: Per-Record Manual Grade Assignment Engine (added interactive Grade Pickers to every grid card, table row, and detail popup modal with automatic `localStorage` survey persistence and live progress & analytics sync).
 
 ---
 
-## 7. Core System Specs & Architecture (v8.5 Summary)
+## 7. Core System Specs & Architecture (v8.6 Summary)
 
 ### 1. 3-Question Grading & Classification Engine
 - **Q1**: Meaning of your Name? *(உங்கள் பெயரின் பொருள் தெரியுமா?)*

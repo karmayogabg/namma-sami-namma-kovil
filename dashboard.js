@@ -497,12 +497,22 @@ function renderPage() {
             pageItems.forEach((item, idx) => {
                 const displayMeaning = item.meaning || 'தமிழ் பொருள் இல்லை';
                 const globalNum = startIdx + idx + 1;
-                const gradeBadge = getGradeBadgeHtml(item.survey);
+                const allDataIndex = allData.indexOf(item);
+                const survey = item.survey || {};
+                const currentGrade = survey.overallGrade || (computeOverallGrade(survey.q1, survey.q2, survey.q3) !== 'Ungraded' ? computeOverallGrade(survey.q1, survey.q2, survey.q3) : 'Ungraded');
+
                 tableHtml += `
-                    <tr onclick="openModal(allData[${allData.indexOf(item)}])">
+                    <tr onclick="openModal(allData[${allDataIndex}])">
                         <td style="color:var(--text-muted); font-size:0.8rem;">${globalNum}</td>
                         <td class="table-name">${escapeHtml(item.name)}</td>
-                        <td>${gradeBadge}</td>
+                        <td onclick="event.stopPropagation();" style="min-width:145px;">
+                            <select class="grade-select-mini" onchange="updateMemberGrade(${allDataIndex}, this.value, event)" style="background: rgba(15, 23, 42, 0.85); color: #f8fafc; border: 1px solid rgba(139, 92, 246, 0.4); border-radius: 4px; padding: 3px 6px; font-size: 0.76rem; font-weight: 700; outline: none; cursor: pointer; width:100%;">
+                                <option value="Ungraded" ${currentGrade === 'Ungraded' ? 'selected' : ''}>⚪ UnClassified</option>
+                                <option value="A" ${currentGrade === 'A' ? 'selected' : ''}>🟢 Grade A (Interested)</option>
+                                <option value="B" ${currentGrade === 'B' ? 'selected' : ''}>🔵 Grade B (No Time)</option>
+                                <option value="C" ${currentGrade === 'C' ? 'selected' : ''}>🟠 Grade C (Not Interested)</option>
+                            </select>
+                        </td>
                         <td>${escapeHtml(item.region)}</td>
                         <td><span class="card-tag">${escapeHtml(item.district)}</span></td>
                         <td>${escapeHtml(item.union)}</td>
@@ -541,6 +551,9 @@ function renderPage() {
 
                 const displayMeaning = item.meaning || 'தமிழ் பொருள் இல்லை';
                 const gradeBadge = getGradeBadgeHtml(item.survey);
+                const allDataIndex = allData.indexOf(item);
+                const survey = item.survey || {};
+                const currentGrade = survey.overallGrade || (computeOverallGrade(survey.q1, survey.q2, survey.q3) !== 'Ungraded' ? computeOverallGrade(survey.q1, survey.q2, survey.q3) : 'Ungraded');
 
                 card.innerHTML = `
                     <div>
@@ -556,6 +569,18 @@ function renderPage() {
                             ${item.region ? `<div class="detail-row"><i data-lucide="map" style="width:14px; height:14px;"></i> ${escapeHtml(item.region)}</div>` : ''}
                             ${item.union ? `<div class="detail-row"><i data-lucide="navigation" style="width:14px; height:14px;"></i> ${escapeHtml(item.union)}</div>` : ''}
                             ${item.mobile ? `<div class="detail-row"><i data-lucide="phone" style="width:14px; height:14px;"></i> ${escapeHtml(item.mobile)}</div>` : ''}
+                        </div>
+
+                        <div class="card-grade-picker" onclick="event.stopPropagation();" style="margin: 8px 0 6px 0; display:flex; align-items:center; justify-content:space-between; background: rgba(255, 255, 255, 0.04); padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.08);">
+                            <span style="font-size:0.74rem; color:var(--text-muted); font-weight:600; display:flex; align-items:center; gap:4px;">
+                                <i data-lucide="edit-3" style="width:12px; height:12px; color:#a78bfa;"></i> Update Grade:
+                            </span>
+                            <select class="grade-select-mini" onchange="updateMemberGrade(${allDataIndex}, this.value, event)" style="background: rgba(15, 23, 42, 0.85); color: #f8fafc; border: 1px solid rgba(139, 92, 246, 0.4); border-radius: 4px; padding: 2px 6px; font-size: 0.76rem; font-weight: 700; outline: none; cursor: pointer;">
+                                <option value="Ungraded" ${currentGrade === 'Ungraded' ? 'selected' : ''}>⚪ UnClassified</option>
+                                <option value="A" ${currentGrade === 'A' ? 'selected' : ''}>🟢 Grade A (Interested)</option>
+                                <option value="B" ${currentGrade === 'B' ? 'selected' : ''}>🔵 Grade B (No Time)</option>
+                                <option value="C" ${currentGrade === 'C' ? 'selected' : ''}>🟠 Grade C (Not Interested)</option>
+                            </select>
                         </div>
 
                         <div class="card-meaning">${escapeHtml(displayMeaning)}</div>
@@ -584,6 +609,77 @@ function renderPage() {
     }
 }
 
+// Update Member Grade Manually
+function updateMemberGrade(itemIndex, newGrade, e) {
+    if (e && e.stopPropagation) e.stopPropagation();
+    const item = allData[itemIndex];
+    if (!item) return;
+
+    if (!item.survey) item.survey = {};
+    if (newGrade === 'Ungraded' || newGrade === 'Unclassified' || !newGrade) {
+        delete item.survey.overallGrade;
+    } else {
+        item.survey.overallGrade = newGrade;
+    }
+
+    // Persist to LocalStorage
+    try {
+        const savedSurvey = localStorage.getItem('nsnk_survey_grades');
+        const surveyMap = savedSurvey ? JSON.parse(savedSurvey) : {};
+        const key = item.mobile || `${item.name}_${item.district}_${item.union}`;
+        if (newGrade === 'Ungraded' || newGrade === 'Unclassified' || !newGrade) {
+            delete surveyMap[key];
+            if (item.mobile) delete surveyMap[item.mobile];
+        } else {
+            surveyMap[key] = item.survey;
+            if (item.mobile) surveyMap[item.mobile] = item.survey;
+        }
+        localStorage.setItem('nsnk_survey_grades', JSON.stringify(surveyMap));
+    } catch(err) {
+        console.error('Failed to save survey grade:', err);
+    }
+
+    // Refresh Stats & UI
+    updateOverallProgressStats();
+    if (typeof renderAnalyticsCharts === 'function') {
+        renderAnalyticsCharts();
+    }
+    applyFilters();
+
+    const labelMap = {
+        'A': 'Grade A (Interested to know more)',
+        'B': 'Grade B (Interested but don\'t have time)',
+        'C': 'Grade C (Not interested)',
+        'Ungraded': 'UnClassified'
+    };
+    showToast(`Updated Grade for ${item.name}: ${labelMap[newGrade] || 'UnClassified'}`);
+}
+window.updateMemberGrade = updateMemberGrade;
+
+function updateActiveModalGrade(newGrade) {
+    if (!activeItemForModal) return;
+    const allDataIndex = allData.indexOf(activeItemForModal);
+    if (allDataIndex !== -1) {
+        updateMemberGrade(allDataIndex, newGrade);
+        updateModalGradeStatusText(activeItemForModal);
+    }
+}
+window.updateActiveModalGrade = updateActiveModalGrade;
+
+function updateModalGradeStatusText(item) {
+    const statusEl = document.getElementById('modal-grade-current-status');
+    if (!statusEl) return;
+    const survey = item ? (item.survey || {}) : {};
+    const grade = survey.overallGrade || computeOverallGrade(survey.q1, survey.q2, survey.q3) || 'Ungraded';
+    const labelMap = {
+        'A': '🟢 Grade A (Interested to know more)',
+        'B': '🔵 Grade B (Interested but don\'t have time)',
+        'C': '🟠 Grade C (Not interested)',
+        'Ungraded': '⚪ UnClassified'
+    };
+    statusEl.innerHTML = `Current Status: <strong>${labelMap[grade] || '⚪ UnClassified'}</strong>`;
+}
+
 // Modal View
 function openModal(item) {
     activeItemForModal = item;
@@ -592,6 +688,8 @@ function openModal(item) {
     modalDistrict.textContent = item.district ? `மாவட்டம்: ${item.district}` : '';
     modalUnion.textContent = item.union ? `ஒன்றியம்: ${item.union}` : '';
     modalMeaning.textContent = item.meaning || 'தமிழ் பொருள் வழங்கப்படவில்லை.';
+
+    updateModalGradeStatusText(item);
 
     modalOverlay.classList.add('active');
 }
