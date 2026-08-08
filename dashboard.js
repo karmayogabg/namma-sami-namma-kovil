@@ -126,19 +126,26 @@ async function loadDataset() {
         }
         allData = await response.json();
 
-        // Restore Saved Survey Data from LocalStorage
+        // Restore Saved Survey Data & Synchronize Grade JSON Property
         try {
             const savedSurvey = localStorage.getItem('nsnk_survey_grades');
-            if (savedSurvey) {
-                const surveyMap = JSON.parse(savedSurvey);
-                allData.forEach(item => {
-                    if (item.mobile && surveyMap[item.mobile]) {
-                        item.survey = surveyMap[item.mobile];
+            const surveyMap = savedSurvey ? JSON.parse(savedSurvey) : {};
+            allData.forEach(item => {
+                const key = item.mobile || `${item.name}_${item.district}_${item.union}`;
+                const saved = surveyMap[key] || (item.mobile && surveyMap[item.mobile]);
+                if (saved && saved.overallGrade) {
+                    item.grade = saved.overallGrade;
+                    item.survey = saved;
+                } else {
+                    item.grade = item.grade || 'Ungraded';
+                    if (item.grade !== 'Ungraded') {
+                        if (!item.survey) item.survey = {};
+                        item.survey.overallGrade = item.grade;
                     }
-                });
-            }
+                }
+            });
         } catch (e) {
-            console.warn('Error reading saved survey grades from localStorage:', e);
+            console.warn('Error synchronizing survey grades:', e);
         }
         
         // Calculate Stats
@@ -430,6 +437,7 @@ function exportToExcel() {
         'S.No': idx + 1,
         'Name / பெயர்': item.name || '',
         'Mobile / தொடர்பு எண்': item.mobile || '',
+        'Grade / தரம்': item.grade || (item.survey?.overallGrade || 'Ungraded'),
         'Region / மண்டலம்': item.region || '',
         'District / மாவட்டம்': item.district || '',
         'Union / ஒன்றியம்': item.union || '',
@@ -448,6 +456,30 @@ function exportToExcel() {
     XLSX.writeFile(workbook, fileName);
 }
 window.exportToExcel = exportToExcel;
+
+// Export Dataset as JSON with Embedded Grades
+function exportToJson() {
+    if (!allData || allData.length === 0) {
+        alert('No records available to export.');
+        return;
+    }
+    const cleanData = allData.map(item => {
+        const copy = { ...item };
+        delete copy.survey;
+        return copy;
+    });
+    const blob = new Blob([JSON.stringify(cleanData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.href = url;
+    downloadAnchor.download = 'namma_sami_namma_kovil_full.json';
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+    URL.revokeObjectURL(url);
+    showToast('Exported updated JSON dataset with embedded grades!');
+}
+window.exportToJson = exportToJson;
 
 // Render Current Page Grid / Table
 function renderPage() {

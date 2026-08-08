@@ -172,10 +172,11 @@ Whenever any update is made to the dataset, UI layout, components, or features, 
 - **`v8.5`**: Customized Grade Classification Labels (updated Grade A = *Interested to know more*, Grade B = *Interested but don't have time*, Grade C = *Not interested*, UnClassified across UI chips, dropdown filters, tooltips, and analytics charts).
 - **`v8.6`**: Per-Record Manual Grade Assignment Engine (added interactive Grade Pickers to every grid card, table row, and detail popup modal with automatic `localStorage` survey persistence and live progress & analytics sync).
 - **`v8.7`**: Direct 1-Click In-Card & In-Table Grade Buttons (added direct `🟢 A`, `🔵 B`, `🟠 C`, `⚪ U` quick-buttons directly on every card and table row with `event.stopPropagation()` preventing modal popups).
+- **`v8.8`**: Native JSON Dataset Grade Embedding (embedded `"grade"` property directly across all 62,521 items in `namma_sami_namma_kovil_full.json`, added `Grade` column to Excel export and added 1-click `Export Dataset (.json)` tool).
 
 ---
 
-## 7. Core System Specs & Architecture (v8.7 Summary)
+## 7. Core System Specs & Architecture (v8.8 Summary)
 
 ### 1. 3-Question Grading & Classification Engine
 - **Q1**: Meaning of your Name? *(உங்கள் பெயரின் பொருள் தெரியுமா?)*
