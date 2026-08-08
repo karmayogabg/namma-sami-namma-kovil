@@ -26,7 +26,7 @@
     <div id="auth-overlay" class="modal-overlay active" style="z-index: 2000; background: rgba(7, 9, 19, 0.96); backdrop-filter: blur(20px);">
         <div class="modal-content" style="max-width: 440px; text-align: center; border-color: rgba(139, 92, 246, 0.4); position: relative;">
             <div style="position: absolute; top: 16px; right: 16px;" class="brand-badge">
-                <span style="color: #6ee7b7; font-weight:700;">v5.2</span>
+                <span style="color: #6ee7b7; font-weight:700;">v5.3</span>
             </div>
             <div class="brand-logo" style="margin: 0 auto 16px auto; width: 56px; height: 56px;">
                 <i data-lucide="lock" style="width:28px; height:28px;"></i>
@@ -42,7 +42,7 @@
                 </button>
             </form>
             <div style="margin-top: 14px; font-size: 0.78rem; color: var(--text-muted);">
-                Namma Sami Namma Kovil Explorer <span style="color:#6ee7b7; font-weight:700;">v5.2</span>
+                Namma Sami Namma Kovil Explorer <span style="color:#6ee7b7; font-weight:700;">v5.3</span>
             </div>
         </div>
     </div>
@@ -64,7 +64,7 @@
                     <i data-lucide="moon" id="theme-icon" style="width:14px; height:14px; vertical-align:middle;"></i> <span id="theme-text">Dark</span>
                 </button>
                 <div class="brand-badge" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); color: #6ee7b7; font-weight:700;">
-                    v5.2
+                    v5.3
                 </div>
                 <div class="brand-badge">
                     <i data-lucide="database" style="width:14px; height:14px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>
@@ -458,8 +458,11 @@
                 </button>
             </div>
 
-            <!-- Search & Status Filter Controls -->
+            <!-- Search, Status Filter Controls & Common Upload Button -->
             <div style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap; align-items:center; background: rgba(255, 255, 255, 0.03); padding:12px; border-radius:8px; border:1px solid var(--border-color);">
+                <button class="toggle-btn" style="background: rgba(236, 72, 153, 0.22); border-color: rgba(236, 72, 153, 0.45); color: #f472b6; padding:8px 16px; font-weight:700; font-size:0.88rem;" onclick="triggerPhotoUpload()">
+                    <i data-lucide="camera" style="width:16px; height:16px; vertical-align:middle;"></i> Upload Form Photo 📷
+                </button>
                 <div style="flex:1; min-width:200px; position:relative;">
                     <input type="text" id="caller-search-input" class="search-input" style="padding-left:34px; height:38px; font-size:0.88rem;" placeholder="Search by Caller Name or Batch #..." oninput="filterCallerBatches()">
                     <i data-lucide="search" style="position:absolute; left:10px; top:11px; width:16px; height:16px; color:var(--text-muted);"></i>
