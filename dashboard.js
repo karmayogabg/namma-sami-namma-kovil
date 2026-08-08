@@ -1221,10 +1221,33 @@ function renderCallerManagerModal() {
         // Status Filter
         if (statusVal !== 'all' && statusVal !== statusKey) continue;
 
-        // Search Filter (by caller name, full time worker, or batch number)
-        const batchNumStr = String(b + 1).padStart(3, '0');
-        const searchTarget = `batch #${batchNumStr} ${b + 1} ${callerName} ${fullTimeWorker}`.toLowerCase();
-        if (searchVal && !searchTarget.includes(searchVal)) continue;
+        // Enhanced Numerical & Text Search Filter
+        if (searchVal) {
+            const searchNum = parseInt(searchVal, 10);
+            const isPureNum = !isNaN(searchNum) && /^\d+$/.test(searchVal);
+
+            let isMatch = false;
+
+            if (isPureNum) {
+                // 1. Direct Batch Number Match (e.g., typing "5", "05", "005" matches Batch #005)
+                if (searchNum === (b + 1)) {
+                    isMatch = true;
+                }
+                // 2. Person Record Index Range Match (e.g., typing "2050" matches Batch #005: #2001 to #2500)
+                else if (searchNum >= (start + 1) && searchNum <= end) {
+                    isMatch = true;
+                }
+            }
+
+            // 3. Text Substring Match (Volunteer Name, Full-Time Worker, or formatted strings)
+            const batchNumStr = String(b + 1).padStart(3, '0');
+            const searchTarget = `batch #${batchNumStr} ${b + 1} #${start + 1} #${end} ${callerName} ${fullTimeWorker}`.toLowerCase();
+            if (searchTarget.includes(searchVal)) {
+                isMatch = true;
+            }
+
+            if (!isMatch) continue;
+        }
 
         matchCount++;
 

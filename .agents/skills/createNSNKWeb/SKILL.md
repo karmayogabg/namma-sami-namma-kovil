@@ -150,10 +150,11 @@ Whenever any update is made to the dataset, UI layout, components, or features, 
 - **`v5.2`**: Interactive Clickable Hero Progress Banner (clicking the overall survey completion progress bar opens the detailed Caller Batch Assignments & Progress Manager modal with status badges and volunteer caller details).
 - **`v5.3`**: Integrated Common `Upload Form Photo 📷` Button inside Caller Manager Modal Header (allowing single centralized OMR form photo uploads directly from within the caller assignments popup window).
 - **`v5.4`**: Two-Column Batch Assignment Manager (added separate editable input fields for **Assigned Volunteer Caller** and **Assigned Full-Time Worker** per batch card with dual field `localStorage` persistence & search filter support).
+- **`v5.5`**: Smart Numerical & Person Record Search Matcher (typing any number e.g. `5`, `05`, `005` instantly matches Batch #005, typing any record number e.g. `2500` matches the containing Batch #005 range `2001..2500`, alongside text matching for volunteer & worker names).
 
 ---
 
-## 7. Core System Specs & Architecture (v5.4 Summary)
+## 7. Core System Specs & Architecture (v5.5 Summary)
 
 ### 1. 3-Question Grading & Classification Engine
 - **Q1**: Meaning of your Name? *(உங்கள் பெயரின் பொருள் தெரியுமா?)*
