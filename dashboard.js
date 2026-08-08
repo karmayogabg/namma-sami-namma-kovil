@@ -130,9 +130,9 @@ async function loadDataset() {
         const uniqueNames = new Set(allData.map(d => d.name)).size;
         const uniqueDistricts = new Set(allData.map(d => d.district).filter(Boolean)).size;
 
-        statTotal.textContent = allData.length.toLocaleString();
-        statUnique.textContent = uniqueNames.toLocaleString();
-        statDistricts.textContent = uniqueDistricts.toLocaleString();
+        if (typeof statTotal !== 'undefined' && statTotal) statTotal.textContent = allData.length.toLocaleString();
+        if (typeof statUnique !== 'undefined' && statUnique) statUnique.textContent = uniqueNames.toLocaleString();
+        if (typeof statDistricts !== 'undefined' && statDistricts) statDistricts.textContent = uniqueDistricts.toLocaleString();
 
         // Populate Dropdowns & Progress Stats
         populateFilters();
@@ -144,19 +144,21 @@ async function loadDataset() {
 
         // Initial Filter & Render
         filteredData = allData;
-        loadingSpinner.style.display = 'none';
-        cardsGrid.style.display = 'grid';
-        pagination.style.display = 'flex';
+        if (typeof loadingSpinner !== 'undefined' && loadingSpinner) loadingSpinner.style.display = 'none';
+        if (typeof cardsGrid !== 'undefined' && cardsGrid) cardsGrid.style.display = 'grid';
+        if (typeof pagination !== 'undefined' && pagination) pagination.style.display = 'flex';
 
-        renderPage();
+        if (typeof renderPage === 'function') renderPage();
     } catch (err) {
         console.error('Failed to load dataset:', err);
-        loadingSpinner.innerHTML = `
-            <div style="color:#ef4444; font-weight:600; text-align:center;">
-                <p>Error loading dataset: ${err.message}</p>
-                <button onclick="location.reload()" style="margin-top:12px; padding:8px 16px; background:var(--accent-primary); border:none; border-radius:6px; color:#fff; cursor:pointer;">Retry</button>
-            </div>
-        `;
+        if (typeof loadingSpinner !== 'undefined' && loadingSpinner) {
+            loadingSpinner.innerHTML = `
+                <div style="color:#ef4444; font-weight:600; text-align:center;">
+                    <p>Error loading dataset: ${err.message}</p>
+                    <button onclick="location.reload()" style="margin-top:12px; padding:8px 16px; background:var(--accent-primary); border:none; border-radius:6px; color:#fff; cursor:pointer;">Retry</button>
+                </div>
+            `;
+        }
     }
 }
 
@@ -1227,18 +1229,7 @@ function renderCallerManagerModal() {
     const container = document.getElementById('caller-batches-grid-container');
     if (!container) return;
 
-    if (!allData || allData.length === 0) {
-        container.innerHTML = `
-            <div style="text-align:center; padding:50px 20px;">
-                <div class="spinner" style="margin:0 auto 16px auto; border-top-color:#6ee7b7;"></div>
-                <h4 style="color:var(--text-main); margin-bottom:6px;">Loading 62,521 Caller Records...</h4>
-                <p style="color:var(--text-muted); font-size:0.85rem;">Populating 126 caller batches and completion percentages...</p>
-            </div>
-        `;
-        return;
-    }
-
-    const totalRecords = allData.length;
+    const totalRecords = (allData && allData.length > 0) ? allData.length : 62521;
     const totalBatches = Math.ceil(totalRecords / BATCH_SIZE);
     
     const searchVal = (document.getElementById('caller-search-input')?.value || '').toLowerCase().trim();
@@ -1250,11 +1241,11 @@ function renderCallerManagerModal() {
     for (let b = 0; b < totalBatches; b++) {
         const start = b * BATCH_SIZE;
         const end = Math.min((b + 1) * BATCH_SIZE, totalRecords);
-        const batchItems = allData.slice(start, end);
-        const batchSize = batchItems.length;
+        const batchItems = (allData && allData.length > 0) ? allData.slice(start, end) : [];
+        const batchSize = (end - start);
 
         const completedInBatch = batchItems.filter(item => item.survey && (item.survey.q1 || item.survey.overallGrade)).length;
-        const pct = Math.round((completedInBatch / batchSize) * 100);
+        const pct = batchSize > 0 ? Math.round((completedInBatch / batchSize) * 100) : 0;
 
         let statusKey = 'pending';
         let statusBadge = `<span class="status-pill status-pill-pending">🔴 Pending (${pct}%)</span>`;
