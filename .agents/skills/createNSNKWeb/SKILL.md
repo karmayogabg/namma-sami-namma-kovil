@@ -174,10 +174,11 @@ Whenever any update is made to the dataset, UI layout, components, or features, 
 - **`v8.7`**: Direct 1-Click In-Card & In-Table Grade Buttons (added direct `🟢 A`, `🔵 B`, `🟠 C`, `⚪ U` quick-buttons directly on every card and table row with `event.stopPropagation()` preventing modal popups).
 - **`v8.8`**: Native JSON Dataset Grade Embedding (embedded `"grade"` property directly across all 62,521 items in `namma_sami_namma_kovil_full.json`, added `Grade` column to Excel export and added 1-click `Export Dataset (.json)` tool).
 - **`v8.9`**: Excel/XLS Batch Import Engine (added 1-click `Import Excel (.xlsx) 📥` file upload tool supporting `.xlsx`, `.xls`, and `.csv` files with flexible column matching, grade normalization, automatic dataset matching, and live analytics sync).
+- **`v9.0`**: Unified Progress & Grade Evaluation Fix (fixed `updateOverallProgressStats()` and `applyFilters()` to evaluate `item.grade` directly alongside `item.survey`, ensuring the overall completion progress bar and grade chips update live when grades are assigned).
 
 ---
 
-## 7. Core System Specs & Architecture (v8.9 Summary)
+## 7. Core System Specs & Architecture (v9.0 Summary)
 
 ### 1. 3-Question Grading & Classification Engine
 - **Q1**: Meaning of your Name? *(உங்கள் பெயரின் பொருள் தெரியுமா?)*

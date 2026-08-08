@@ -25,9 +25,13 @@ function computeOverallGrade(q1, q2, q3) {
 window.computeOverallGrade = computeOverallGrade;
 
 // Get Grade Badge HTML
-function getGradeBadgeHtml(survey) {
-    survey = survey || {};
-    const grade = survey.overallGrade || computeOverallGrade(survey.q1, survey.q2, survey.q3);
+function getGradeBadgeHtml(survey, item) {
+    let grade = null;
+    if (item && item.grade) grade = item.grade;
+    if (!grade || grade === 'Ungraded') {
+        survey = survey || {};
+        grade = survey.overallGrade || computeOverallGrade(survey.q1, survey.q2, survey.q3);
+    }
     if (grade === 'A') return '<span class="grade-badge grade-badge-a" title="Grade A: Interested to know more">Grade A (Interested)</span>';
     if (grade === 'B') return '<span class="grade-badge grade-badge-b" title="Grade B: Interested but don\'t have time">Grade B (No Time)</span>';
     if (grade === 'C') return '<span class="grade-badge grade-badge-c" title="Grade C: Not interested">Grade C (Not Interested)</span>';
@@ -347,9 +351,9 @@ function applyFilters() {
         // Grade Filter (v2.0)
         if (selectedGrade) {
             const survey = item.survey || {};
-            const grade = survey.overallGrade || computeOverallGrade(survey.q1, survey.q2, survey.q3);
+            const grade = item.grade || survey.overallGrade || computeOverallGrade(survey.q1, survey.q2, survey.q3) || 'Ungraded';
             if (selectedGrade === 'Ungraded') {
-                if (grade !== 'Ungraded') return false;
+                if (grade !== 'Ungraded' && grade !== 'Unclassified') return false;
             } else {
                 if (grade !== selectedGrade) return false;
             }
@@ -1177,7 +1181,7 @@ function renderAnalyticsCharts() {
         if (item.district) districtCounts[item.district] = (districtCounts[item.district] || 0) + 1;
         if (item.union) unionCounts[item.union] = (unionCounts[item.union] || 0) + 1;
 
-        const grade = (item.survey && item.survey.overallGrade) ? item.survey.overallGrade : 'Ungraded';
+        const grade = item.grade || (item.survey && item.survey.overallGrade) || (item.survey ? computeOverallGrade(item.survey.q1, item.survey.q2, item.survey.q3) : 'Ungraded') || 'Ungraded';
         gradeCounts[grade] = (gradeCounts[grade] || 0) + 1;
     });
 
@@ -1496,8 +1500,8 @@ function updateOverallProgressStats() {
     let countUnclassified = 0;
 
     allData.forEach(item => {
-        let grade = null;
-        if (item.survey) {
+        let grade = item.grade;
+        if ((!grade || grade === 'Ungraded' || grade === 'Unclassified') && item.survey) {
             if (item.survey.overallGrade) {
                 grade = item.survey.overallGrade;
             } else if (item.survey.q1 || item.survey.q2 || item.survey.q3) {
@@ -1514,7 +1518,10 @@ function updateOverallProgressStats() {
         const start = b * BATCH_SIZE;
         const end = Math.min((b + 1) * BATCH_SIZE, totalRecords);
         const batchItems = allData.slice(start, end);
-        const completedInBatch = batchItems.filter(item => item.survey && (item.survey.q1 || item.survey.overallGrade)).length;
+        const completedInBatch = batchItems.filter(item => {
+            const g = item.grade || (item.survey && item.survey.overallGrade);
+            return (g && g !== 'Ungraded' && g !== 'Unclassified') || (item.survey && (item.survey.q1 || item.survey.q2 || item.survey.q3));
+        }).length;
         
         totalCompleted += completedInBatch;
         if (completedInBatch >= batchItems.length) {
