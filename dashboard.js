@@ -28,10 +28,10 @@ window.computeOverallGrade = computeOverallGrade;
 function getGradeBadgeHtml(survey) {
     survey = survey || {};
     const grade = survey.overallGrade || computeOverallGrade(survey.q1, survey.q2, survey.q3);
-    if (grade === 'A') return '<span class="grade-badge grade-badge-a">Grade A</span>';
-    if (grade === 'B') return '<span class="grade-badge grade-badge-b">Grade B</span>';
-    if (grade === 'C') return '<span class="grade-badge grade-badge-c">Grade C</span>';
-    return '<span class="grade-badge grade-badge-u">Ungraded</span>';
+    if (grade === 'A') return '<span class="grade-badge grade-badge-a" title="Grade A: Interested to know more">Grade A (Interested)</span>';
+    if (grade === 'B') return '<span class="grade-badge grade-badge-b" title="Grade B: Interested but don\'t have time">Grade B (No Time)</span>';
+    if (grade === 'C') return '<span class="grade-badge grade-badge-c" title="Grade C: Not interested">Grade C (Not Interested)</span>';
+    return '<span class="grade-badge grade-badge-u" title="UnClassified">UnClassified</span>';
 }
 window.getGradeBadgeHtml = getGradeBadgeHtml;
 
@@ -1028,7 +1028,7 @@ function renderAnalyticsCharts() {
         chartGradeInst = new Chart(ctxGrade, {
             type: 'doughnut',
             data: {
-                labels: ['Grade A (High)', 'Grade B (Moderate)', 'Grade C (Guidance)', 'Ungraded'],
+                labels: ['Grade A (Interested)', 'Grade B (No Time)', 'Grade C (Not Interested)', 'UnClassified'],
                 datasets: [{
                     data: [gradeCounts.A, gradeCounts.B, gradeCounts.C, gradeCounts.Ungraded],
                     backgroundColor: [

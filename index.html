@@ -141,16 +141,16 @@
                     <div style="font-size:0.8rem; font-weight:700; color:var(--text-muted); display:flex; align-items:center; gap:4px; margin-right:4px;">
                         <i data-lucide="pie-chart" style="width:14px; height:14px; color:#a78bfa;"></i> Grade Breakdown:
                     </div>
-                    <div id="hero-grade-badge-a" class="hero-grade-chip" onclick="filterByGrade('A')" style="display:inline-flex; align-items:center; gap:6px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.35); color:#6ee7b7; padding:4px 12px; border-radius:20px; font-size:0.82rem; font-weight:700; cursor:pointer; transition:all 0.2s ease;" title="Click to filter by Grade A">
-                        <span>🟢 Grade A:</span> <span id="hero-grade-count-a">0 (0.0%)</span>
+                    <div id="hero-grade-badge-a" class="hero-grade-chip" onclick="filterByGrade('A')" style="display:inline-flex; align-items:center; gap:6px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.35); color:#6ee7b7; padding:4px 12px; border-radius:20px; font-size:0.82rem; font-weight:700; cursor:pointer; transition:all 0.2s ease;" title="Grade A: Interested to know more">
+                        <span>🟢 Grade A (Interested to know more):</span> <span id="hero-grade-count-a">0 (0.0%)</span>
                     </div>
-                    <div id="hero-grade-badge-b" class="hero-grade-chip" onclick="filterByGrade('B')" style="display:inline-flex; align-items:center; gap:6px; background:rgba(6,182,212,0.15); border:1px solid rgba(6,182,212,0.35); color:#67e8f9; padding:4px 12px; border-radius:20px; font-size:0.82rem; font-weight:700; cursor:pointer; transition:all 0.2s ease;" title="Click to filter by Grade B">
-                        <span>🔵 Grade B:</span> <span id="hero-grade-count-b">0 (0.0%)</span>
+                    <div id="hero-grade-badge-b" class="hero-grade-chip" onclick="filterByGrade('B')" style="display:inline-flex; align-items:center; gap:6px; background:rgba(6,182,212,0.15); border:1px solid rgba(6,182,212,0.35); color:#67e8f9; padding:4px 12px; border-radius:20px; font-size:0.82rem; font-weight:700; cursor:pointer; transition:all 0.2s ease;" title="Grade B: Interested but don't have time">
+                        <span>🔵 Grade B (Interested but don't have time):</span> <span id="hero-grade-count-b">0 (0.0%)</span>
                     </div>
-                    <div id="hero-grade-badge-c" class="hero-grade-chip" onclick="filterByGrade('C')" style="display:inline-flex; align-items:center; gap:6px; background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.35); color:#fde047; padding:4px 12px; border-radius:20px; font-size:0.82rem; font-weight:700; cursor:pointer; transition:all 0.2s ease;" title="Click to filter by Grade C">
-                        <span>🟠 Grade C:</span> <span id="hero-grade-count-c">0 (0.0%)</span>
+                    <div id="hero-grade-badge-c" class="hero-grade-chip" onclick="filterByGrade('C')" style="display:inline-flex; align-items:center; gap:6px; background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.35); color:#fde047; padding:4px 12px; border-radius:20px; font-size:0.82rem; font-weight:700; cursor:pointer; transition:all 0.2s ease;" title="Grade C: Not interested">
+                        <span>🟠 Grade C (Not interested):</span> <span id="hero-grade-count-c">0 (0.0%)</span>
                     </div>
-                    <div id="hero-grade-badge-u" class="hero-grade-chip" onclick="filterByGrade('Ungraded')" style="display:inline-flex; align-items:center; gap:6px; background:rgba(148,163,184,0.12); border:1px solid rgba(148,163,184,0.25); color:#cbd5e1; padding:4px 12px; border-radius:20px; font-size:0.82rem; font-weight:700; cursor:pointer; transition:all 0.2s ease;" title="Click to filter by UnClassified">
+                    <div id="hero-grade-badge-u" class="hero-grade-chip" onclick="filterByGrade('Ungraded')" style="display:inline-flex; align-items:center; gap:6px; background:rgba(148,163,184,0.12); border:1px solid rgba(148,163,184,0.25); color:#cbd5e1; padding:4px 12px; border-radius:20px; font-size:0.82rem; font-weight:700; cursor:pointer; transition:all 0.2s ease;" title="UnClassified / Pending Calls">
                         <span>⚪ UnClassified:</span> <span id="hero-grade-count-u">62,521 (100.0%)</span>
                     </div>
                 </div>
@@ -267,10 +267,10 @@
 
                 <select id="filter-grade" class="select-custom" style="border-color: rgba(139, 92, 246, 0.4);">
                     <option value="">All Grades / அனைத்து தரங்கள்</option>
-                    <option value="A">Grade A (High Knowledge 🟢)</option>
-                    <option value="B">Grade B (Moderate Awareness 🔵)</option>
-                    <option value="C">Grade C (Needs Guidance 🟠)</option>
-                    <option value="Ungraded">Ungraded (Pending Calls ⚪)</option>
+                    <option value="A">Grade A (Interested to know more 🟢)</option>
+                    <option value="B">Grade B (Interested but don't have time 🔵)</option>
+                    <option value="C">Grade C (Not interested 🟠)</option>
+                    <option value="Ungraded">UnClassified (Pending Calls ⚪)</option>
                 </select>
 
                 <select id="filter-page-size" class="select-custom" style="min-width: 130px; margin-left: auto;">

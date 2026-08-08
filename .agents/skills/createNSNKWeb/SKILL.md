@@ -169,17 +169,18 @@ Whenever any update is made to the dataset, UI layout, components, or features, 
 - **`v8.2`**: Line-Grid Anchored Contrast OMR Engine (`analyzeSheetImagePixels` dynamically detects horizontal table grid divider lines to align row Y-centers and applies Intra-Group Relative Contrast $\Delta \ge 35$ and Pen Ink Thresholding $\ge 140$, eliminating false positive misreads on blank rows like Row #6 and guaranteeing 100% accurate capture of marked rows like Row #5).
 - **`v8.3`**: Streamlined Core Dashboard & Sample Cleanup (removed `testsample.jpg` button & asset files, removed Caller Assignments Manager modal/buttons to streamline UI focus on core survey explorer, printable call sheets, and AI OMR scanning).
 - **`v8.4`**: Interactive Grade Breakdown Bar (`Grade A`, `Grade B`, `Grade C`, `UnClassified` counts & percentages display directly below the Overall Survey Completion Progress bar with 1-click filter interactivity).
+- **`v8.5`**: Customized Grade Classification Labels (updated Grade A = *Interested to know more*, Grade B = *Interested but don't have time*, Grade C = *Not interested*, UnClassified across UI chips, dropdown filters, tooltips, and analytics charts).
 
 ---
 
-## 7. Core System Specs & Architecture (v8.4 Summary)
+## 7. Core System Specs & Architecture (v8.5 Summary)
 
 ### 1. 3-Question Grading & Classification Engine
 - **Q1**: Meaning of your Name? *(உங்கள் பெயரின் பொருள் தெரியுமா?)*
 - **Q2**: Do you know your Parampara? *(உங்கள் பரம்பரை தெரியுமா?)*
 - **Q3**: Do you know your Gothram? *(உங்கள் கோத்திரம் தெரியுமா?)*
 - **Points**: `A` = 2 pts, `B` = 1 pt, `C` = 0 pt.
-- **Grade A** (🟢 5–6 pts), **Grade B** (🔵 3–4 pts), **Grade C** (🟠 0–2 pts).
+- **Grade A** (🟢 5–6 pts: *Interested to know more*), **Grade B** (🔵 3–4 pts: *Interested but don't have time*), **Grade C** (🟠 0–2 pts: *Not interested*).
 
 ### 2. Sequential PDF Batch Generator (`build_real_pdf_zip.js` & `print_sheets.html`)
 - **Total Batches**: 126 PDF files covering all 62,521 persons in exact sequential JSON order.
