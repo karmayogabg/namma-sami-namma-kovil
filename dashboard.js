@@ -505,13 +505,13 @@ function renderPage() {
                     <tr onclick="openModal(allData[${allDataIndex}])">
                         <td style="color:var(--text-muted); font-size:0.8rem;">${globalNum}</td>
                         <td class="table-name">${escapeHtml(item.name)}</td>
-                        <td onclick="event.stopPropagation();" style="min-width:145px;">
-                            <select class="grade-select-mini" onchange="updateMemberGrade(${allDataIndex}, this.value, event)" style="background: rgba(15, 23, 42, 0.85); color: #f8fafc; border: 1px solid rgba(139, 92, 246, 0.4); border-radius: 4px; padding: 3px 6px; font-size: 0.76rem; font-weight: 700; outline: none; cursor: pointer; width:100%;">
-                                <option value="Ungraded" ${currentGrade === 'Ungraded' ? 'selected' : ''}>⚪ UnClassified</option>
-                                <option value="A" ${currentGrade === 'A' ? 'selected' : ''}>🟢 Grade A (Interested)</option>
-                                <option value="B" ${currentGrade === 'B' ? 'selected' : ''}>🔵 Grade B (No Time)</option>
-                                <option value="C" ${currentGrade === 'C' ? 'selected' : ''}>🟠 Grade C (Not Interested)</option>
-                            </select>
+                        <td onclick="event.stopPropagation();" onmousedown="event.stopPropagation();" style="min-width:165px;">
+                            <div style="display:flex; gap:3px; align-items:center;" onclick="event.stopPropagation();" onmousedown="event.stopPropagation();">
+                                <button class="grade-quick-btn ${currentGrade === 'A' ? 'active-a' : ''}" onclick="updateMemberGrade(${allDataIndex}, 'A', event)" onmousedown="event.stopPropagation();" title="Grade A: Interested to know more">🟢 A</button>
+                                <button class="grade-quick-btn ${currentGrade === 'B' ? 'active-b' : ''}" onclick="updateMemberGrade(${allDataIndex}, 'B', event)" onmousedown="event.stopPropagation();" title="Grade B: Interested but don't have time">🔵 B</button>
+                                <button class="grade-quick-btn ${currentGrade === 'C' ? 'active-c' : ''}" onclick="updateMemberGrade(${allDataIndex}, 'C', event)" onmousedown="event.stopPropagation();" title="Grade C: Not interested">🟠 C</button>
+                                <button class="grade-quick-btn ${currentGrade === 'Ungraded' ? 'active-u' : ''}" onclick="updateMemberGrade(${allDataIndex}, 'Ungraded', event)" onmousedown="event.stopPropagation();" title="UnClassified">⚪ U</button>
+                            </div>
                         </td>
                         <td>${escapeHtml(item.region)}</td>
                         <td><span class="card-tag">${escapeHtml(item.district)}</span></td>
@@ -571,16 +571,16 @@ function renderPage() {
                             ${item.mobile ? `<div class="detail-row"><i data-lucide="phone" style="width:14px; height:14px;"></i> ${escapeHtml(item.mobile)}</div>` : ''}
                         </div>
 
-                        <div class="card-grade-picker" onclick="event.stopPropagation();" style="margin: 8px 0 6px 0; display:flex; align-items:center; justify-content:space-between; background: rgba(255, 255, 255, 0.04); padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.08);">
-                            <span style="font-size:0.74rem; color:var(--text-muted); font-weight:600; display:flex; align-items:center; gap:4px;">
-                                <i data-lucide="edit-3" style="width:12px; height:12px; color:#a78bfa;"></i> Update Grade:
+                        <div class="card-grade-picker" onclick="event.stopPropagation();" onmousedown="event.stopPropagation();" style="margin: 8px 0 6px 0; display:flex; align-items:center; justify-content:space-between; background: rgba(255, 255, 255, 0.04); padding: 5px 8px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.08);">
+                            <span style="font-size:0.72rem; color:var(--text-muted); font-weight:700; display:flex; align-items:center; gap:4px;">
+                                <i data-lucide="edit-3" style="width:12px; height:12px; color:#a78bfa;"></i> Grade:
                             </span>
-                            <select class="grade-select-mini" onchange="updateMemberGrade(${allDataIndex}, this.value, event)" style="background: rgba(15, 23, 42, 0.85); color: #f8fafc; border: 1px solid rgba(139, 92, 246, 0.4); border-radius: 4px; padding: 2px 6px; font-size: 0.76rem; font-weight: 700; outline: none; cursor: pointer;">
-                                <option value="Ungraded" ${currentGrade === 'Ungraded' ? 'selected' : ''}>⚪ UnClassified</option>
-                                <option value="A" ${currentGrade === 'A' ? 'selected' : ''}>🟢 Grade A (Interested)</option>
-                                <option value="B" ${currentGrade === 'B' ? 'selected' : ''}>🔵 Grade B (No Time)</option>
-                                <option value="C" ${currentGrade === 'C' ? 'selected' : ''}>🟠 Grade C (Not Interested)</option>
-                            </select>
+                            <div style="display:flex; gap:4px;" onclick="event.stopPropagation();" onmousedown="event.stopPropagation();">
+                                <button class="grade-quick-btn ${currentGrade === 'A' ? 'active-a' : ''}" onclick="updateMemberGrade(${allDataIndex}, 'A', event)" onmousedown="event.stopPropagation();" title="Grade A: Interested to know more">🟢 A</button>
+                                <button class="grade-quick-btn ${currentGrade === 'B' ? 'active-b' : ''}" onclick="updateMemberGrade(${allDataIndex}, 'B', event)" onmousedown="event.stopPropagation();" title="Grade B: Interested but don't have time">🔵 B</button>
+                                <button class="grade-quick-btn ${currentGrade === 'C' ? 'active-c' : ''}" onclick="updateMemberGrade(${allDataIndex}, 'C', event)" onmousedown="event.stopPropagation();" title="Grade C: Not interested">🟠 C</button>
+                                <button class="grade-quick-btn ${currentGrade === 'Ungraded' ? 'active-u' : ''}" onclick="updateMemberGrade(${allDataIndex}, 'Ungraded', event)" onmousedown="event.stopPropagation();" title="UnClassified">⚪ U</button>
+                            </div>
                         </div>
 
                         <div class="card-meaning">${escapeHtml(displayMeaning)}</div>
@@ -611,7 +611,10 @@ function renderPage() {
 
 // Update Member Grade Manually
 function updateMemberGrade(itemIndex, newGrade, e) {
-    if (e && e.stopPropagation) e.stopPropagation();
+    if (e) {
+        if (e.stopPropagation) e.stopPropagation();
+        if (e.preventDefault) e.preventDefault();
+    }
     const item = allData[itemIndex];
     if (!item) return;
 
