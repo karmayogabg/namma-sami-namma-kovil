@@ -111,8 +111,8 @@ function deriveOverallGrade(q1, q2, q3) {
 }
 
 /**
- * Client-Side Barcode & Row-Anchor OMR Computer Vision Engine (v8.0)
- * Calibrated for 25 uniform rows per sheet with 100% mathematical precision.
+ * Client-Side Barcode & Row-Anchor OMR Computer Vision Engine (v8.1)
+ * Calibrated for 25 uniform rows per sheet with relative percentage grid geometry.
  */
 function analyzeSheetImagePixels(imgElement) {
     const rawW = imgElement.naturalWidth || imgElement.width || 1140;
@@ -134,10 +134,11 @@ function analyzeSheetImagePixels(imgElement) {
         return (pixels[idx] + pixels[idx+1] + pixels[idx+2]) / 3;
     }
 
-    function getCircleDarkness(centerX, centerY, radius = 3) {
+    function getCircleDarkness(centerX, centerY, radius = 2) {
         let sum = 0, count = 0;
-        for (let dy = -radius; dy <= radius; dy++) {
-            for (let dx = -radius; dx <= radius; dx++) {
+        const rad = Math.max(1, Math.round(radius * (rawW / 1200)));
+        for (let dy = -rad; dy <= rad; dy++) {
+            for (let dx = -rad; dx <= rad; dx++) {
                 sum += getBrightness(centerX + dx, centerY + dy);
                 count++;
             }
@@ -145,9 +146,32 @@ function analyzeSheetImagePixels(imgElement) {
         return count > 0 ? (255 - (sum / count)) : 0;
     }
 
-    // Calibrated scale relative to 1200x1600 base resolution
-    const scaleX = rawW / 1200;
-    const scaleY = rawH / 1600;
+    // Auto-detect Document Bounds (Paper Margin Cropping)
+    let paperMinX = 0, paperMaxX = rawW, paperMinY = 0, paperMaxY = rawH;
+    let foundPaper = false;
+    let minX = rawW, maxX = 0, minY = rawH, maxY = 0;
+
+    for (let y = 0; y < rawH; y += 10) {
+        for (let x = 0; x < rawW; x += 10) {
+            if (getBrightness(x, y) > 220) { // White paper pixel
+                if (x < minX) minX = x;
+                if (x > maxX) maxX = x;
+                if (y < minY) minY = y;
+                if (y > maxY) maxY = y;
+                foundPaper = true;
+            }
+        }
+    }
+
+    if (foundPaper && (maxX - minX) > rawW * 0.4 && (maxY - minY) > rawH * 0.4) {
+        paperMinX = minX;
+        paperMaxX = maxX;
+        paperMinY = minY;
+        paperMaxY = maxY;
+    }
+
+    const paperW = paperMaxX - paperMinX;
+    const paperH = paperMaxY - paperMinY;
 
     const scannedRows = [];
     const memberPhones = [
@@ -158,37 +182,42 @@ function analyzeSheetImagePixels(imgElement) {
         "9994558334", "7806851354", "9789345210", "9443128901", "9842156789"
     ];
 
-    // 25 uniform rows per sheet
+    // 25 uniform rows per sheet (Row #1 to Row #25)
     for (let r = 1; r <= 25; r++) {
-        const rowY = Math.round((190 + (r - 1) * 52.8) * scaleY);
-        const bgDarkness = getCircleDarkness(740 * scaleX, rowY, 3);
+        // Relative Y center for row #r (Row 1 at rel ~0.218, Row 25 at rel ~0.938)
+        const relY = 0.218 + (r - 1) * ((0.938 - 0.218) / 24);
+        const rowY = paperMinY + relY * paperH;
+        const bgDarkness = getCircleDarkness(paperMinX + 0.50 * paperW, rowY, 2);
 
         const q1Centers = [
-            { mark: 'A', x: 775 * scaleX },
-            { mark: 'B', x: 795 * scaleX },
-            { mark: 'C', x: 816 * scaleX }
+            { mark: 'A', relX: 0.585 },
+            { mark: 'B', relX: 0.612 },
+            { mark: 'C', relX: 0.638 }
         ];
 
         const q2Centers = [
-            { mark: 'A', x: 870 * scaleX },
-            { mark: 'B', x: 890 * scaleX },
-            { mark: 'C', x: 910 * scaleX }
+            { mark: 'A', relX: 0.720 },
+            { mark: 'B', relX: 0.747 },
+            { mark: 'C', relX: 0.774 }
         ];
 
         const q3Centers = [
-            { mark: 'A', x: 965 * scaleX },
-            { mark: 'B', x: 985 * scaleX },
-            { mark: 'C', x: 1005 * scaleX }
+            { mark: 'A', relX: 0.855 },
+            { mark: 'B', relX: 0.882 },
+            { mark: 'C', relX: 0.909 }
         ];
 
         function evaluateGroup(centers) {
-            const darknesses = centers.map(c => Math.round(getCircleDarkness(c.x, rowY, 3)));
+            const darknesses = centers.map(c => {
+                const x = paperMinX + c.relX * paperW;
+                return Math.round(getCircleDarkness(x, rowY, 2));
+            });
             const maxD = Math.max(...darknesses);
             const minD = Math.min(...darknesses);
             const diff = maxD - minD;
             const relBg = maxD - bgDarkness;
 
-            if (diff >= 30 && relBg >= 30) {
+            if (diff >= 18 && relBg >= 15) {
                 return centers[darknesses.indexOf(maxD)].mark;
             }
             return "-";
