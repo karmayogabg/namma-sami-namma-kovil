@@ -156,10 +156,11 @@ Whenever any update is made to the dataset, UI layout, components, or features, 
 - **`v5.8`**: 100% Pixel & Row Data Alignment Synergy (synchronized `sample_marked_sheet.jpg` with `CODE: NSNK-B001-P01` and row phone numbers `7010853258`, `9363786428`, `9363758615`, `7358064179`, `6380506458` for exact 1-to-1 match between preview output and image).
 - **`v5.9`**: Instant Modal Trigger & Asynchronous Loading Fallback (guaranteed instant pop-up overlay opening upon clicking the Hero Progress Banner or Top Action Button with smooth dataset loading spinners).
 - **`v6.0`**: Real Client-Side HTML Canvas Pixel OCR Analyzer Engine (`analyzeSheetImagePixels` sampling 1140x1735 pixel grid darkness to accurately extract filled pen bubbles `(A)`, `(B)`, `(C)` for Q1, Q2, Q3 from any uploaded photo).
+- **`v6.1`**: Automated Filter Auto-Reset & 1-Click Clear Search Fallback (ensures opening Caller Manager modal automatically resets filters to display all 126 batch cards, with 1-click `Clear Search & Show All 126 Batches 🔄` fallback button).
 
 ---
 
-## 7. Core System Specs & Architecture (v6.0 Summary)
+## 7. Core System Specs & Architecture (v6.1 Summary)
 
 ### 1. 3-Question Grading & Classification Engine
 - **Q1**: Meaning of your Name? *(உங்கள் பெயரின் பொருள் தெரியுமா?)*

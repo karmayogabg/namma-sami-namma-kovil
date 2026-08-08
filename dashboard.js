@@ -1184,11 +1184,23 @@ window.updateOverallProgressStats = updateOverallProgressStats;
 
 function openCallerManagerModal() {
     initCallerAssignments();
+
+    // Ensure search & status filters are reset on open to show all 126 batch cards
+    const searchInput = document.getElementById('caller-search-input');
+    const statusSelect = document.getElementById('caller-status-filter');
+    if (searchInput) searchInput.value = '';
+    if (statusSelect) statusSelect.value = 'all';
+
     const modal = document.getElementById('caller-manager-modal');
     if (modal) {
         modal.style.display = 'flex';
         modal.classList.add('active');
     }
+
+    if ((!allData || allData.length === 0) && typeof loadDataset === 'function') {
+        loadDataset();
+    }
+
     renderCallerManagerModal();
 }
 window.openCallerManagerModal = openCallerManagerModal;
@@ -1201,6 +1213,15 @@ function closeCallerManagerModal() {
     }
 }
 window.closeCallerManagerModal = closeCallerManagerModal;
+
+function resetCallerFilters() {
+    const searchInput = document.getElementById('caller-search-input');
+    const statusSelect = document.getElementById('caller-status-filter');
+    if (searchInput) searchInput.value = '';
+    if (statusSelect) statusSelect.value = 'all';
+    renderCallerManagerModal();
+}
+window.resetCallerFilters = resetCallerFilters;
 
 function renderCallerManagerModal() {
     const container = document.getElementById('caller-batches-grid-container');
@@ -1338,7 +1359,14 @@ function renderCallerManagerModal() {
     }
 
     if (matchCount === 0) {
-        html += `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);">No batches match your search filter criteria.</div>`;
+        html += `
+            <div style="grid-column:1/-1; text-align:center; padding:50px 20px; color:var(--text-muted);">
+                <p style="font-size:0.95rem; color:var(--text-main); margin-bottom:12px;">No batch cards match your search criteria "${escapeHtml(searchVal)}".</p>
+                <button class="toggle-btn" style="padding:8px 16px; background:rgba(139,92,246,0.2); border-color:rgba(139,92,246,0.4); color:#c4b5fd;" onclick="resetCallerFilters()">
+                    Clear Search & Show All 126 Batches 🔄
+                </button>
+            </div>
+        `;
     }
 
     html += '</div>';
