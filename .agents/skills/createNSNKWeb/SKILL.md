@@ -158,10 +158,11 @@ Whenever any update is made to the dataset, UI layout, components, or features, 
 - **`v6.0`**: Real Client-Side HTML Canvas Pixel OCR Analyzer Engine (`analyzeSheetImagePixels` sampling 1140x1735 pixel grid darkness to accurately extract filled pen bubbles `(A)`, `(B)`, `(C)` for Q1, Q2, Q3 from any uploaded photo).
 - **`v6.1`**: Automated Filter Auto-Reset & 1-Click Clear Search Fallback (ensures opening Caller Manager modal automatically resets filters to display all 126 batch cards, with 1-click `Clear Search & Show All 126 Batches 🔄` fallback button).
 - **`v6.2`**: Document Boundary Detection & Relative Contrast OMR Analyzer (`analyzeSheetImagePixels` auto-crops paper margins from phone camera photos like `ManualMarkedSheet.jpg` and uses local paper background contrast to accurately read manually marked pen bubbles).
+- **`v6.3`**: Precision Inner-Bubble Circle Sampling & Border Avoidance (`analyzeSheetImagePixels` samples tight 3px radius inner bubble centers to prevent outer rating box borders from triggering false un-marked bubble detections).
 
 ---
 
-## 7. Core System Specs & Architecture (v6.2 Summary)
+## 7. Core System Specs & Architecture (v6.3 Summary)
 
 ### 1. 3-Question Grading & Classification Engine
 - **Q1**: Meaning of your Name? *(உங்கள் பெயரின் பொருள் தெரியுமா?)*

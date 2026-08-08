@@ -189,11 +189,11 @@ function analyzeSheetImagePixels(imgElement) {
         return count > 0 ? (sum / count) : 255;
     }
 
-    // Coordinates for Q1, Q2, Q3 bubbles
+    // Coordinates for Q1, Q2, Q3 bubbles (tightly centered inside inner bubble circles)
     const BubbleMap = {
-        q1: [ { mark: 'A', x: 792 }, { mark: 'B', x: 807 }, { mark: 'C', x: 822 } ],
-        q2: [ { mark: 'A', x: 869 }, { mark: 'B', x: 884 }, { mark: 'C', x: 900 } ],
-        q3: [ { mark: 'A', x: 971 }, { mark: 'B', x: 986 }, { mark: 'C', x: 1001 } ]
+        q1: [ { mark: 'A', x: 712 }, { mark: 'B', x: 728 }, { mark: 'C', x: 744 } ],
+        q2: [ { mark: 'A', x: 818 }, { mark: 'B', x: 834 }, { mark: 'C', x: 850 } ],
+        q3: [ { mark: 'A', x: 928 }, { mark: 'B', x: 944 }, { mark: 'C', x: 960 } ]
     };
 
     const scannedRows = [];
@@ -205,15 +205,16 @@ function analyzeSheetImagePixels(imgElement) {
     for (let r = 1; r <= 8; r++) {
         const rowY = Math.round(264 + (r - 1) * 170);
 
-        // Local paper white background reference
-        const bgRef = getAverageBrightness(740, rowY, 8);
+        // Local paper white background reference sampled away from border lines
+        const bgRef = getAverageBrightness(670, rowY, 4);
 
         function detectQuestionMark(qBubbles) {
             let darkestMark = "-";
             let maxDarknessContrast = 0;
 
             qBubbles.forEach(b => {
-                const brightness = getAverageBrightness(b.x, rowY, 6);
+                // Tight 3px radius ensures we only sample inner bubble circle and avoid box border lines
+                const brightness = getAverageBrightness(b.x, rowY, 3);
                 const contrast = bgRef - brightness;
                 if (contrast > maxDarknessContrast) {
                     maxDarknessContrast = contrast;
@@ -221,8 +222,8 @@ function analyzeSheetImagePixels(imgElement) {
                 }
             });
 
-            // Require minimum 20px contrast darker than background to confirm filled pen mark
-            return maxDarknessContrast >= 20 ? darkestMark : "-";
+            // Require minimum 35px contrast darker than white paper background to confirm filled pen mark
+            return maxDarknessContrast >= 35 ? darkestMark : "-";
         }
 
         const q1Mark = detectQuestionMark(BubbleMap.q1);
