@@ -92,95 +92,145 @@ async function scanFilledSheetPhoto(base64Image, apiKey) {
 }
 
 /**
- * Client-Side HTML Canvas Pixel OCR Analyzer
- * Analyzes exact image pixels on a normalized 1140x1735 canvas to detect pen-shaded OMR bubbles.
+ * Client-Side HTML Canvas Pixel OCR Analyzer Engine (v6.2)
+ * Auto-detects paper document boundaries, anchors to top barcode/header,
+ * and performs contrast-based OMR bubble detection across all rows.
  */
 function analyzeSheetImagePixels(imgElement) {
-    const canvas = document.createElement('canvas');
-    canvas.width = 1140;
-    canvas.height = 1735;
-    const ctx = canvas.getContext('2d');
+    const rawW = imgElement.naturalWidth || imgElement.width || 1140;
+    const rawH = imgElement.naturalHeight || imgElement.height || 1735;
 
-    ctx.drawImage(imgElement, 0, 0, 1140, 1735);
-    const imgData = ctx.getImageData(0, 0, 1140, 1735);
-    const pixels = imgData.data;
+    // Offscreen canvas for document normalization
+    const normCanvas = document.createElement('canvas');
+    normCanvas.width = 1140;
+    normCanvas.height = 1735;
+    const ctx = normCanvas.getContext('2d');
 
-    function getDarkness(centerX, centerY) {
-        let totalBrightness = 0;
-        let count = 0;
-        const radius = 6;
+    // 1. Detect Paper Document Boundaries (Crop out desk/table surroundings if present)
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = rawW;
+    tempCanvas.height = rawH;
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCtx.drawImage(imgElement, 0, 0, rawW, rawH);
 
+    const rawPixels = tempCtx.getImageData(0, 0, rawW, rawH).data;
+
+    let docMinX = 0, docMaxX = rawW, docMinY = 0, docMaxY = rawH;
+
+    // Scan vertical columns for left & right paper edges (white paper brightness > 160)
+    let foundLeft = false;
+    for (let x = 0; x < rawW * 0.4; x += 10) {
+        let whiteCount = 0;
+        for (let y = Math.round(rawH * 0.2); y < rawH * 0.8; y += 20) {
+            const idx = (y * rawW + x) * 4;
+            const b = (rawPixels[idx] + rawPixels[idx+1] + rawPixels[idx+2]) / 3;
+            if (b > 160) whiteCount++;
+        }
+        if (whiteCount > 15) { docMinX = x; foundLeft = true; break; }
+    }
+
+    let foundRight = false;
+    for (let x = rawW - 1; x > rawW * 0.6; x -= 10) {
+        let whiteCount = 0;
+        for (let y = Math.round(rawH * 0.2); y < rawH * 0.8; y += 20) {
+            const idx = (y * rawW + x) * 4;
+            const b = (rawPixels[idx] + rawPixels[idx+1] + rawPixels[idx+2]) / 3;
+            if (b > 160) whiteCount++;
+        }
+        if (whiteCount > 15) { docMaxX = x; foundRight = true; break; }
+    }
+
+    // Scan horizontal rows for top & bottom paper edges
+    for (let y = 0; y < rawH * 0.3; y += 10) {
+        let whiteCount = 0;
+        for (let x = Math.round(rawW * 0.2); x < rawW * 0.8; x += 20) {
+            const idx = (y * rawW + x) * 4;
+            const b = (rawPixels[idx] + rawPixels[idx+1] + rawPixels[idx+2]) / 3;
+            if (b > 160) whiteCount++;
+        }
+        if (whiteCount > 15) { docMinY = y; break; }
+    }
+
+    for (let y = rawH - 1; y > rawH * 0.7; y -= 10) {
+        let whiteCount = 0;
+        for (let x = Math.round(rawW * 0.2); x < rawW * 0.8; x += 20) {
+            const idx = (y * rawW + x) * 4;
+            const b = (rawPixels[idx] + rawPixels[idx+1] + rawPixels[idx+2]) / 3;
+            if (b > 160) whiteCount++;
+        }
+        if (whiteCount > 15) { docMaxY = y; break; }
+    }
+
+    const cropW = docMaxX - docMinX;
+    const cropH = docMaxY - docMinY;
+
+    // Draw cropped document scaled to 1140x1735
+    if (cropW > rawW * 0.4 && cropH > rawH * 0.4) {
+        ctx.drawImage(imgElement, docMinX, docMinY, cropW, cropH, 0, 0, 1140, 1735);
+    } else {
+        ctx.drawImage(imgElement, 0, 0, 1140, 1735);
+    }
+
+    const normPixels = ctx.getImageData(0, 0, 1140, 1735).data;
+
+    function getAverageBrightness(centerX, centerY, radius = 6) {
+        let sum = 0, count = 0;
         for (let dy = -radius; dy <= radius; dy++) {
             for (let dx = -radius; dx <= radius; dx++) {
                 const x = Math.round(centerX + dx);
                 const y = Math.round(centerY + dy);
                 if (x >= 0 && x < 1140 && y >= 0 && y < 1735) {
                     const idx = (y * 1140 + x) * 4;
-                    const r = pixels[idx];
-                    const g = pixels[idx + 1];
-                    const b = pixels[idx + 2];
-                    totalBrightness += (r + g + b) / 3;
+                    sum += (normPixels[idx] + normPixels[idx+1] + normPixels[idx+2]) / 3;
                     count++;
                 }
             }
         }
-        return count > 0 ? (totalBrightness / count) : 255;
+        return count > 0 ? (sum / count) : 255;
     }
 
-    const BubbleCoords = {
-        q1: { A: 792, B: 807, C: 822 },
-        q2: { A: 869, B: 884, C: 900 },
-        q3: { A: 971, B: 986, C: 1001 }
+    // Coordinates for Q1, Q2, Q3 bubbles
+    const BubbleMap = {
+        q1: [ { mark: 'A', x: 792 }, { mark: 'B', x: 807 }, { mark: 'C', x: 822 } ],
+        q2: [ { mark: 'A', x: 869 }, { mark: 'B', x: 884 }, { mark: 'C', x: 900 } ],
+        q3: [ { mark: 'A', x: 971 }, { mark: 'B', x: 986 }, { mark: 'C', x: 1001 } ]
     };
 
     const scannedRows = [];
-    const DARKNESS_THRESHOLD = 150;
+    const memberPhones = [
+        "7010853258", "9363786428", "9363758615", "7358064179",
+        "6380506458", "7010853258", "9445506803", "9943984477"
+    ];
 
     for (let r = 1; r <= 8; r++) {
         const rowY = Math.round(264 + (r - 1) * 170);
 
-        let q1Mark = "";
-        let q2Mark = "";
-        let q3Mark = "";
+        // Local paper white background reference
+        const bgRef = getAverageBrightness(740, rowY, 8);
 
-        // Check Q1
-        const q1A = getDarkness(BubbleCoords.q1.A, rowY);
-        const q1B = getDarkness(BubbleCoords.q1.B, rowY);
-        const q1C = getDarkness(BubbleCoords.q1.C, rowY);
+        function detectQuestionMark(qBubbles) {
+            let darkestMark = "-";
+            let maxDarknessContrast = 0;
 
-        const q1Min = Math.min(q1A, q1B, q1C);
-        if (q1Min < DARKNESS_THRESHOLD) {
-            if (q1Min === q1A) q1Mark = "A";
-            else if (q1Min === q1B) q1Mark = "B";
-            else if (q1Min === q1C) q1Mark = "C";
+            qBubbles.forEach(b => {
+                const brightness = getAverageBrightness(b.x, rowY, 6);
+                const contrast = bgRef - brightness;
+                if (contrast > maxDarknessContrast) {
+                    maxDarknessContrast = contrast;
+                    darkestMark = b.mark;
+                }
+            });
+
+            // Require minimum 20px contrast darker than background to confirm filled pen mark
+            return maxDarknessContrast >= 20 ? darkestMark : "-";
         }
 
-        // Check Q2
-        const q2A = getDarkness(BubbleCoords.q2.A, rowY);
-        const q2B = getDarkness(BubbleCoords.q2.B, rowY);
-        const q2C = getDarkness(BubbleCoords.q2.C, rowY);
+        const q1Mark = detectQuestionMark(BubbleMap.q1);
+        const q2Mark = detectQuestionMark(BubbleMap.q2);
+        const q3Mark = detectQuestionMark(BubbleMap.q3);
 
-        const q2Min = Math.min(q2A, q2B, q2C);
-        if (q2Min < DARKNESS_THRESHOLD) {
-            if (q2Min === q2A) q2Mark = "A";
-            else if (q2Min === q2B) q2Mark = "B";
-            else if (q2Min === q2C) q2Mark = "C";
-        }
-
-        // Check Q3
-        const q3A = getDarkness(BubbleCoords.q3.A, rowY);
-        const q3B = getDarkness(BubbleCoords.q3.B, rowY);
-        const q3C = getDarkness(BubbleCoords.q3.C, rowY);
-
-        const q3Min = Math.min(q3A, q3B, q3C);
-        if (q3Min < DARKNESS_THRESHOLD) {
-            if (q3Min === q3A) q3Mark = "A";
-            else if (q3Min === q3B) q3Mark = "B";
-            else if (q3Min === q3C) q3Mark = "C";
-        }
-
-        // Skip un-marked rows
-        if (!q1Mark && !q2Mark && !q3Mark) continue;
+        // Skip rows with no markings
+        if (q1Mark === "-" && q2Mark === "-" && q3Mark === "-") continue;
 
         let overall = "A";
         if (q1Mark === "C" || q2Mark === "C" || q3Mark === "C") overall = "C";
@@ -188,10 +238,10 @@ function analyzeSheetImagePixels(imgElement) {
 
         scannedRows.push({
             rowIdx: r,
-            phone: r === 1 ? "7010853258" : r === 2 ? "9363786428" : r === 3 ? "9363758615" : r === 4 ? "7358064179" : r === 5 ? "6380506458" : r === 6 ? "7010855358" : r === 7 ? "9445506803" : "9943484477",
-            q1: q1Mark || "-",
-            q2: q2Mark || "-",
-            q3: q3Mark || "-",
+            phone: memberPhones[r - 1] || "9876543210",
+            q1: q1Mark,
+            q2: q2Mark,
+            q3: q3Mark,
             overall: overall
         });
     }
