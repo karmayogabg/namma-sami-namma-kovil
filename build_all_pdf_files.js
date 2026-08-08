@@ -8,7 +8,7 @@ console.log('Starting Master PDF Batch Generation for 62,521 Records...');
 const rawData = fs.readFileSync('namma_sami_namma_kovil_full.json', 'utf8');
 const allData = JSON.parse(rawData);
 
-const RECORDS_PER_PAGE = 20;
+const RECORDS_PER_PAGE = 25;
 const RECORDS_PER_BATCH = 500;
 const totalBatches = Math.ceil(allData.length / RECORDS_PER_BATCH);
 

@@ -8,7 +8,7 @@ console.log('Generating 126 REAL PDF files on disk and building master ZIP...');
 const rawData = fs.readFileSync('namma_sami_namma_kovil_full.json', 'utf8');
 const allData = JSON.parse(rawData);
 
-const RECORDS_PER_PAGE = 20;
+const RECORDS_PER_PAGE = 25;
 const RECORDS_PER_BATCH = 500;
 const totalBatches = Math.ceil(allData.length / RECORDS_PER_BATCH);
 
@@ -24,7 +24,7 @@ function generateBatchPdf(records, batchNum, startIdx, endIdx) {
         const endStr = String(endIdx).padStart(5, '0');
         const pdfPath = path.join(pdfDir, `NSNK_Batch_${batchStr}_Persons_${startStr}_to_${endStr}.pdf`);
 
-        const doc = new PDFDocument({ size: 'A4', margin: 20 });
+        const doc = new PDFDocument({ size: 'A4', margin: 15 });
         doc.registerFont('Tamil', path.join(__dirname, 'NotoSansTamil-Regular.ttf'));
         doc.registerFont('Tamil-Bold', path.join(__dirname, 'NotoSansTamil-Bold.ttf'));
 
@@ -44,53 +44,54 @@ function generateBatchPdf(records, batchNum, startIdx, endIdx) {
 
             // Header
             doc.fontSize(11).font('Tamil-Bold').fillColor('#0f172a')
-               .text(`Namma Sami Namma Kovil - PDF Caller Sheets (Batch #${batchStr})`, 20, 20);
+               .text(`Namma Sami Namma Kovil - PDF Caller Sheets (Batch #${batchStr})`, 20, 15);
             
             doc.fontSize(8).font('Tamil').fillColor('#475569')
-               .text(`Persons #${startIdx + pStart + 1} to #${startIdx + pEnd}  |  Page ${p + 1} of ${totalPages}  |  CODE: ${pageCode}`, 20, 35);
+               .text(`Persons #${startIdx + pStart + 1} to #${startIdx + pEnd}  |  Page ${p + 1} of ${totalPages} (25/Page)  |  CODE: ${pageCode}`, 20, 28);
 
-            doc.rect(480, 18, 95, 22).fillAndStroke('#0f172a', '#0f172a');
+            doc.rect(480, 12, 95, 20).fillAndStroke('#0f172a', '#0f172a');
             doc.fontSize(8).font('Tamil-Bold').fillColor('#6ee7b7')
-               .text(pageCode, 485, 25, { width: 85, align: 'center' });
+               .text(pageCode, 485, 18, { width: 85, align: 'center' });
 
-            doc.moveTo(20, 46).lineTo(575, 46).lineWidth(1).strokeColor('#0f172a').stroke();
+            doc.moveTo(20, 38).lineTo(575, 38).lineWidth(1).strokeColor('#0f172a').stroke();
 
-            // Records Table
-            let y = 52;
+            // Single Table Header
+            doc.rect(20, 42, 555, 16).fill('#0f172a');
+            doc.fontSize(7.5).font('Tamil-Bold').fillColor('#ffffff')
+               .text('#', 22, 46, { width: 25, align: 'center' })
+               .text('Name (Tamil Name)', 50, 46, { width: 180 })
+               .text('Phone Number', 235, 46, { width: 120 })
+               .text('Q1, Q2, Q3 Rating Bubbles', 360, 46, { width: 210, align: 'right' });
+
+            // Records Table Rows
+            let y = 60;
             pageRecords.forEach((item, idx) => {
                 const globalIdx = startIdx + pStart + idx + 1;
-                const survey = item.survey || {};
-                const q1 = survey.q1 || ' ';
-                const q2 = survey.q2 || ' ';
-                const q3 = survey.q3 || ' ';
 
                 // Member Row Box
-                doc.rect(20, y, 555, 34).lineWidth(0.5).strokeColor('#0f172a').stroke();
+                doc.rect(20, y, 555, 28).lineWidth(0.5).strokeColor('#334155').stroke();
 
                 // Index Badge
-                doc.rect(20, y, 24, 34).fill('#0f172a');
+                doc.rect(20, y, 25, 28).fill('#0f172a');
                 doc.fontSize(7.5).font('Tamil-Bold').fillColor('#ffffff')
-                   .text(`${globalIdx}`, 20, y + 12, { width: 24, align: 'center' });
+                   .text(`${globalIdx}`, 20, y + 9, { width: 25, align: 'center' });
 
-                // Details Line
+                // Details
                 const name = item.name || '';
-                const mobile = item.mobile ? `Ph: ${item.mobile}` : '';
-                const loc = [item.region, item.district, item.union].filter(Boolean).join(' | ');
+                const mobile = item.mobile ? `Ph: ${item.mobile}` : 'N/A';
 
                 doc.fontSize(8.5).font('Tamil-Bold').fillColor('#0f172a')
-                   .text(`${name}   ${mobile}   ${loc}`, 48, y + 4, { width: 370 });
+                   .text(`${name}`, 50, y + 8, { width: 180, ellipsis: true });
+
+                doc.fontSize(8).font('Tamil').fillColor('#1e293b')
+                   .text(`${mobile}`, 235, y + 9, { width: 120 });
 
                 // Rating Box (Right aligned)
-                doc.rect(425, y + 3, 145, 14).lineWidth(1).strokeColor('#0f172a').stroke();
-                doc.fontSize(6.5).font('Tamil-Bold').fillColor('#0f172a')
-                   .text(`Q1: [A][B][C]  Q2: [A][B][C]  Q3: [A][B][C]`, 428, y + 7, { width: 140, align: 'center' });
+                doc.rect(410, y + 5, 160, 18).lineWidth(1).strokeColor('#0f172a').stroke();
+                doc.fontSize(7).font('Tamil-Bold').fillColor('#0f172a')
+                   .text(`Q1: (A)(B)(C)  Q2: (A)(B)(C)  Q3: (A)(B)(C)`, 412, y + 10, { width: 156, align: 'center' });
 
-                // Meaning Line
-                const meaningText = item.meaning ? `Meaning: ${item.meaning}` : 'Meaning script loading...';
-                doc.fontSize(7.5).font('Tamil').fillColor('#334155')
-                   .text(meaningText, 48, y + 18, { width: 520, height: 13, ellipsis: true });
-
-                y += 36;
+                y += 29;
             });
         }
 

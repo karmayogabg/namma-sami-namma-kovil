@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NSNK - 50 Persons / Page Dual-Column Caller Sheet Sample</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+
+    <style>
+        @page { size: A4 portrait; margin: 5mm; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Noto Sans Tamil', -apple-system, sans-serif; background: #e2e8f0; color: #0f172a; margin: 0; padding: 15px; font-size: 10px; }
+
+        .sheet-container { background: #fff; width: 210mm; min-height: 297mm; margin: 0 auto; padding: 8mm 9mm; border: 1px solid #cbd5e1; box-shadow: 0 6px 16px rgba(0,0,0,0.12); position: relative; }
+
+        /* Dual Tracking Header */
+        .sheet-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0f172a; padding-bottom: 5px; margin-bottom: 6px; }
+        .sheet-title h2 { margin: 0; font-size: 1.05rem; font-family: 'Outfit', sans-serif; font-weight: 700; color: #0f172a; }
+        .sheet-title p { margin: 2px 0 0 0; font-size: 0.72rem; color: #475569; font-weight: 600; }
+        .header-code-badge { display: inline-block; background: #0f172a; color: #6ee7b7; font-family: monospace; font-weight: 700; font-size: 0.8rem; padding: 2px 7px; border-radius: 4px; margin-top: 3px; }
+
+        .barcode-container { text-align: right; }
+        .barcode-img { height: 28px; }
+
+        /* Dual Column Layout */
+        .columns-wrapper { display: flex; gap: 10px; justify-content: space-between; }
+        .column-box { flex: 1 1 50%; max-width: calc(50% - 5px); }
+
+        /* Table Styling */
+        table.records-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        table.records-table th { background: #0f172a; color: #fff; border: 1px solid #0f172a; padding: 3px 4px; font-size: 0.68rem; text-align: left; }
+        table.records-table td { border: 1px solid #475569; padding: 2.5px 4px; vertical-align: middle; height: 32px; font-size: 0.75rem; }
+
+        .member-idx { font-weight: 700; font-size: 0.72rem; background: #0f172a; color: #fff; padding: 1px 4px; border-radius: 2px; text-align: center; display: inline-block; min-width: 24px; }
+        .member-name { font-weight: 700; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 95px; }
+        .member-phone { font-size: 0.68rem; color: #1e293b; font-family: monospace; font-weight: 600; white-space: nowrap; }
+
+        /* OMR Rating Bubbles */
+        .q-bubbles-group { display: flex; gap: 3px; align-items: center; justify-content: flex-end; }
+        .q-sub-box { display: flex; align-items: center; gap: 1px; }
+        .q-lbl { font-size: 0.6rem; font-weight: 700; color: #0f172a; margin-right: 1px; }
+        .bubble { display: inline-block; width: 12px; height: 12px; border: 1.2px solid #0f172a; border-radius: 50%; text-align: center; line-height: 11px; font-size: 0.58rem; font-weight: 700; color: #0f172a; }
+        .bubble.filled { background: #0f172a; color: #fff; border-color: #0f172a; }
+    </style>
+</head>
+<body>
+
+    <div class="sheet-container">
+        <!-- Dual Tracking Header -->
+        <div class="sheet-header">
+            <div class="sheet-title">
+                <h2>நம்ம சாமி நம்ம கோவில் - உறுப்பினர்கள் தகவல்கள் & மதிப்பீட்டுத் தாள்</h2>
+                <p>Persons #1 to #50 • Batch #001 • Page 1 of 10 (Total 50 Persons/Page Layout)</p>
+                <div class="header-code-badge">CODE: NSNK-B001-P01</div>
+            </div>
+            <div class="barcode-container">
+                <svg class="barcode-img" id="barcode-NSNK-B001-P01"></svg>
+            </div>
+        </div>
+
+        <!-- Dual Column Tables -->
+        <div class="columns-wrapper">
+            <!-- Left Column Table (1 to 25) -->
+            <div class="column-box">
+                <table class="records-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 28px;">#</th>
+                            <th>பெயர் (Name)</th>
+                            <th style="width: 72px;">தொலைபேசி</th>
+                            <th style="width: 108px; text-align:right;">கேள்விகள் Q1, Q2, Q3</th>
+                        </tr>
+                    </thead>
+                    <tbody id="left-table-body"></tbody>
+                </table>
+            </div>
+
+            <!-- Right Column Table (26 to 50) -->
+            <div class="column-box">
+                <table class="records-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 28px;">#</th>
+                            <th>பெயர் (Name)</th>
+                            <th style="width: 72px;">தொலைபேசி</th>
+                            <th style="width: 108px; text-align:right;">கேள்விகள் Q1, Q2, Q3</th>
+                        </tr>
+                    </thead>
+                    <tbody id="right-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Statically Embedded 50 Sample Persons Dataset
+        const sampleDataset = [
+            {"name":"ராம்குமார்","mobile":"7010853258"},
+            {"name":"சிவகோகுல்","mobile":"9363786428"},
+            {"name":"சிவகோகுல்","mobile":"9363758615"},
+            {"name":"பத்மா","mobile":"7358064179"},
+            {"name":"தாமோதரன்","mobile":"6380506458"},
+            {"name":"ராம்குமார்","mobile":"7010853258"},
+            {"name":"மணிகண்டன்","mobile":"9445560803"},
+            {"name":"முரளிதரன்","mobile":"9943984477"},
+            {"name":"சிவபாலன்","mobile":"7358064179"},
+            {"name":"ஜவஹர் பாபு","mobile":"9994558334"},
+            {"name":"இராஜகோபால்","mobile":"9443693114"},
+            {"name":"கிருஷ்ணன்","mobile":"9360882000"},
+            {"name":"ராஜேஷ் குமார்","mobile":"8668090549"},
+            {"name":"மாயகிருஷ்ணன்","mobile":"8940842836"},
+            {"name":"கார்த்திக்","mobile":"9597107220"},
+            {"name":"ராதிகா","mobile":"9486090618"},
+            {"name":"கலைமணி","mobile":"8190835670"},
+            {"name":"முரளி","mobile":"9543661785"},
+            {"name":"ராமஜெயம்","mobile":"9003700575"},
+            {"name":"ராமேஸ்வரன்","mobile":"8248482472"},
+            {"name":"ஜவஹர் பாபு","mobile":"9994558334"},
+            {"name":"ஜெய்சங்கர்","mobile":"7806851354"},
+            {"name":"சந்தோஷ்","mobile":"9789345210"},
+            {"name":"அன்பரசன்","mobile":"9443128901"},
+            {"name":"சுரேஷ்","mobile":"9842156789"},
+
+            {"name":"லட்சுமி","mobile":"9123456789"},
+            {"name":"கணேஷ்","mobile":"9123456790"},
+            {"name":"சுரேஷ்","mobile":"9123456791"},
+            {"name":"கவிதா","mobile":"9123456792"},
+            {"name":"கார்த்திக்","mobile":"9123456813"},
+            {"name":"சரவணன்","mobile":"9843210987"},
+            {"name":"மீனாட்சி","mobile":"9765432109"},
+            {"name":"வேல்முருகன்","mobile":"9654321098"},
+            {"name":"தனலட்சுமி","mobile":"9543210987"},
+            {"name":"சுப்பிரமணியன்","mobile":"9432109876"},
+            {"name":"மகேஸ்வரி","mobile":"9321098765"},
+            {"name":"பாஸ்கரன்","mobile":"9210987654"},
+            {"name":"விஜயலட்சுமி","mobile":"9109876543"},
+            {"name":"செந்தில்குமார்","mobile":"9098765432"},
+            {"name":"அருள்மொழி","mobile":"8987654321"},
+            {"name":"சண்முகம்","mobile":"8876543210"},
+            {"name":"பார்வதி","mobile":"8765432109"},
+            {"name":"நாராயணன்","mobile":"8654321098"},
+            {"name":"சரஸ்வதி","mobile":"8543210987"},
+            {"name":"கங்காதரன்","mobile":"8432109876"},
+            {"name":"புவனேஸ்வரி","mobile":"8321098765"},
+            {"name":"கோவிந்தன்","mobile":"8210987654"},
+            {"name":"காயத்ரி","mobile":"8109876543"},
+            {"name":"சங்கரநாராயணன்","mobile":"8098765432"},
+            {"name":"ராஜேஸ்வரி","mobile":"7987654321"}
+        ];
+
+        // Sample Marked Answers for demonstration (Rows 1 to 5 show realistic pen shading)
+        const markedSampleAnswers = {
+            0: {q1:'A', q2:'A', q3:'B'},
+            1: {q1:'A', q2:'B', q3:'A'},
+            2: {q1:'B', q2:'B', q3:'C'},
+            3: {q1:'A', q2:'A', q3:'A'},
+            4: {q1:'C', q2:'C', q3:'B'}
+        };
+
+        function renderRows(records, startIdx) {
+            let html = '';
+            records.forEach((item, i) => {
+                const globalNo = startIdx + i + 1;
+                const mark = markedSampleAnswers[startIdx + i];
+
+                const q1_A = mark && mark.q1 === 'A' ? 'filled' : '';
+                const q1_B = mark && mark.q1 === 'B' ? 'filled' : '';
+                const q1_C = mark && mark.q1 === 'C' ? 'filled' : '';
+
+                const q2_A = mark && mark.q2 === 'A' ? 'filled' : '';
+                const q2_B = mark && mark.q2 === 'B' ? 'filled' : '';
+                const q2_C = mark && mark.q2 === 'C' ? 'filled' : '';
+
+                const q3_A = mark && mark.q3 === 'A' ? 'filled' : '';
+                const q3_B = mark && mark.q3 === 'B' ? 'filled' : '';
+                const q3_C = mark && mark.q3 === 'C' ? 'filled' : '';
+
+                html += `
+                    <tr>
+                        <td style="text-align:center;"><span class="member-idx">${globalNo}</span></td>
+                        <td><span class="member-name" title="${item.name}">${item.name}</span></td>
+                        <td><span class="member-phone">${item.mobile}</span></td>
+                        <td>
+                            <div class="q-bubbles-group">
+                                <div class="q-sub-box"><span class="q-lbl">1:</span><span class="bubble ${q1_A}">A</span><span class="bubble ${q1_B}">B</span><span class="bubble ${q1_C}">C</span></div>
+                                <div class="q-sub-box"><span class="q-lbl">2:</span><span class="bubble ${q2_A}">A</span><span class="bubble ${q2_B}">B</span><span class="bubble ${q2_C}">C</span></div>
+                                <div class="q-sub-box"><span class="q-lbl">3:</span><span class="bubble ${q3_A}">A</span><span class="bubble ${q3_B}">B</span><span class="bubble ${q3_C}">C</span></div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            return html;
+        }
+
+        document.getElementById('left-table-body').innerHTML = renderRows(sampleDataset.slice(0, 25), 0);
+        document.getElementById('right-table-body').innerHTML = renderRows(sampleDataset.slice(25, 50), 25);
+
+        // Render Barcode
+        try {
+            JsBarcode("#barcode-NSNK-B001-P01", "NSNK-B001-P01", {
+                format: "CODE128",
+                height: 24,
+                displayValue: false,
+                margin: 0
+            });
+        } catch(e) {}
+    </script>
+</body>
+</html>

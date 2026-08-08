@@ -125,6 +125,21 @@ async function loadDataset() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         allData = await response.json();
+
+        // Restore Saved Survey Data from LocalStorage
+        try {
+            const savedSurvey = localStorage.getItem('nsnk_survey_grades');
+            if (savedSurvey) {
+                const surveyMap = JSON.parse(savedSurvey);
+                allData.forEach(item => {
+                    if (item.mobile && surveyMap[item.mobile]) {
+                        item.survey = surveyMap[item.mobile];
+                    }
+                });
+            }
+        } catch (e) {
+            console.warn('Error reading saved survey grades from localStorage:', e);
+        }
         
         // Calculate Stats
         const uniqueNames = new Set(allData.map(d => d.name)).size;
@@ -657,7 +672,6 @@ function handlePhotoUpload(input) {
         const base64Img = e.target.result;
         if (previewImg) previewImg.src = base64Img;
 
-        // Ensure Image is completely decoded in browser memory before analyzing
         const scanImg = new Image();
         scanImg.onload = function() {
             if (loadingState) loadingState.style.display = 'none';
@@ -673,33 +687,75 @@ function handlePhotoUpload(input) {
             }
 
             const detectedCode = scannedResult?.pageCode || "NSNK-B001-P01";
-            const detectedBatchNum = "001";
-            const detectedPageNum = "01";
-            const detectedRange = "Persons #1 to #20";
+            const codeMatch = detectedCode.match(/NSNK-B(\d{3})-P(\d{2})/);
+            let batchNum = 1;
+            let pageNum = 1;
+            if (codeMatch) {
+                batchNum = parseInt(codeMatch[1], 10);
+                pageNum = parseInt(codeMatch[2], 10);
+            }
+
+            const pageStart = (batchNum - 1) * 500 + (pageNum - 1) * 25 + 1;
+            const pageEnd = Math.min((batchNum - 1) * 500 + pageNum * 25, allData.length || 62521);
 
             const batchInfoEl = document.getElementById('ocr-batch-info');
             if (batchInfoEl) {
-                batchInfoEl.innerHTML = `🎯 Detected: Batch #${detectedBatchNum} • Page ${detectedPageNum} (${detectedRange}) • Code: ${detectedCode}`;
+                batchInfoEl.innerHTML = `🎯 Detected: Batch #${String(batchNum).padStart(3, '0')} • Page ${String(pageNum).padStart(2, '0')} (Persons #${pageStart} to #${pageEnd}) • Code: ${detectedCode}`;
             }
 
             const sampleScannedRows = (scannedResult && scannedResult.scannedRows) ? scannedResult.scannedRows : [];
-            pendingOcrScannedData = sampleScannedRows;
+            pendingOcrScannedData = sampleScannedRows.map(r => {
+                const globalIdx = (batchNum - 1) * 500 + (pageNum - 1) * 25 + r.rowIdx;
+                const matchedItem = allData[globalIdx - 1];
+                return {
+                    rowIdx: r.rowIdx,
+                    globalIdx: globalIdx,
+                    name: matchedItem ? matchedItem.name : "Member #" + globalIdx,
+                    phone: matchedItem ? matchedItem.mobile : r.phone,
+                    q1: r.q1,
+                    q2: r.q2,
+                    q3: r.q3,
+                    overall: (typeof deriveOverallGrade === 'function') ? deriveOverallGrade(r.q1, r.q2, r.q3) : r.overall
+                };
+            });
 
             const tbody = document.getElementById('ocr-scanned-rows-body');
             if (tbody) {
                 let html = '';
-                if (sampleScannedRows.length === 0) {
-                    html = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:20px;">No pen markings detected on sheet rows.</td></tr>`;
+                if (pendingOcrScannedData.length === 0) {
+                    html = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:20px;">No pen markings detected on sheet rows.</td></tr>`;
                 } else {
-                    sampleScannedRows.forEach(r => {
+                    pendingOcrScannedData.forEach((r, idx) => {
                         html += `
                             <tr>
                                 <td>#${r.rowIdx}</td>
+                                <td><strong>${r.name}</strong></td>
                                 <td>${r.phone}</td>
-                                <td><strong>${r.q1}</strong></td>
-                                <td><strong>${r.q2}</strong></td>
-                                <td><strong>${r.q3}</strong></td>
-                                <td>${getGradeBadgeHtml({ overallGrade: r.overall })}</td>
+                                <td>
+                                    <select onchange="updatePendingOcrRow(${idx}, 'q1', this.value)" style="padding:2px 4px; border-radius:4px; background:var(--bg-dark); color:var(--text-main); border:1px solid var(--border-color);">
+                                        <option value="A" ${r.q1==='A'?'selected':''}>A</option>
+                                        <option value="B" ${r.q1==='B'?'selected':''}>B</option>
+                                        <option value="C" ${r.q1==='C'?'selected':''}>C</option>
+                                        <option value="-" ${r.q1==='-'?'selected':''}>-</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select onchange="updatePendingOcrRow(${idx}, 'q2', this.value)" style="padding:2px 4px; border-radius:4px; background:var(--bg-dark); color:var(--text-main); border:1px solid var(--border-color);">
+                                        <option value="A" ${r.q2==='A'?'selected':''}>A</option>
+                                        <option value="B" ${r.q2==='B'?'selected':''}>B</option>
+                                        <option value="C" ${r.q2==='C'?'selected':''}>C</option>
+                                        <option value="-" ${r.q2==='-'?'selected':''}>-</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select onchange="updatePendingOcrRow(${idx}, 'q3', this.value)" style="padding:2px 4px; border-radius:4px; background:var(--bg-dark); color:var(--text-main); border:1px solid var(--border-color);">
+                                        <option value="A" ${r.q3==='A'?'selected':''}>A</option>
+                                        <option value="B" ${r.q3==='B'?'selected':''}>B</option>
+                                        <option value="C" ${r.q3==='C'?'selected':''}>C</option>
+                                        <option value="-" ${r.q3==='-'?'selected':''}>-</option>
+                                    </select>
+                                </td>
+                                <td id="ocr-grade-badge-${idx}">${getGradeBadgeHtml({ overallGrade: r.overall })}</td>
                             </tr>
                         `;
                     });
@@ -713,6 +769,25 @@ function handlePhotoUpload(input) {
     reader.readAsDataURL(file);
 }
 window.handlePhotoUpload = handlePhotoUpload;
+
+function updatePendingOcrRow(idx, field, val) {
+    if (!pendingOcrScannedData || !pendingOcrScannedData[idx]) return;
+    pendingOcrScannedData[idx][field] = val;
+
+    if (typeof deriveOverallGrade === 'function') {
+        const derived = deriveOverallGrade(
+            pendingOcrScannedData[idx].q1,
+            pendingOcrScannedData[idx].q2,
+            pendingOcrScannedData[idx].q3
+        );
+        pendingOcrScannedData[idx].overall = derived;
+        const badgeEl = document.getElementById(`ocr-grade-badge-${idx}`);
+        if (badgeEl) {
+            badgeEl.innerHTML = getGradeBadgeHtml({ overallGrade: derived });
+        }
+    }
+}
+window.updatePendingOcrRow = updatePendingOcrRow;
 
 function closeOcrModal() {
     const ocrOverlay = document.getElementById('ocr-modal-overlay');
@@ -728,17 +803,39 @@ function confirmOcrGrades() {
     }
 
     let updatedCount = 0;
+    const surveyMap = {};
+
+    try {
+        const existing = localStorage.getItem('nsnk_survey_grades');
+        if (existing) Object.assign(surveyMap, JSON.parse(existing));
+    } catch(e) {}
+
     pendingOcrScannedData.forEach(scanned => {
-        const item = allData.find(d => d.mobile === scanned.phone);
+        let item = null;
+        if (scanned.globalIdx && allData[scanned.globalIdx - 1]) {
+            item = allData[scanned.globalIdx - 1];
+        } else {
+            item = allData.find(d => d.mobile === scanned.phone);
+        }
+
         if (item) {
             item.survey = item.survey || {};
             item.survey.q1 = scanned.q1;
             item.survey.q2 = scanned.q2;
             item.survey.q3 = scanned.q3;
             item.survey.overallGrade = scanned.overall;
+            if (item.mobile) {
+                surveyMap[item.mobile] = item.survey;
+            }
             updatedCount++;
         }
     });
+
+    try {
+        localStorage.setItem('nsnk_survey_grades', JSON.stringify(surveyMap));
+    } catch(e) {
+        console.warn('Error persisting survey grades to localStorage:', e);
+    }
 
     closeOcrModal();
     applyFilters();

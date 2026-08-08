@@ -93,26 +93,21 @@
         .barcode-container { text-align: right; }
         .barcode-img { height: 32px; }
 
-        /* Members Table Layout */
+        /* Members Single Table Layout */
         table.records-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
-        table.records-table td { border: 1px solid #0f172a; padding: 5px 7px; text-align: left; vertical-align: top; }
-        
-        .member-row-header { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-        .member-meta-group { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
-        .member-idx { font-weight: 700; font-size: 0.8rem; background: #0f172a; color: #fff; padding: 1px 5px; border-radius: 3px; }
-        .member-name { font-weight: 700; font-size: 0.92rem; color: #0f172a; margin-right: 2px; }
-        .member-phone { font-size: 0.75rem; color: #1e293b; font-weight: 600; }
-        .loc-tag { font-size: 0.7rem; background: #f1f5f9; color: #334155; padding: 1px 5px; border-radius: 3px; border: 1px solid #cbd5e1; }
+        table.records-table th { background: #0f172a; color: #fff; border: 1.5px solid #0f172a; padding: 6px 8px; font-size: 0.78rem; text-align: left; }
+        table.records-table td { border: 1.5px solid #334155; padding: 5px 8px; vertical-align: middle; height: 38px; font-size: 0.88rem; }
 
-        /* Tamil Name Meaning Full Script Box */
-        .meaning-full-box { margin-top: 3px; font-size: 0.8rem; line-height: 1.4; color: #1e293b; background: #f8fafc; padding: 4px 7px; border-left: 3px solid #8b5cf6; border-radius: 0 4px 4px 0; }
+        .member-idx { font-weight: 700; font-size: 0.8rem; background: #0f172a; color: #fff; padding: 2px 6px; border-radius: 3px; text-align: center; display: inline-block; min-width: 28px; }
+        .member-name { font-weight: 700; color: #0f172a; font-size: 0.92rem; }
+        .member-phone { font-size: 0.82rem; color: #1e293b; font-family: monospace; font-weight: 600; }
 
-        /* Rating Bubbles Box */
-        .rating-box { display: flex; gap: 8px; align-items: center; background: #fff; padding: 2px 6px; border: 1.5px solid #0f172a; border-radius: 4px; flex-shrink: 0; }
-        .q-item { display: flex; align-items: center; gap: 2px; }
-        .q-lbl { font-size: 0.68rem; font-weight: 700; color: #0f172a; }
-        .bubble { display: inline-block; width: 15px; height: 15px; border: 1.5px solid #0f172a; border-radius: 50%; text-align: center; line-height: 15px; font-size: 0.68rem; font-weight: 700; }
-        .filled { background: #0f172a; color: #fff; }
+        /* OMR Rating Bubbles */
+        .q-bubbles-group { display: flex; gap: 14px; align-items: center; justify-content: flex-end; }
+        .q-sub-box { display: flex; align-items: center; gap: 3px; background: #f8fafc; padding: 3px 6px; border-radius: 4px; border: 1px solid #cbd5e1; }
+        .q-lbl { font-size: 0.72rem; font-weight: 700; color: #0f172a; margin-right: 2px; }
+        .bubble { display: inline-block; width: 15px; height: 15px; border: 1.5px solid #0f172a; border-radius: 50%; text-align: center; line-height: 14px; font-size: 0.68rem; font-weight: 700; color: #0f172a; background: #fff; }
+        .bubble.filled { background: #0f172a; color: #fff; border-color: #0f172a; }
 
         #loading-status {
             max-width: 600px;
@@ -160,7 +155,7 @@
     <div id="loading-status">
         <div class="spinner"></div>
         <h3 style="margin: 0 0 8px 0; color: #0f172a; font-family:'Outfit';">Loading Entire Dataset (0 to 62,521)...</h3>
-        <p id="loading-desc" style="margin: 0; color: #64748b; font-size: 0.9rem;">Building full uninterrupted printable call sheet (3,127 pages)...</p>
+        <p id="loading-desc" style="margin: 0; color: #64748b; font-size: 0.9rem;">Building full uninterrupted printable call sheet (2,501 pages)...</p>
     </div>
 
     <!-- Container where pages render dynamically -->
@@ -168,7 +163,7 @@
 
     <script>
         let allData = [];
-        const RECORDS_PER_PAGE = 20;
+        const RECORDS_PER_PAGE = 25;
         const RECORDS_PER_BATCH = 500;
 
         // Fetch Master Dataset
@@ -222,26 +217,14 @@
 
                         rowsHtml += `
                             <tr>
-                                <td style="width: 25px; text-align: center; vertical-align: middle; background: #f8fafc; padding: 2px;">
-                                    <span class="member-idx">${globalIdx}</span>
-                                </td>
+                                <td style="width: 40px; text-align: center;"><span class="member-idx">#${globalIdx}</span></td>
+                                <td style="width: 220px;"><span class="member-name">${item.name || ''}</span></td>
+                                <td style="width: 140px;"><span class="member-phone">📞 ${item.mobile || 'N/A'}</span></td>
                                 <td>
-                                    <div class="member-row-header">
-                                        <div class="member-meta-group">
-                                            <span class="member-name">${item.name || ''}</span>
-                                            <span class="member-phone">📞 ${item.mobile || 'N/A'}</span>
-                                            ${item.region ? `<span class="loc-tag">மண்டலம்: ${item.region}</span>` : ''}
-                                            ${item.district ? `<span class="loc-tag">மாவட்டம்: ${item.district}</span>` : ''}
-                                            ${item.union ? `<span class="loc-tag">ஒன்றியம்: ${item.union}</span>` : ''}
-                                        </div>
-                                        <div class="rating-box">
-                                            <div class="q-item"><span class="q-lbl">Q1:</span><span class="bubble ${q1==='A'?'filled':''}">A</span><span class="bubble ${q1==='B'?'filled':''}">B</span><span class="bubble ${q1==='C'?'filled':''}">C</span></div>
-                                            <div class="q-item"><span class="q-lbl">Q2:</span><span class="bubble ${q2==='A'?'filled':''}">A</span><span class="bubble ${q2==='B'?'filled':''}">B</span><span class="bubble ${q2==='C'?'filled':''}">C</span></div>
-                                            <div class="q-item"><span class="q-lbl">Q3:</span><span class="bubble ${q3==='A'?'filled':''}">A</span><span class="bubble ${q3==='B'?'filled':''}">B</span><span class="bubble ${q3==='C'?'filled':''}">C</span></div>
-                                        </div>
-                                    </div>
-                                    <div class="meaning-full-box">
-                                        <strong>தமிழ் பொருள்:</strong> ${item.meaning || 'விளக்கம் சேகரிக்கப்படுகிறது.'}
+                                    <div class="q-bubbles-group">
+                                        <div class="q-sub-box"><span class="q-lbl">Q1:</span><span class="bubble ${q1==='A'?'filled':''}">A</span><span class="bubble ${q1==='B'?'filled':''}">B</span><span class="bubble ${q1==='C'?'filled':''}">C</span></div>
+                                        <div class="q-sub-box"><span class="q-lbl">Q2:</span><span class="bubble ${q2==='A'?'filled':''}">A</span><span class="bubble ${q2==='B'?'filled':''}">B</span><span class="bubble ${q2==='C'?'filled':''}">C</span></div>
+                                        <div class="q-sub-box"><span class="q-lbl">Q3:</span><span class="bubble ${q3==='A'?'filled':''}">A</span><span class="bubble ${q3==='B'?'filled':''}">B</span><span class="bubble ${q3==='C'?'filled':''}">C</span></div>
                                     </div>
                                 </td>
                             </tr>
@@ -251,16 +234,24 @@
                     pageDiv.innerHTML = `
                         <div class="sheet-header">
                             <div class="sheet-title">
-                                <h2>நம்ம சாமி நம்ம கோவில் - உறுப்பினர்கள் கேள்விகள் & மதிப்பீட்டுத் தாள்</h2>
-                                <p>Full Print Sheet (0 to 62,521) • Persons #${pageStart + 1} to #${pageEnd} • Page ${p + 1} of ${totalPages} (Batch #${String(batchIdx + 1).padStart(3, '0')})</p>
+                                <h2>நம்ம சாமி நம்ம கோவில் - உறுப்பினர்கள் தகவல்கள் & மதிப்பீட்டுத் தாள்</h2>
+                                <p>Persons #${pageStart + 1} to #${pageEnd} • Page ${p + 1} of ${totalPages} (25 Persons/Page)</p>
                                 <div class="header-code-badge">CODE: ${pageCode}</div>
                             </div>
                             <div class="barcode-container">
-                                <svg class="barcode-img" id="barcode-full-${p}"></svg>
+                                <svg class="barcode-img" id="barcode-${pageCode}"></svg>
                             </div>
                         </div>
 
                         <table class="records-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40px; text-align: center;">#</th>
+                                    <th style="width: 220px;">பெயர் (Tamil Name)</th>
+                                    <th style="width: 140px;">தொலைபேசி (Phone Number)</th>
+                                    <th style="text-align: right; padding-right: 15px;">கேள்விகள் Q1, Q2, Q3 மதிப்பீடு (OMR Rating Bubbles)</th>
+                                </tr>
+                            </thead>
                             <tbody>
                                 ${rowsHtml}
                             </tbody>
