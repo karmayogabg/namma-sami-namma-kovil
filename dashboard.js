@@ -481,6 +481,147 @@ function exportToJson() {
 }
 window.exportToJson = exportToJson;
 
+// Excel Import Engine (v8.9)
+function triggerExcelImport() {
+    const fileInput = document.getElementById('excel-file-input');
+    if (fileInput) {
+        fileInput.value = '';
+        fileInput.click();
+    }
+}
+window.triggerExcelImport = triggerExcelImport;
+
+function handleExcelImport(input) {
+    if (!input || !input.files || input.files.length === 0) return;
+    const file = input.files[0];
+
+    if (typeof XLSX === 'undefined') {
+        alert('SheetJS Excel library is loading. Please try again in a moment.');
+        return;
+    }
+
+    showToast(`Reading Excel file: ${file.name}...`);
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            
+            if (!workbook.SheetNames || workbook.SheetNames.length === 0) {
+                alert('No sheets found in Excel file.');
+                return;
+            }
+
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            const rows = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+
+            if (!rows || rows.length === 0) {
+                alert('The imported Excel file is empty.');
+                return;
+            }
+
+            let updatedCount = 0;
+            let countA = 0;
+            let countB = 0;
+            let countC = 0;
+            let countU = 0;
+
+            const savedSurvey = localStorage.getItem('nsnk_survey_grades');
+            const surveyMap = savedSurvey ? JSON.parse(savedSurvey) : {};
+
+            rows.forEach(row => {
+                let mobile = '';
+                let name = '';
+                let rawGrade = '';
+                let district = '';
+
+                Object.keys(row).forEach(key => {
+                    const k = key.trim().toLowerCase();
+                    const val = String(row[key]).trim();
+                    if (k.includes('mobile') || k.includes('phone') || k.includes('தொடர்பு')) {
+                        mobile = val.replace(/\D/g, '');
+                    } else if (k === 'name' || k.includes('பெயர்')) {
+                        name = val;
+                    } else if (k === 'grade' || k.includes('தரம்')) {
+                        rawGrade = val;
+                    } else if (k === 'district' || k.includes('மாவட்டம்')) {
+                        district = val;
+                    }
+                });
+
+                if (!rawGrade) return;
+
+                let gradeVal = 'Ungraded';
+                const gUpper = rawGrade.toUpperCase();
+                if (gUpper.includes('A') || gUpper.includes('INTERESTED TO KNOW MORE') || gUpper.includes('HIGH')) {
+                    gradeVal = 'A';
+                    countA++;
+                } else if (gUpper.includes('B') || gUpper.includes('NO TIME') || gUpper.includes('MODERATE')) {
+                    gradeVal = 'B';
+                    countB++;
+                } else if (gUpper.includes('C') || gUpper.includes('NOT INTERESTED') || gUpper.includes('GUIDANCE')) {
+                    gradeVal = 'C';
+                    countC++;
+                } else {
+                    countU++;
+                }
+
+                let matchedItem = null;
+                if (mobile) {
+                    matchedItem = allData.find(d => d.mobile === mobile);
+                }
+                if (!matchedItem && name && district) {
+                    matchedItem = allData.find(d => d.name === name && d.district === district);
+                }
+
+                if (matchedItem) {
+                    matchedItem.grade = gradeVal;
+                    if (!matchedItem.survey) matchedItem.survey = {};
+
+                    if (gradeVal === 'Ungraded') {
+                        delete matchedItem.survey.overallGrade;
+                    } else {
+                        matchedItem.survey.overallGrade = gradeVal;
+                    }
+
+                    const mapKey = matchedItem.mobile || `${matchedItem.name}_${matchedItem.district}_${matchedItem.union}`;
+                    if (gradeVal === 'Ungraded') {
+                        delete surveyMap[mapKey];
+                        if (matchedItem.mobile) delete surveyMap[matchedItem.mobile];
+                    } else {
+                        surveyMap[mapKey] = matchedItem.survey;
+                        if (matchedItem.mobile) surveyMap[matchedItem.mobile] = matchedItem.survey;
+                    }
+
+                    updatedCount++;
+                }
+            });
+
+            try {
+                localStorage.setItem('nsnk_survey_grades', JSON.stringify(surveyMap));
+            } catch(err) {
+                console.error('Failed to save imported grades to localStorage:', err);
+            }
+
+            updateOverallProgressStats();
+            if (typeof renderAnalyticsCharts === 'function') {
+                renderAnalyticsCharts();
+            }
+            applyFilters();
+
+            showToast(`Excel Import Complete! Updated ${updatedCount.toLocaleString()} records (A: ${countA}, B: ${countB}, C: ${countC}).`);
+        } catch (err) {
+            console.error('Error parsing Excel file:', err);
+            alert('Failed to parse Excel file. Please ensure it is a valid .xlsx or .xls spreadsheet.');
+        }
+    };
+
+    reader.readAsArrayBuffer(file);
+}
+window.handleExcelImport = handleExcelImport;
+
 // Render Current Page Grid / Table
 function renderPage() {
     const totalItems = filteredData.length;
