@@ -1267,20 +1267,20 @@ function renderCallerManagerModal() {
                     ${statusBadge}
                 </div>
 
-                <!-- Two-Column Editable Assignment Inputs -->
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <!-- Stacked Assignment Inputs (Row 1: Volunteer Caller, Row 2: Full-Time Worker) -->
+                <div style="display:flex; flex-direction:column; gap:8px;">
                     <div>
-                        <label style="font-size:0.73rem; color:var(--text-muted); font-weight:600; display:block; margin-bottom:4px;">Assigned Volunteer Caller:</label>
+                        <label style="font-size:0.75rem; color:var(--text-muted); font-weight:600; display:block; margin-bottom:4px;">Assigned Volunteer Caller:</label>
                         <div class="caller-input-box">
-                            <i data-lucide="user-check" style="width:13px; height:13px; color:#a78bfa;"></i>
-                            <input type="text" value="${escapeHtml(callerName)}" placeholder="Volunteer Name..." onchange="saveCallerAssignment(${b}, 'callerName', this.value)">
+                            <i data-lucide="user-check" style="width:14px; height:14px; color:#a78bfa;"></i>
+                            <input type="text" value="${escapeHtml(callerName)}" placeholder="Volunteer Caller Name..." onchange="saveCallerAssignment(${b}, 'callerName', this.value)">
                         </div>
                     </div>
                     <div>
-                        <label style="font-size:0.73rem; color:var(--text-muted); font-weight:600; display:block; margin-bottom:4px;">Assigned Full-Time Worker:</label>
+                        <label style="font-size:0.75rem; color:var(--text-muted); font-weight:600; display:block; margin-bottom:4px;">Assigned Full-Time Worker:</label>
                         <div class="caller-input-box">
-                            <i data-lucide="briefcase" style="width:13px; height:13px; color:#38bdf8;"></i>
-                            <input type="text" value="${escapeHtml(fullTimeWorker)}" placeholder="Full-Time Worker..." onchange="saveCallerAssignment(${b}, 'fullTimeWorker', this.value)">
+                            <i data-lucide="briefcase" style="width:14px; height:14px; color:#38bdf8;"></i>
+                            <input type="text" value="${escapeHtml(fullTimeWorker)}" placeholder="Full-Time Worker Name..." onchange="saveCallerAssignment(${b}, 'fullTimeWorker', this.value)">
                         </div>
                     </div>
                 </div>
