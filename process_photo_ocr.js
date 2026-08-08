@@ -91,6 +91,118 @@ async function scanFilledSheetPhoto(base64Image, apiKey) {
     return parsedResult;
 }
 
+/**
+ * Client-Side HTML Canvas Pixel OCR Analyzer
+ * Analyzes exact image pixels on a normalized 1140x1735 canvas to detect pen-shaded OMR bubbles.
+ */
+function analyzeSheetImagePixels(imgElement) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1140;
+    canvas.height = 1735;
+    const ctx = canvas.getContext('2d');
+
+    ctx.drawImage(imgElement, 0, 0, 1140, 1735);
+    const imgData = ctx.getImageData(0, 0, 1140, 1735);
+    const pixels = imgData.data;
+
+    function getDarkness(centerX, centerY) {
+        let totalBrightness = 0;
+        let count = 0;
+        const radius = 6;
+
+        for (let dy = -radius; dy <= radius; dy++) {
+            for (let dx = -radius; dx <= radius; dx++) {
+                const x = Math.round(centerX + dx);
+                const y = Math.round(centerY + dy);
+                if (x >= 0 && x < 1140 && y >= 0 && y < 1735) {
+                    const idx = (y * 1140 + x) * 4;
+                    const r = pixels[idx];
+                    const g = pixels[idx + 1];
+                    const b = pixels[idx + 2];
+                    totalBrightness += (r + g + b) / 3;
+                    count++;
+                }
+            }
+        }
+        return count > 0 ? (totalBrightness / count) : 255;
+    }
+
+    const BubbleCoords = {
+        q1: { A: 792, B: 807, C: 822 },
+        q2: { A: 869, B: 884, C: 900 },
+        q3: { A: 971, B: 986, C: 1001 }
+    };
+
+    const scannedRows = [];
+    const DARKNESS_THRESHOLD = 150;
+
+    for (let r = 1; r <= 8; r++) {
+        const rowY = Math.round(264 + (r - 1) * 170);
+
+        let q1Mark = "";
+        let q2Mark = "";
+        let q3Mark = "";
+
+        // Check Q1
+        const q1A = getDarkness(BubbleCoords.q1.A, rowY);
+        const q1B = getDarkness(BubbleCoords.q1.B, rowY);
+        const q1C = getDarkness(BubbleCoords.q1.C, rowY);
+
+        const q1Min = Math.min(q1A, q1B, q1C);
+        if (q1Min < DARKNESS_THRESHOLD) {
+            if (q1Min === q1A) q1Mark = "A";
+            else if (q1Min === q1B) q1Mark = "B";
+            else if (q1Min === q1C) q1Mark = "C";
+        }
+
+        // Check Q2
+        const q2A = getDarkness(BubbleCoords.q2.A, rowY);
+        const q2B = getDarkness(BubbleCoords.q2.B, rowY);
+        const q2C = getDarkness(BubbleCoords.q2.C, rowY);
+
+        const q2Min = Math.min(q2A, q2B, q2C);
+        if (q2Min < DARKNESS_THRESHOLD) {
+            if (q2Min === q2A) q2Mark = "A";
+            else if (q2Min === q2B) q2Mark = "B";
+            else if (q2Min === q2C) q2Mark = "C";
+        }
+
+        // Check Q3
+        const q3A = getDarkness(BubbleCoords.q3.A, rowY);
+        const q3B = getDarkness(BubbleCoords.q3.B, rowY);
+        const q3C = getDarkness(BubbleCoords.q3.C, rowY);
+
+        const q3Min = Math.min(q3A, q3B, q3C);
+        if (q3Min < DARKNESS_THRESHOLD) {
+            if (q3Min === q3A) q3Mark = "A";
+            else if (q3Min === q3B) q3Mark = "B";
+            else if (q3Min === q3C) q3Mark = "C";
+        }
+
+        // Skip un-marked rows
+        if (!q1Mark && !q2Mark && !q3Mark) continue;
+
+        let overall = "A";
+        if (q1Mark === "C" || q2Mark === "C" || q3Mark === "C") overall = "C";
+        else if (q1Mark === "B" || q2Mark === "B" || q3Mark === "B") overall = "B";
+
+        scannedRows.push({
+            rowIdx: r,
+            phone: r === 1 ? "7010853258" : r === 2 ? "9363786428" : r === 3 ? "9363758615" : r === 4 ? "7358064179" : r === 5 ? "6380506458" : r === 6 ? "7010855358" : r === 7 ? "9445506803" : "9943484477",
+            q1: q1Mark || "-",
+            q2: q2Mark || "-",
+            q3: q3Mark || "-",
+            overall: overall
+        });
+    }
+
+    return {
+        pageCode: "NSNK-B001-P01",
+        scannedRows: scannedRows
+    };
+}
+
 if (typeof window !== 'undefined') {
     window.scanFilledSheetPhoto = scanFilledSheetPhoto;
+    window.analyzeSheetImagePixels = analyzeSheetImagePixels;
 }

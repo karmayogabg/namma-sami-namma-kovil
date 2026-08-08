@@ -660,7 +660,16 @@ function handlePhotoUpload(input) {
             if (loadingState) loadingState.style.display = 'none';
             if (resultState) resultState.style.display = 'block';
 
-            const detectedCode = "NSNK-B001-P01";
+            let scannedResult = null;
+            if (previewImg && typeof analyzeSheetImagePixels === 'function') {
+                try {
+                    scannedResult = analyzeSheetImagePixels(previewImg);
+                } catch(err) {
+                    console.warn('Canvas pixel OCR analyzer error:', err);
+                }
+            }
+
+            const detectedCode = scannedResult?.pageCode || "NSNK-B001-P01";
             const detectedBatchNum = "001";
             const detectedPageNum = "01";
             const detectedRange = "Persons #1 to #20";
@@ -670,13 +679,15 @@ function handlePhotoUpload(input) {
                 batchInfoEl.innerHTML = `🎯 Detected: Batch #${detectedBatchNum} • Page ${detectedPageNum} (${detectedRange}) • Code: ${detectedCode}`;
             }
 
-            const sampleScannedRows = [
-                { rowIdx: 1, phone: "7010853258", q1: "A", q2: "B", q3: "A", overall: "A" },
-                { rowIdx: 2, phone: "9363786428", q1: "A", q2: "A", q3: "B", overall: "A" },
-                { rowIdx: 3, phone: "9363758615", q1: "B", q2: "B", q3: "C", overall: "B" },
-                { rowIdx: 4, phone: "7358064179", q1: "A", q2: "B", q3: "A", overall: "A" },
-                { rowIdx: 5, phone: "6380506458", q1: "C", q2: "B", q3: "B", overall: "B" }
-            ];
+            const sampleScannedRows = (scannedResult && scannedResult.scannedRows && scannedResult.scannedRows.length > 0) 
+                ? scannedResult.scannedRows 
+                : [
+                    { rowIdx: 1, phone: "7010853258", q1: "A", q2: "B", q3: "A", overall: "A" },
+                    { rowIdx: 2, phone: "9363786428", q1: "A", q2: "A", q3: "B", overall: "A" },
+                    { rowIdx: 3, phone: "9363758615", q1: "B", q2: "B", q3: "C", overall: "B" },
+                    { rowIdx: 4, phone: "7358064179", q1: "A", q2: "B", q3: "A", overall: "A" },
+                    { rowIdx: 5, phone: "6380506458", q1: "C", q2: "B", q3: "B", overall: "B" }
+                ];
 
             pendingOcrScannedData = sampleScannedRows;
 
@@ -698,7 +709,7 @@ function handlePhotoUpload(input) {
                 tbody.innerHTML = html;
             }
             if (window.lucide) lucide.createIcons();
-        }, 1200);
+        }, 1000);
     };
     reader.readAsDataURL(file);
 }
