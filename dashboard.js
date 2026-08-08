@@ -151,11 +151,7 @@ async function loadDataset() {
 
         // Populate Dropdowns & Progress Stats
         populateFilters();
-        initCallerAssignments();
         updateOverallProgressStats();
-        if (document.getElementById('caller-manager-modal')?.classList.contains('active')) {
-            renderCallerManagerModal();
-        }
 
         // Initial Filter & Render
         filteredData = allData;
@@ -840,9 +836,6 @@ function confirmOcrGrades() {
     closeOcrModal();
     applyFilters();
     updateOverallProgressStats();
-    if (document.getElementById('caller-manager-modal')?.classList.contains('active')) {
-        renderCallerManagerModal();
-    }
     showToast(`Successfully saved grades for ${updatedCount} members to database!`);
 }
 window.confirmOcrGrades = confirmOcrGrades;
@@ -1197,48 +1190,10 @@ function closeChartFullscreen() {
 window.closeChartFullscreen = closeChartFullscreen;
 
 // ==========================================
-// Caller Batch Assignments & Progress Manager Engine (v5.0)
+// Progress Manager Engine
 // ==========================================
 
 const BATCH_SIZE = 500;
-let callerAssignments = {};
-
-function initCallerAssignments() {
-    try {
-        const saved = localStorage.getItem('nsnk_caller_assignments');
-        if (saved) {
-            callerAssignments = JSON.parse(saved);
-        }
-    } catch(e) {
-        console.error('Failed to load caller assignments:', e);
-        callerAssignments = {};
-    }
-}
-window.initCallerAssignments = initCallerAssignments;
-
-function saveCallerAssignment(batchIdx, field, val) {
-    const cleanVal = (val || '').trim();
-    if (!callerAssignments) callerAssignments = {};
-    if (!callerAssignments[batchIdx]) {
-        callerAssignments[batchIdx] = {};
-    }
-    
-    callerAssignments[batchIdx][field] = cleanVal;
-    callerAssignments[batchIdx].updatedAt = new Date().toISOString();
-
-    if (!callerAssignments[batchIdx].callerName && !callerAssignments[batchIdx].fullTimeWorker) {
-        delete callerAssignments[batchIdx];
-    }
-
-    try {
-        localStorage.setItem('nsnk_caller_assignments', JSON.stringify(callerAssignments));
-    } catch(e) {}
-    
-    updateOverallProgressStats();
-    const label = field === 'fullTimeWorker' ? 'Full-Time Worker' : 'Volunteer Caller';
-    showToast(`Saved ${label} for Batch #${String(batchIdx + 1).padStart(3, '0')}: ${cleanVal || 'Unassigned'}`);
-}
-window.saveCallerAssignment = saveCallerAssignment;
 
 function updateOverallProgressStats() {
     if (!allData || allData.length === 0) return;
@@ -1264,7 +1219,6 @@ function updateOverallProgressStats() {
 
     const statsEl = document.getElementById('hero-progress-stats');
     const fillEl = document.getElementById('hero-progress-fill');
-    const badgeEl = document.getElementById('caller-manager-summary-badge');
 
     if (statsEl) {
         statsEl.textContent = `${totalCompleted.toLocaleString()} / ${totalRecords.toLocaleString()} Records Completed (${overallPct}%) • ${completedBatchesCount} / ${totalBatches} Batches Done`;
@@ -1272,198 +1226,6 @@ function updateOverallProgressStats() {
     if (fillEl) {
         fillEl.style.width = `${overallPct}%`;
     }
-    if (badgeEl) {
-        badgeEl.textContent = `${completedBatchesCount} / ${totalBatches} Batches Completed (${overallPct}%)`;
-    }
 }
 window.updateOverallProgressStats = updateOverallProgressStats;
-
-function openCallerManagerModal() {
-    initCallerAssignments();
-
-    // Ensure search & status filters are reset on open to show all 126 batch cards
-    const searchInput = document.getElementById('caller-search-input');
-    const statusSelect = document.getElementById('caller-status-filter');
-    if (searchInput) searchInput.value = '';
-    if (statusSelect) statusSelect.value = 'all';
-
-    const modal = document.getElementById('caller-manager-modal');
-    if (modal) {
-        modal.style.display = 'flex';
-        modal.classList.add('active');
-    }
-
-    if ((!allData || allData.length === 0) && typeof loadDataset === 'function') {
-        loadDataset();
-    }
-
-    renderCallerManagerModal();
-}
-window.openCallerManagerModal = openCallerManagerModal;
-
-function closeCallerManagerModal() {
-    const modal = document.getElementById('caller-manager-modal');
-    if (modal) {
-        modal.classList.remove('active');
-        modal.style.display = 'none';
-    }
-}
-window.closeCallerManagerModal = closeCallerManagerModal;
-
-function resetCallerFilters() {
-    const searchInput = document.getElementById('caller-search-input');
-    const statusSelect = document.getElementById('caller-status-filter');
-    if (searchInput) searchInput.value = '';
-    if (statusSelect) statusSelect.value = 'all';
-    renderCallerManagerModal();
-}
-window.resetCallerFilters = resetCallerFilters;
-
-function renderCallerManagerModal() {
-    const container = document.getElementById('caller-batches-grid-container');
-    if (!container) return;
-
-    const totalRecords = (allData && allData.length > 0) ? allData.length : 62521;
-    const totalBatches = Math.ceil(totalRecords / BATCH_SIZE);
-    
-    const searchVal = (document.getElementById('caller-search-input')?.value || '').toLowerCase().trim();
-    const statusVal = document.getElementById('caller-status-filter')?.value || 'all';
-
-    let html = '<div class="caller-batches-grid">';
-    let matchCount = 0;
-
-    for (let b = 0; b < totalBatches; b++) {
-        const start = b * BATCH_SIZE;
-        const end = Math.min((b + 1) * BATCH_SIZE, totalRecords);
-        const batchItems = (allData && allData.length > 0) ? allData.slice(start, end) : [];
-        const batchSize = (end - start);
-
-        const completedInBatch = batchItems.filter(item => item.survey && (item.survey.q1 || item.survey.overallGrade)).length;
-        const pct = batchSize > 0 ? Math.round((completedInBatch / batchSize) * 100) : 0;
-
-        let statusKey = 'pending';
-        let statusBadge = `<span class="status-pill status-pill-pending">🔴 Pending (${pct}%)</span>`;
-        if (pct === 100) {
-            statusKey = 'completed';
-            statusBadge = `<span class="status-pill status-pill-completed">🟢 Completed (100%)</span>`;
-        } else if (pct > 0) {
-            statusKey = 'progress';
-            statusBadge = `<span class="status-pill status-pill-progress">🟡 In Progress (${pct}%)</span>`;
-        }
-
-        const assignment = callerAssignments[b] || {};
-        const callerName = assignment.callerName || '';
-        const fullTimeWorker = assignment.fullTimeWorker || '';
-
-        // Status Filter
-        if (statusVal !== 'all' && statusVal !== statusKey) continue;
-
-        // Enhanced Numerical & Text Search Filter
-        if (searchVal) {
-            const searchNum = parseInt(searchVal, 10);
-            const isPureNum = !isNaN(searchNum) && /^\d+$/.test(searchVal);
-
-            let isMatch = false;
-
-            if (isPureNum) {
-                // 1. Direct Batch Number Match (e.g., typing "5", "05", "005" matches Batch #005)
-                if (searchNum === (b + 1)) {
-                    isMatch = true;
-                }
-                // 2. Person Record Index Range Match (e.g., typing "2050" matches Batch #005: #2001 to #2500)
-                else if (searchNum >= (start + 1) && searchNum <= end) {
-                    isMatch = true;
-                }
-            }
-
-            // 3. Text Substring Match (Volunteer Name, Full-Time Worker, or formatted strings)
-            const batchNumStr = String(b + 1).padStart(3, '0');
-            const searchTarget = `batch #${batchNumStr} ${b + 1} #${start + 1} #${end} ${callerName} ${fullTimeWorker}`.toLowerCase();
-            if (searchTarget.includes(searchVal)) {
-                isMatch = true;
-            }
-
-            if (!isMatch) continue;
-        }
-
-        matchCount++;
-
-        const barGradient = pct === 100 
-            ? '#10b981' 
-            : pct > 0 
-                ? 'linear-gradient(90deg, #f59e0b, #10b981)' 
-                : 'rgba(255,255,255,0.15)';
-
-        html += `
-            <div class="caller-batch-card">
-                <div class="caller-batch-header">
-                    <div>
-                        <strong style="font-family:'Outfit'; font-size:1.05rem; color:#f8fafc;">Batch #${batchNumStr}</strong>
-                        <span style="font-size:0.78rem; color:var(--text-muted); margin-left:6px;">(#${(start + 1).toLocaleString()} to #${end.toLocaleString()})</span>
-                    </div>
-                    ${statusBadge}
-                </div>
-
-                <!-- Stacked Assignment Inputs (Row 1: Volunteer Caller, Row 2: Full-Time Worker) -->
-                <div style="display:flex; flex-direction:column; gap:8px;">
-                    <div>
-                        <label style="font-size:0.75rem; color:var(--text-muted); font-weight:600; display:block; margin-bottom:4px;">Assigned Volunteer Caller:</label>
-                        <div class="caller-input-box">
-                            <i data-lucide="user-check" style="width:14px; height:14px; color:#a78bfa;"></i>
-                            <input type="text" value="${escapeHtml(callerName)}" placeholder="Volunteer Caller Name..." onchange="saveCallerAssignment(${b}, 'callerName', this.value)">
-                        </div>
-                    </div>
-                    <div>
-                        <label style="font-size:0.75rem; color:var(--text-muted); font-weight:600; display:block; margin-bottom:4px;">Assigned Full-Time Worker:</label>
-                        <div class="caller-input-box">
-                            <i data-lucide="briefcase" style="width:14px; height:14px; color:#38bdf8;"></i>
-                            <input type="text" value="${escapeHtml(fullTimeWorker)}" placeholder="Full-Time Worker Name..." onchange="saveCallerAssignment(${b}, 'fullTimeWorker', this.value)">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Progress Bar & Stats -->
-                <div>
-                    <div style="display:flex; justify-content:space-between; font-size:0.78rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">
-                        <span>Progress: <strong style="color:#6ee7b7;">${completedInBatch} / ${batchSize}</strong> Completed</span>
-                        <span style="color:#c4b5fd;">${pct}%</span>
-                    </div>
-                    <div class="batch-progress-bar-bg">
-                        <div class="batch-progress-bar-fill" style="width:${pct}%; background:${barGradient};"></div>
-                    </div>
-                </div>
-
-                <!-- Quick Actions -->
-                <div style="display:flex; gap:8px; margin-top:4px;">
-                    <a href="print_sheets.html?batch=${b}" target="_blank" class="toggle-btn" style="flex:1; justify-content:center; padding:7px 12px; font-size:0.82rem; background:rgba(139,92,246,0.18); border-color:rgba(139,92,246,0.4); color:#c4b5fd; text-decoration:none; font-weight:600;">
-                        <i data-lucide="file-text" style="width:14px; height:14px; vertical-align:middle;"></i> View Printable Call Sheet (500) 📄
-                    </a>
-                </div>
-            </div>
-        `;
-    }
-
-    if (matchCount === 0) {
-        html += `
-            <div style="grid-column:1/-1; text-align:center; padding:50px 20px; color:var(--text-muted);">
-                <p style="font-size:0.95rem; color:var(--text-main); margin-bottom:12px;">No batch cards match your search criteria "${escapeHtml(searchVal)}".</p>
-                <button class="toggle-btn" style="padding:8px 16px; background:rgba(139,92,246,0.2); border-color:rgba(139,92,246,0.4); color:#c4b5fd;" onclick="resetCallerFilters()">
-                    Clear Search & Show All 126 Batches 🔄
-                </button>
-            </div>
-        `;
-    }
-
-    html += '</div>';
-    container.innerHTML = html;
-
-    if (window.lucide) lucide.createIcons();
-    updateOverallProgressStats();
-}
-window.renderCallerManagerModal = renderCallerManagerModal;
-
-function filterCallerBatches() {
-    renderCallerManagerModal();
-}
-window.filterCallerBatches = filterCallerBatches;
 

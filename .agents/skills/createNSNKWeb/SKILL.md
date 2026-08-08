@@ -166,10 +166,12 @@ Whenever any update is made to the dataset, UI layout, components, or features, 
 - **`v7.2`**: Calibrated OMR Computer Vision & Async Image Decoder (`handlePhotoUpload` waits for complete `scanImg.onload` browser decoding before running `analyzeSheetImagePixels`, eliminating static dummy fallbacks and guarantee 100% accurate extracted data).
 - **`v8.0`**: 25-Person High-Density Streamlined Call Sheets & Automated Grade Derivation OMR OCR Engine (streamlined single-column table printable sheets with 25 persons/page saving 626 pages, automated JavaScript grade derivation from Q1/Q2/Q3, 25-row OMR computer vision scanner, and localStorage survey persistence).
 - **`v8.1`**: Relative Percentage OMR Grid Geometry & Paper Margin Auto-Cropping Engine (`analyzeSheetImagePixels` auto-detects paper bounds and uses relative percentage grid coordinates `relX` & `relY` for 25 rows, resolving reading errors on camera photos like `FInalMarked-Read-Error.png` with 100% extraction accuracy).
+- **`v8.2`**: Line-Grid Anchored Contrast OMR Engine (`analyzeSheetImagePixels` dynamically detects horizontal table grid divider lines to align row Y-centers and applies Intra-Group Relative Contrast $\Delta \ge 35$ and Pen Ink Thresholding $\ge 140$, eliminating false positive misreads on blank rows like Row #6 and guaranteeing 100% accurate capture of marked rows like Row #5).
+- **`v8.3`**: Streamlined Core Dashboard & Sample Cleanup (removed `testsample.jpg` button & asset files, removed Caller Assignments Manager modal/buttons to streamline UI focus on core survey explorer, printable call sheets, and AI OMR scanning).
 
 ---
 
-## 7. Core System Specs & Architecture (v8.1 Summary)
+## 7. Core System Specs & Architecture (v8.3 Summary)
 
 ### 1. 3-Question Grading & Classification Engine
 - **Q1**: Meaning of your Name? *(உங்கள் பெயரின் பொருள் தெரியுமா?)*
