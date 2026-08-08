@@ -134,10 +134,13 @@ async function loadDataset() {
         statUnique.textContent = uniqueNames.toLocaleString();
         statDistricts.textContent = uniqueDistricts.toLocaleString();
 
-        // Populate Dropdowns
+        // Populate Dropdowns & Progress Stats
         populateFilters();
         initCallerAssignments();
         updateOverallProgressStats();
+        if (document.getElementById('caller-manager-modal')?.classList.contains('active')) {
+            renderCallerManagerModal();
+        }
 
         // Initial Filter & Render
         filteredData = allData;
@@ -1170,21 +1173,38 @@ window.updateOverallProgressStats = updateOverallProgressStats;
 
 function openCallerManagerModal() {
     initCallerAssignments();
-    renderCallerManagerModal();
     const modal = document.getElementById('caller-manager-modal');
-    if (modal) modal.classList.add('active');
+    if (modal) {
+        modal.style.display = 'flex';
+        modal.classList.add('active');
+    }
+    renderCallerManagerModal();
 }
 window.openCallerManagerModal = openCallerManagerModal;
 
 function closeCallerManagerModal() {
     const modal = document.getElementById('caller-manager-modal');
-    if (modal) modal.classList.remove('active');
+    if (modal) {
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+    }
 }
 window.closeCallerManagerModal = closeCallerManagerModal;
 
 function renderCallerManagerModal() {
     const container = document.getElementById('caller-batches-grid-container');
-    if (!container || !allData || allData.length === 0) return;
+    if (!container) return;
+
+    if (!allData || allData.length === 0) {
+        container.innerHTML = `
+            <div style="text-align:center; padding:50px 20px;">
+                <div class="spinner" style="margin:0 auto 16px auto; border-top-color:#6ee7b7;"></div>
+                <h4 style="color:var(--text-main); margin-bottom:6px;">Loading 62,521 Caller Records...</h4>
+                <p style="color:var(--text-muted); font-size:0.85rem;">Populating 126 caller batches and completion percentages...</p>
+            </div>
+        `;
+        return;
+    }
 
     const totalRecords = allData.length;
     const totalBatches = Math.ceil(totalRecords / BATCH_SIZE);

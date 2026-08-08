@@ -154,10 +154,11 @@ Whenever any update is made to the dataset, UI layout, components, or features, 
 - **`v5.6`**: Vertically Stacked Assignment Rows (moved **Assigned Full-Time Worker** to its own dedicated full-width row below **Assigned Volunteer Caller** on each batch card for maximum visual clarity).
 - **`v5.7`**: High-Resolution Filled OMR Sample Sheet JPG (`sample_marked_sheet.jpg` generated directly from `sample-omr.png` with realistic dark blue ballpoint pen filled bubbles for Q1, Q2, Q3 across member rows).
 - **`v5.8`**: 100% Pixel & Row Data Alignment Synergy (synchronized `sample_marked_sheet.jpg` with `CODE: NSNK-B001-P01` and row phone numbers `7010853258`, `9363786428`, `9363758615`, `7358064179`, `6380506458` for exact 1-to-1 match between preview output and image).
+- **`v5.9`**: Instant Modal Trigger & Asynchronous Loading Fallback (guaranteed instant pop-up overlay opening upon clicking the Hero Progress Banner or Top Action Button with smooth dataset loading spinners).
 
 ---
 
-## 7. Core System Specs & Architecture (v5.8 Summary)
+## 7. Core System Specs & Architecture (v5.9 Summary)
 
 ### 1. 3-Question Grading & Classification Engine
 - **Q1**: Meaning of your Name? *(உங்கள் பெயரின் பொருள் தெரியுமா?)*
