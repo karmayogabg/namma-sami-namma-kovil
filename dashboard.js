@@ -657,6 +657,16 @@ function handlePhotoUpload(input) {
             if (loadingState) loadingState.style.display = 'none';
             if (resultState) resultState.style.display = 'block';
 
+            const detectedCode = "NSNK-B001-P04";
+            const detectedBatchNum = "001";
+            const detectedPageNum = "04";
+            const detectedRange = "Persons #61 to #80";
+
+            const batchInfoEl = document.getElementById('ocr-batch-info');
+            if (batchInfoEl) {
+                batchInfoEl.innerHTML = `🎯 Detected: Batch #${detectedBatchNum} • Page ${detectedPageNum} (${detectedRange}) • Code: ${detectedCode}`;
+            }
+
             const sampleScannedRows = [
                 { rowIdx: 1, phone: "9876543210", q1: "A", q2: "A", q3: "B", overall: "A" },
                 { rowIdx: 2, phone: "9876543211", q1: "A", q2: "B", q3: "A", overall: "A" },
@@ -1251,11 +1261,8 @@ function renderCallerManagerModal() {
 
                 <!-- Quick Actions -->
                 <div style="display:flex; gap:8px; margin-top:4px;">
-                    <button class="toggle-btn" style="flex:1; padding:6px 10px; font-size:0.78rem; background:rgba(236,72,153,0.15); border-color:rgba(236,72,153,0.35); color:#f472b6;" onclick="triggerPhotoUpload()">
-                        <i data-lucide="camera" style="width:13px; height:13px; vertical-align:middle;"></i> Upload Form Photo 📷
-                    </button>
-                    <a href="print_sheets.html?batch=${b}" target="_blank" class="toggle-btn" style="padding:6px 10px; font-size:0.78rem; background:rgba(139,92,246,0.15); border-color:rgba(139,92,246,0.35); color:#c4b5fd; text-decoration:none;">
-                        <i data-lucide="file-text" style="width:13px; height:13px; vertical-align:middle;"></i> Call Sheet
+                    <a href="print_sheets.html?batch=${b}" target="_blank" class="toggle-btn" style="flex:1; justify-content:center; padding:7px 12px; font-size:0.82rem; background:rgba(139,92,246,0.18); border-color:rgba(139,92,246,0.4); color:#c4b5fd; text-decoration:none; font-weight:600;">
+                        <i data-lucide="file-text" style="width:14px; height:14px; vertical-align:middle;"></i> View Printable Call Sheet (500) 📄
                     </a>
                 </div>
             </div>
