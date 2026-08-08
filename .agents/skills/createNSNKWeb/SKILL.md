@@ -145,10 +145,11 @@ Whenever any update is made to the dataset, UI layout, components, or features, 
 - **`v4.5`**: Embedded Noto Sans Tamil TTF fonts across all 126 PDF batch files, eliminating UTF-8 font corruption on PDF caller sheets.
 - **`v4.8`**: Added `PDF Call Full Sheet` (`print_full_sheet.html`) for continuous full sheet printing without batch split across all 62,521 records (3,127 pages).
 - **`v4.9`**: Placed `PDF Call Full Sheet` button exclusively inside `print_sheets.html` header bar while keeping main pages clean and streamlined.
+- **`v5.0`**: Caller Batch Assignments & Survey Progress Manager Engine (`#caller-manager-modal`, volunteer caller name assignments per batch, OMR sheet photo upload integration, and live completion percentage progress bars across all 62,521 records).
 
 ---
 
-## 7. Core System Specs & Architecture (v4.9 Summary)
+## 7. Core System Specs & Architecture (v5.0 Summary)
 
 ### 1. 3-Question Grading & Classification Engine
 - **Q1**: Meaning of your Name? *(உங்கள் பெயரின் பொருள் தெரியுமா?)*

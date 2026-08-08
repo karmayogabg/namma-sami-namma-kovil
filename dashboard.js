@@ -136,6 +136,8 @@ async function loadDataset() {
 
         // Populate Dropdowns
         populateFilters();
+        initCallerAssignments();
+        updateOverallProgressStats();
 
         // Initial Filter & Render
         filteredData = allData;
@@ -717,6 +719,10 @@ function confirmOcrGrades() {
 
     closeOcrModal();
     applyFilters();
+    updateOverallProgressStats();
+    if (document.getElementById('caller-manager-modal')?.classList.contains('active')) {
+        renderCallerManagerModal();
+    }
     showToast(`Successfully saved grades for ${updatedCount} members to database!`);
 }
 window.confirmOcrGrades = confirmOcrGrades;
@@ -1069,3 +1075,207 @@ function closeChartFullscreen() {
     }
 }
 window.closeChartFullscreen = closeChartFullscreen;
+
+// ==========================================
+// Caller Batch Assignments & Progress Manager Engine (v5.0)
+// ==========================================
+
+const BATCH_SIZE = 500;
+let callerAssignments = {};
+
+function initCallerAssignments() {
+    try {
+        const saved = localStorage.getItem('nsnk_caller_assignments');
+        if (saved) {
+            callerAssignments = JSON.parse(saved);
+        }
+    } catch(e) {
+        console.error('Failed to load caller assignments:', e);
+        callerAssignments = {};
+    }
+}
+window.initCallerAssignments = initCallerAssignments;
+
+function saveCallerAssignment(batchIdx, nameVal) {
+    const cleanName = (nameVal || '').trim();
+    if (!callerAssignments) callerAssignments = {};
+    if (cleanName) {
+        callerAssignments[batchIdx] = {
+            callerName: cleanName,
+            updatedAt: new Date().toISOString()
+        };
+    } else {
+        delete callerAssignments[batchIdx];
+    }
+    try {
+        localStorage.setItem('nsnk_caller_assignments', JSON.stringify(callerAssignments));
+    } catch(e) {}
+    
+    updateOverallProgressStats();
+    showToast(`Saved assignment for Batch #${String(batchIdx + 1).padStart(3, '0')}: ${cleanName || 'Unassigned'}`);
+}
+window.saveCallerAssignment = saveCallerAssignment;
+
+function updateOverallProgressStats() {
+    if (!allData || allData.length === 0) return;
+    
+    let totalCompleted = 0;
+    const totalRecords = allData.length;
+    const totalBatches = Math.ceil(totalRecords / BATCH_SIZE);
+    let completedBatchesCount = 0;
+
+    for (let b = 0; b < totalBatches; b++) {
+        const start = b * BATCH_SIZE;
+        const end = Math.min((b + 1) * BATCH_SIZE, totalRecords);
+        const batchItems = allData.slice(start, end);
+        const completedInBatch = batchItems.filter(item => item.survey && (item.survey.q1 || item.survey.overallGrade)).length;
+        
+        totalCompleted += completedInBatch;
+        if (completedInBatch >= batchItems.length) {
+            completedBatchesCount++;
+        }
+    }
+
+    const overallPct = ((totalCompleted / totalRecords) * 100).toFixed(1);
+
+    const statsEl = document.getElementById('hero-progress-stats');
+    const fillEl = document.getElementById('hero-progress-fill');
+    const badgeEl = document.getElementById('caller-manager-summary-badge');
+
+    if (statsEl) {
+        statsEl.textContent = `${totalCompleted.toLocaleString()} / ${totalRecords.toLocaleString()} Records Completed (${overallPct}%) • ${completedBatchesCount} / ${totalBatches} Batches Done`;
+    }
+    if (fillEl) {
+        fillEl.style.width = `${overallPct}%`;
+    }
+    if (badgeEl) {
+        badgeEl.textContent = `${completedBatchesCount} / ${totalBatches} Batches Completed (${overallPct}%)`;
+    }
+}
+window.updateOverallProgressStats = updateOverallProgressStats;
+
+function openCallerManagerModal() {
+    initCallerAssignments();
+    renderCallerManagerModal();
+    const modal = document.getElementById('caller-manager-modal');
+    if (modal) modal.classList.add('active');
+}
+window.openCallerManagerModal = openCallerManagerModal;
+
+function closeCallerManagerModal() {
+    const modal = document.getElementById('caller-manager-modal');
+    if (modal) modal.classList.remove('active');
+}
+window.closeCallerManagerModal = closeCallerManagerModal;
+
+function renderCallerManagerModal() {
+    const container = document.getElementById('caller-batches-grid-container');
+    if (!container || !allData || allData.length === 0) return;
+
+    const totalRecords = allData.length;
+    const totalBatches = Math.ceil(totalRecords / BATCH_SIZE);
+    
+    const searchVal = (document.getElementById('caller-search-input')?.value || '').toLowerCase().trim();
+    const statusVal = document.getElementById('caller-status-filter')?.value || 'all';
+
+    let html = '<div class="caller-batches-grid">';
+    let matchCount = 0;
+
+    for (let b = 0; b < totalBatches; b++) {
+        const start = b * BATCH_SIZE;
+        const end = Math.min((b + 1) * BATCH_SIZE, totalRecords);
+        const batchItems = allData.slice(start, end);
+        const batchSize = batchItems.length;
+
+        const completedInBatch = batchItems.filter(item => item.survey && (item.survey.q1 || item.survey.overallGrade)).length;
+        const pct = Math.round((completedInBatch / batchSize) * 100);
+
+        let statusKey = 'pending';
+        let statusBadge = `<span class="status-pill status-pill-pending">🔴 Pending (${pct}%)</span>`;
+        if (pct === 100) {
+            statusKey = 'completed';
+            statusBadge = `<span class="status-pill status-pill-completed">🟢 Completed (100%)</span>`;
+        } else if (pct > 0) {
+            statusKey = 'progress';
+            statusBadge = `<span class="status-pill status-pill-progress">🟡 In Progress (${pct}%)</span>`;
+        }
+
+        const assignment = callerAssignments[b] || {};
+        const callerName = assignment.callerName || '';
+
+        // Status Filter
+        if (statusVal !== 'all' && statusVal !== statusKey) continue;
+
+        // Search Filter (by caller name or batch number)
+        const batchNumStr = String(b + 1).padStart(3, '0');
+        const searchTarget = `batch #${batchNumStr} ${b + 1} ${callerName}`.toLowerCase();
+        if (searchVal && !searchTarget.includes(searchVal)) continue;
+
+        matchCount++;
+
+        const barGradient = pct === 100 
+            ? '#10b981' 
+            : pct > 0 
+                ? 'linear-gradient(90deg, #f59e0b, #10b981)' 
+                : 'rgba(255,255,255,0.15)';
+
+        html += `
+            <div class="caller-batch-card">
+                <div class="caller-batch-header">
+                    <div>
+                        <strong style="font-family:'Outfit'; font-size:1.05rem; color:#f8fafc;">Batch #${batchNumStr}</strong>
+                        <span style="font-size:0.78rem; color:var(--text-muted); margin-left:6px;">(#${(start + 1).toLocaleString()} to #${end.toLocaleString()})</span>
+                    </div>
+                    ${statusBadge}
+                </div>
+
+                <!-- Caller Assignment Input -->
+                <div>
+                    <label style="font-size:0.75rem; color:var(--text-muted); font-weight:600; display:block; margin-bottom:4px;">Assigned Volunteer Caller:</label>
+                    <div class="caller-input-box">
+                        <i data-lucide="user" style="width:14px; height:14px; color:#a78bfa;"></i>
+                        <input type="text" value="${escapeHtml(callerName)}" placeholder="Type Volunteer Name & Press Enter..." onchange="saveCallerAssignment(${b}, this.value)">
+                    </div>
+                </div>
+
+                <!-- Progress Bar & Stats -->
+                <div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.78rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">
+                        <span>Progress: <strong style="color:#6ee7b7;">${completedInBatch} / ${batchSize}</strong> Completed</span>
+                        <span style="color:#c4b5fd;">${pct}%</span>
+                    </div>
+                    <div class="batch-progress-bar-bg">
+                        <div class="batch-progress-bar-fill" style="width:${pct}%; background:${barGradient};"></div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div style="display:flex; gap:8px; margin-top:4px;">
+                    <button class="toggle-btn" style="flex:1; padding:6px 10px; font-size:0.78rem; background:rgba(236,72,153,0.15); border-color:rgba(236,72,153,0.35); color:#f472b6;" onclick="triggerPhotoUpload()">
+                        <i data-lucide="camera" style="width:13px; height:13px; vertical-align:middle;"></i> Upload Form Photo 📷
+                    </button>
+                    <a href="print_sheets.html?batch=${b}" target="_blank" class="toggle-btn" style="padding:6px 10px; font-size:0.78rem; background:rgba(139,92,246,0.15); border-color:rgba(139,92,246,0.35); color:#c4b5fd; text-decoration:none;">
+                        <i data-lucide="file-text" style="width:13px; height:13px; vertical-align:middle;"></i> Call Sheet
+                    </a>
+                </div>
+            </div>
+        `;
+    }
+
+    if (matchCount === 0) {
+        html += `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);">No batches match your search filter criteria.</div>`;
+    }
+
+    html += '</div>';
+    container.innerHTML = html;
+
+    if (window.lucide) lucide.createIcons();
+    updateOverallProgressStats();
+}
+window.renderCallerManagerModal = renderCallerManagerModal;
+
+function filterCallerBatches() {
+    renderCallerManagerModal();
+}
+window.filterCallerBatches = filterCallerBatches;
+
