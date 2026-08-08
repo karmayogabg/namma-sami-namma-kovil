@@ -153,10 +153,11 @@ Whenever any update is made to the dataset, UI layout, components, or features, 
 - **`v5.5`**: Smart Numerical & Person Record Search Matcher (typing any number e.g. `5`, `05`, `005` instantly matches Batch #005, typing any record number e.g. `2500` matches the containing Batch #005 range `2001..2500`, alongside text matching for volunteer & worker names).
 - **`v5.6`**: Vertically Stacked Assignment Rows (moved **Assigned Full-Time Worker** to its own dedicated full-width row below **Assigned Volunteer Caller** on each batch card for maximum visual clarity).
 - **`v5.7`**: High-Resolution Filled OMR Sample Sheet JPG (`sample_marked_sheet.jpg` generated directly from `sample-omr.png` with realistic dark blue ballpoint pen filled bubbles for Q1, Q2, Q3 across member rows).
+- **`v5.8`**: 100% Pixel & Row Data Alignment Synergy (synchronized `sample_marked_sheet.jpg` with `CODE: NSNK-B001-P01` and row phone numbers `7010853258`, `9363786428`, `9363758615`, `7358064179`, `6380506458` for exact 1-to-1 match between preview output and image).
 
 ---
 
-## 7. Core System Specs & Architecture (v5.7 Summary)
+## 7. Core System Specs & Architecture (v5.8 Summary)
 
 ### 1. 3-Question Grading & Classification Engine
 - **Q1**: Meaning of your Name? *(உங்கள் பெயரின் பொருள் தெரியுமா?)*
