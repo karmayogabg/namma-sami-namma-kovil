@@ -863,4 +863,9 @@ body {
     box-shadow: 0 6px 20px rgba(139, 92, 246, 0.2);
     transform: translateY(-1.5px);
 }
+.hero-grade-chip:hover {
+    transform: translateY(-1.5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    filter: brightness(1.2);
+}
 

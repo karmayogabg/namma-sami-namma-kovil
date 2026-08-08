@@ -1195,6 +1195,19 @@ window.closeChartFullscreen = closeChartFullscreen;
 
 const BATCH_SIZE = 500;
 
+function filterByGrade(grade) {
+    const filterGradeEl = document.getElementById('filter-grade');
+    if (filterGradeEl) {
+        if (filterGradeEl.value === grade) {
+            filterGradeEl.value = '';
+        } else {
+            filterGradeEl.value = grade;
+        }
+        applyFilters();
+    }
+}
+window.filterByGrade = filterByGrade;
+
 function updateOverallProgressStats() {
     if (!allData || allData.length === 0) return;
     
@@ -1202,6 +1215,26 @@ function updateOverallProgressStats() {
     const totalRecords = allData.length;
     const totalBatches = Math.ceil(totalRecords / BATCH_SIZE);
     let completedBatchesCount = 0;
+
+    let countA = 0;
+    let countB = 0;
+    let countC = 0;
+    let countUnclassified = 0;
+
+    allData.forEach(item => {
+        let grade = null;
+        if (item.survey) {
+            if (item.survey.overallGrade) {
+                grade = item.survey.overallGrade;
+            } else if (item.survey.q1 || item.survey.q2 || item.survey.q3) {
+                grade = computeOverallGrade(item.survey.q1, item.survey.q2, item.survey.q3);
+            }
+        }
+        if (grade === 'A') countA++;
+        else if (grade === 'B') countB++;
+        else if (grade === 'C') countC++;
+        else countUnclassified++;
+    });
 
     for (let b = 0; b < totalBatches; b++) {
         const start = b * BATCH_SIZE;
@@ -1226,6 +1259,21 @@ function updateOverallProgressStats() {
     if (fillEl) {
         fillEl.style.width = `${overallPct}%`;
     }
+
+    const pctA = ((countA / totalRecords) * 100).toFixed(1);
+    const pctB = ((countB / totalRecords) * 100).toFixed(1);
+    const pctC = ((countC / totalRecords) * 100).toFixed(1);
+    const pctU = ((countUnclassified / totalRecords) * 100).toFixed(1);
+
+    const elA = document.getElementById('hero-grade-count-a');
+    const elB = document.getElementById('hero-grade-count-b');
+    const elC = document.getElementById('hero-grade-count-c');
+    const elU = document.getElementById('hero-grade-count-u');
+
+    if (elA) elA.textContent = `${countA.toLocaleString()} (${pctA}%)`;
+    if (elB) elB.textContent = `${countB.toLocaleString()} (${pctB}%)`;
+    if (elC) elC.textContent = `${countC.toLocaleString()} (${pctC}%)`;
+    if (elU) elU.textContent = `${countUnclassified.toLocaleString()} (${pctU}%)`;
 }
 window.updateOverallProgressStats = updateOverallProgressStats;
 

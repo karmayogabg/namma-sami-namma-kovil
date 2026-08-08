@@ -26,7 +26,7 @@
     <div id="auth-overlay" class="modal-overlay active" style="z-index: 2000; background: rgba(7, 9, 19, 0.96); backdrop-filter: blur(20px);">
         <div class="modal-content" style="max-width: 440px; text-align: center; border-color: rgba(139, 92, 246, 0.4); position: relative;">
             <div style="position: absolute; top: 16px; right: 16px;" class="brand-badge">
-                <span style="color: #6ee7b7; font-weight:700;">v8.3</span>
+                <span style="color: #6ee7b7; font-weight:700;">v8.4</span>
             </div>
             <div class="brand-logo" style="margin: 0 auto 16px auto; width: 56px; height: 56px;">
                 <i data-lucide="lock" style="width:28px; height:28px;"></i>
@@ -42,7 +42,7 @@
                 </button>
             </form>
             <div style="margin-top: 14px; font-size: 0.78rem; color: var(--text-muted);">
-                Namma Sami Namma Kovil Explorer <span style="color:#6ee7b7; font-weight:700;">v8.3</span>
+                Namma Sami Namma Kovil Explorer <span style="color:#6ee7b7; font-weight:700;">v8.4</span>
             </div>
         </div>
     </div>
@@ -64,7 +64,7 @@
                     <i data-lucide="moon" id="theme-icon" style="width:14px; height:14px; vertical-align:middle;"></i> <span id="theme-text">Dark</span>
                 </button>
                 <div class="brand-badge" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); color: #6ee7b7; font-weight:700;">
-                    v8.3
+                    v8.4
                 </div>
                 <div class="brand-badge">
                     <i data-lucide="database" style="width:14px; height:14px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>
@@ -134,6 +134,25 @@
                 </div>
                 <div style="width:100%; height:12px; background:rgba(255,255,255,0.08); border-radius:6px; overflow:hidden; border:1px solid rgba(255,255,255,0.12);">
                     <div id="hero-progress-fill" style="width:0%; height:100%; background:linear-gradient(90deg, #8b5cf6, #06b6d4, #10b981); transition:width 0.6s ease; border-radius:6px;"></div>
+                </div>
+
+                <!-- Grade Breakdown Bar (Grade A, B, C, UnClassified) -->
+                <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; border-top:1px solid rgba(255,255,255,0.08); margin-top:12px; padding-top:12px;">
+                    <div style="font-size:0.8rem; font-weight:700; color:var(--text-muted); display:flex; align-items:center; gap:4px; margin-right:4px;">
+                        <i data-lucide="pie-chart" style="width:14px; height:14px; color:#a78bfa;"></i> Grade Breakdown:
+                    </div>
+                    <div id="hero-grade-badge-a" class="hero-grade-chip" onclick="filterByGrade('A')" style="display:inline-flex; align-items:center; gap:6px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.35); color:#6ee7b7; padding:4px 12px; border-radius:20px; font-size:0.82rem; font-weight:700; cursor:pointer; transition:all 0.2s ease;" title="Click to filter by Grade A">
+                        <span>🟢 Grade A:</span> <span id="hero-grade-count-a">0 (0.0%)</span>
+                    </div>
+                    <div id="hero-grade-badge-b" class="hero-grade-chip" onclick="filterByGrade('B')" style="display:inline-flex; align-items:center; gap:6px; background:rgba(6,182,212,0.15); border:1px solid rgba(6,182,212,0.35); color:#67e8f9; padding:4px 12px; border-radius:20px; font-size:0.82rem; font-weight:700; cursor:pointer; transition:all 0.2s ease;" title="Click to filter by Grade B">
+                        <span>🔵 Grade B:</span> <span id="hero-grade-count-b">0 (0.0%)</span>
+                    </div>
+                    <div id="hero-grade-badge-c" class="hero-grade-chip" onclick="filterByGrade('C')" style="display:inline-flex; align-items:center; gap:6px; background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.35); color:#fde047; padding:4px 12px; border-radius:20px; font-size:0.82rem; font-weight:700; cursor:pointer; transition:all 0.2s ease;" title="Click to filter by Grade C">
+                        <span>🟠 Grade C:</span> <span id="hero-grade-count-c">0 (0.0%)</span>
+                    </div>
+                    <div id="hero-grade-badge-u" class="hero-grade-chip" onclick="filterByGrade('Ungraded')" style="display:inline-flex; align-items:center; gap:6px; background:rgba(148,163,184,0.12); border:1px solid rgba(148,163,184,0.25); color:#cbd5e1; padding:4px 12px; border-radius:20px; font-size:0.82rem; font-weight:700; cursor:pointer; transition:all 0.2s ease;" title="Click to filter by UnClassified">
+                        <span>⚪ UnClassified:</span> <span id="hero-grade-count-u">62,521 (100.0%)</span>
+                    </div>
                 </div>
             </div>
         </section>
