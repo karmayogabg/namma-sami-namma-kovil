@@ -917,7 +917,7 @@ ${topListText}
 🔵 Grade B (Interested but no time): ${totalGradeB.toLocaleString()}
 🟠 Grade C (Not interested): ${totalGradeC.toLocaleString()}
 -------------------------------------------
-Shared via Namma Sami Namma Kovil Reports Hub (v9.6)`;
+Shared via Namma Sami Namma Kovil Reports Hub (v9.7)`;
 
     // Capture Graph & Summary Table Image for Web Share / Download
     const captureArea = document.getElementById('report-capture-area');
