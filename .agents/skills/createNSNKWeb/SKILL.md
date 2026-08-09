@@ -162,6 +162,7 @@ Whenever any update is made to the dataset, UI layout, components, or features, 
 - **`v9.7`**: Top Positioned Export & Sharing Action Toolbar (relocated Export Image, WhatsApp Share, and Excel Export buttons to the top section of the page, directly above the AI Report Assistant prompt card).
 - **`v9.8`**: Synchronous Popup-Safe WhatsApp Link Sharing (fixed WhatsApp popup blocker issue by triggering `navigator.share` / `wa.me` instantly on user gesture with live URL link `https://karmayogabg.github.io/namma-sami-namma-kovil/reports.html` formatted on its own line for rich preview cards).
 - **`v9.9`**: Direct WhatsApp Sharing without File Download Interruption (removed conflicting automatic background file downloads during WhatsApp share, guaranteeing WhatsApp opens directly on mobile & desktop to share text summary and live report link).
+- **`v10.0`**: Premium High-Contrast Light Mode Redesign (redesigned Light Mode UI across `dashboard.css`, `reports.html`, and `reports.js` featuring crisp white glassmorphism cards, dark slate high-contrast typography, violet/cyan accents, and theme-aware Chart.js re-rendering).
 
 > [!IMPORTANT]
 > **Mandatory Version Synchronization Protocol**: Whenever any update or feature is added to the application, **you MUST update the version badge across ALL app files simultaneously (`index.html`, `dashboard.html`, `reports.html`, `reports.js`) so that all pages remain at the exact same version level (e.g. `v9.3`)**.

@@ -45,6 +45,7 @@ function toggleTheme() {
     document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('nsnk_theme', newTheme);
     updateThemeIcon(newTheme);
+    renderChart();
 }
 
 function updateThemeIcon(theme) {
@@ -438,6 +439,10 @@ function renderChart() {
     }
 
     const ctx = canvas.getContext('2d');
+    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    const textColor = isLight ? '#334155' : '#94a3b8';
+    const gridColor = isLight ? 'rgba(15, 23, 42, 0.08)' : 'rgba(255, 255, 255, 0.08)';
+    const legendColor = isLight ? '#0f172a' : '#f8fafc';
     let chartConfig = {};
 
     if (currentChartType === 'doughnut') {
@@ -450,14 +455,14 @@ function renderChart() {
                     data: top5.map(r => r.count),
                     backgroundColor: ['#8b5cf6', '#06b6d4', '#f59e0b', '#10b981', '#ec4899', '#3b82f6', '#84cc16', '#a855f7'],
                     borderWidth: 2,
-                    borderColor: '#0f172a'
+                    borderColor: isLight ? '#ffffff' : '#0f172a'
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { position: 'right', labels: { color: '#f8fafc', font: { family: 'Outfit' } } }
+                    legend: { position: 'right', labels: { color: legendColor, font: { family: 'Outfit' } } }
                 }
             }
         };
@@ -481,8 +486,8 @@ function renderChart() {
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                    x: { ticks: { color: '#94a3b8', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.05)' } },
-                    y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.08)' } }
+                    x: { ticks: { color: textColor, font: { size: 11 } }, grid: { color: gridColor } },
+                    y: { ticks: { color: textColor }, grid: { color: gridColor } }
                 },
                 plugins: { legend: { display: false } }
             }
@@ -506,8 +511,8 @@ function renderChart() {
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                    x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.08)' } },
-                    y: { ticks: { color: '#94a3b8', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                    x: { ticks: { color: textColor }, grid: { color: gridColor } },
+                    y: { ticks: { color: textColor, font: { size: 11 } }, grid: { color: gridColor } }
                 },
                 plugins: { legend: { display: false } }
             }
@@ -530,8 +535,8 @@ function renderChart() {
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                    x: { ticks: { color: '#94a3b8', font: { size: 11 }, maxRotation: 45 }, grid: { color: 'rgba(255,255,255,0.05)' } },
-                    y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.08)' } }
+                    x: { ticks: { color: textColor, font: { size: 11 }, maxRotation: 45 }, grid: { color: gridColor } },
+                    y: { ticks: { color: textColor }, grid: { color: gridColor } }
                 },
                 plugins: { legend: { display: false } }
             }
@@ -923,7 +928,7 @@ ${topListText}
 👉 *View Live Report & Interactive Graphs*:
 ${reportUrl}
 
-Shared via Namma Sami Namma Kovil Reports Hub (v9.9)`;
+Shared via Namma Sami Namma Kovil Reports Hub (v10.0)`;
 
     const encodedMsg = encodeURIComponent(message);
     const waUrl = `https://api.whatsapp.com/send?text=${encodedMsg}`;
