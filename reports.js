@@ -2,7 +2,8 @@
  * reports.js
  * Dedicated Reporting & Interactive Analytics Engine for Namma Sami Namma Kovil
  * Supports Pincode Grade Analysis (Report 1), Geographic Hierarchy (Report 2),
- * Multi-format Chart.js visualizer, Image Exporter (PNG), and WhatsApp Sharing.
+ * Multi-format Chart.js visualizer, Image Exporter (PNG), WhatsApp Sharing,
+ * and AI Assistant Chat Box with Natural Language Query Parsing.
  */
 
 let dataset = [];
@@ -13,6 +14,10 @@ let includeGrade = true;
 let chartInstance = null;
 let currentReportRows = [];
 let filteredReportRows = [];
+
+// AI Assistant State Variables
+let aiPincodeCondition = 'all'; // 'all', 'missing', 'present'
+let aiGradeFilter = '';          // '', 'A', 'B', 'C', 'Ungraded'
 
 // DOM Elements
 document.addEventListener('DOMContentLoaded', async () => {
@@ -167,13 +172,29 @@ function renderActiveReport() {
     const selectedRegion = document.getElementById('filter-report-region')?.value || '';
     const selectedDistrict = document.getElementById('filter-report-district')?.value || '';
 
-    // Filter Dataset Scope
+    // Filter Dataset Scope by Region, District, AI Pincode Condition, and AI Grade Filter
     let scopedData = dataset;
     if (selectedRegion) {
         scopedData = scopedData.filter(d => d.region && d.region.trim() === selectedRegion);
     }
     if (selectedDistrict) {
         scopedData = scopedData.filter(d => d.district && d.district.trim() === selectedDistrict);
+    }
+
+    // AI Pincode Condition Filter
+    if (aiPincodeCondition === 'missing') {
+        scopedData = scopedData.filter(d => !d.pincode || d.pincode.trim() === '' || d.pincode.trim() === '-');
+    } else if (aiPincodeCondition === 'present') {
+        scopedData = scopedData.filter(d => d.pincode && d.pincode.trim() !== '' && d.pincode.trim() !== '-');
+    }
+
+    // AI Grade Filter
+    if (aiGradeFilter) {
+        scopedData = scopedData.filter(d => {
+            const g = d.grade ? d.grade.trim() : 'Ungraded';
+            if (aiGradeFilter === 'Ungraded') return g === 'Ungraded' || g === 'UnClassified' || g === '';
+            return g === `Grade ${aiGradeFilter}` || g === aiGradeFilter;
+        });
     }
 
     if (currentReportId === 1) {
@@ -204,7 +225,7 @@ function generateReport1Pincode(scopedData) {
     const pinMap = new Map();
 
     scopedData.forEach(item => {
-        const pin = item.pincode ? item.pincode.trim() : 'Unspecified';
+        const pin = item.pincode && item.pincode.trim() !== '-' ? item.pincode.trim() : 'Unspecified / பின்கோடு இல்லை';
         if (!pinMap.has(pin)) {
             pinMap.set(pin, {
                 pincode: pin,
@@ -512,6 +533,143 @@ function renderTable() {
             </tr>
         `).join('');
     }
+}
+
+// ==========================================
+// AI REPORT ASSISTANT CHAT ENGINE
+// ==========================================
+function sendAiChipQuery(text) {
+    const input = document.getElementById('ai-chat-input');
+    if (input) input.value = text;
+    submitAiChat();
+}
+
+function submitAiChat() {
+    const input = document.getElementById('ai-chat-input');
+    if (!input) return;
+    const query = input.value.trim();
+    if (!query) return;
+    input.value = '';
+
+    appendAiChatMessage('user', query);
+    processAiUserQuery(query);
+}
+
+function appendAiChatMessage(sender, text) {
+    const log = document.getElementById('ai-chat-log');
+    if (!log) return;
+
+    const div = document.createElement('div');
+    div.style.fontSize = '0.84rem';
+    div.style.padding = '8px 12px';
+    div.style.borderRadius = '6px';
+    div.style.maxWidth = '88%';
+
+    if (sender === 'user') {
+        div.style.background = 'rgba(6, 182, 212, 0.18)';
+        div.style.border = '1px solid rgba(6, 182, 212, 0.35)';
+        div.style.color = '#67e8f9';
+        div.style.alignSelf = 'flex-end';
+        div.innerHTML = `<strong>👤 You:</strong> ${escapeHtml(text)}`;
+    } else {
+        div.style.background = 'rgba(139, 92, 246, 0.15)';
+        div.style.border = '1px solid rgba(139, 92, 246, 0.35)';
+        div.style.color = '#c4b5fd';
+        div.style.alignSelf = 'flex-start';
+        div.innerHTML = `<strong>🤖 AI Assistant:</strong> ${text}`;
+    }
+
+    log.appendChild(div);
+    log.scrollTop = log.scrollHeight;
+}
+
+function processAiUserQuery(query) {
+    const q = query.toLowerCase();
+    const actions = [];
+
+    // Reset command
+    if (q.includes('reset') || q.includes('clear') || q.includes('show all')) {
+        aiPincodeCondition = 'all';
+        aiGradeFilter = '';
+        const regEl = document.getElementById('filter-report-region');
+        const distEl = document.getElementById('filter-report-district');
+        if (regEl) regEl.value = '';
+        if (distEl) distEl.value = '';
+        const chk = document.getElementById('chk-include-grade');
+        if (chk) chk.checked = true;
+        includeGrade = true;
+        actions.push('Reset all filters to default dataset');
+    }
+
+    // Pincode condition
+    if (q.includes('without pincode') || q.includes('missing pincode') || q.includes('no pincode') || q.includes('pincode இல்லை')) {
+        aiPincodeCondition = 'missing';
+        actions.push('Filter: Records <strong>Without Pincode</strong>');
+    } else if (q.includes('with pincode') || q.includes('has pincode')) {
+        aiPincodeCondition = 'present';
+        actions.push('Filter: Records <strong>With Valid Pincode</strong>');
+    }
+
+    // Grade filter
+    if (q.includes('grade a') || q.includes('a grade') || q.includes('a தர') || q.includes('grade 🟢')) {
+        aiGradeFilter = 'A';
+        actions.push('Filter: <strong>🟢 Grade A Records Only</strong>');
+    } else if (q.includes('grade b') || q.includes('b grade') || q.includes('b தர')) {
+        aiGradeFilter = 'B';
+        actions.push('Filter: <strong>🔵 Grade B Records Only</strong>');
+    } else if (q.includes('grade c') || q.includes('c grade') || q.includes('c தர')) {
+        aiGradeFilter = 'C';
+        actions.push('Filter: <strong>🟠 Grade C Records Only</strong>');
+    } else if (q.includes('ungraded') || q.includes('unclassified') || q.includes('pending')) {
+        aiGradeFilter = 'Ungraded';
+        actions.push('Filter: <strong>⚪ UnClassified Records</strong>');
+    }
+
+    // Chart Format commands
+    if (q.includes('horizontal') || q.includes('landscape bar')) {
+        currentChartType = 'horizontalBar';
+        const sel = document.getElementById('select-chart-type');
+        if (sel) sel.value = 'horizontalBar';
+        actions.push('Chart: Switched to <strong>Horizontal Bar Chart</strong>');
+    } else if (q.includes('donut') || q.includes('pie') || q.includes('doughnut')) {
+        currentChartType = 'doughnut';
+        const sel = document.getElementById('select-chart-type');
+        if (sel) sel.value = 'doughnut';
+        actions.push('Chart: Switched to <strong>Donut Chart</strong>');
+    } else if (q.includes('line') || q.includes('trend')) {
+        currentChartType = 'line';
+        const sel = document.getElementById('select-chart-type');
+        if (sel) sel.value = 'line';
+        actions.push('Chart: Switched to <strong>Line Chart</strong>');
+    } else if (q.includes('vertical bar') || (q.includes('bar') && !q.includes('horizontal'))) {
+        currentChartType = 'bar';
+        const sel = document.getElementById('select-chart-type');
+        if (sel) sel.value = 'bar';
+        actions.push('Chart: Switched to <strong>Vertical Bar Chart</strong>');
+    }
+
+    // Report switching
+    if (q.includes('report 2') || q.includes('geographic') || q.includes('hierarchy') || q.includes('மண்டலம்')) {
+        switchReport(2);
+        actions.push('Switched to <strong>Report 2: Geographic Hierarchy</strong>');
+    } else if (q.includes('report 1') || q.includes('pincode report')) {
+        switchReport(1);
+        actions.push('Switched to <strong>Report 1: Pincode Distribution</strong>');
+    }
+
+    // Apply & re-render
+    renderActiveReport();
+
+    const resultCount = filteredReportRows.reduce((acc, r) => acc + r.count, 0);
+    const summaryMsg = actions.length > 0
+        ? `Applied AI Commands:<br>• ${actions.join('<br>• ')}<br><span style="color:#6ee7b7; font-weight:700;">✨ Found ${resultCount.toLocaleString()} matching records! Graphs & tables updated below.</span>`
+        : `Could not parse explicit filter parameters. Try asking: <em>"filter all A grade"</em> or <em>"show data without pincode"</em>.`;
+
+    appendAiChatMessage('assistant', summaryMsg);
+}
+
+function escapeHtml(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 // ==========================================
