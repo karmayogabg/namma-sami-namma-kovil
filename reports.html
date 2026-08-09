@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>நம்ம சாமி நம்ம கோவில் - Interactive Reports & Analytics Hub (v9.2)</title>
+    <meta name="description" content="Dedicated Analytics & Reports Hub for Namma Sami Namma Kovil dataset featuring Pincode Grade Analysis, Geographic Hierarchies, Image Exports, and WhatsApp Sharing.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Noto+Sans+Tamil:wght@400;600;700&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Libraries: Lucide Icons, SheetJS, Chart.js & html2canvas -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="dashboard.css">
+    
+    <style>
+        .report-tab-btn {
+            padding: 10px 18px;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.92rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .report-tab-btn:hover {
+            background: rgba(139, 92, 246, 0.15);
+            border-color: rgba(139, 92, 246, 0.35);
+            color: var(--text-main);
+        }
+        .report-tab-btn.active {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.35), rgba(6, 182, 212, 0.35));
+            border-color: rgba(139, 92, 246, 0.7);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.25);
+        }
+        .report-table-container {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.7);
+        }
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            text-align: left;
+        }
+        .report-table th {
+            background: rgba(30, 41, 59, 0.9);
+            color: #c4b5fd;
+            padding: 12px 14px;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            position: sticky;
+            top: 0;
+            white-space: nowrap;
+        }
+        .report-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            white-space: nowrap;
+        }
+        .report-table tr:hover {
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .share-btn-wa {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: #fff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .share-btn-wa:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+        }
+        .export-img-btn {
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            color: #fff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .export-img-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navbar -->
+    <header class="navbar">
+        <div class="container navbar-inner">
+            <a href="dashboard.html" class="brand">
+                <div class="brand-logo">
+                    <i data-lucide="pie-chart"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>நம்ம சாமி நம்ம கோவில்</h1>
+                    <p>Reports & Analytics Hub / அறிக்கை மையம்</p>
+                </div>
+            </a>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <a href="dashboard.html" class="toggle-btn" style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.2); color: var(--text-main); text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+                    <i data-lucide="arrow-left" style="width:14px; height:14px;"></i> Back to Dashboard
+                </a>
+                <button id="theme-toggle-btn" class="toggle-btn" style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.2); color: var(--text-main);" onclick="toggleTheme()">
+                    <i data-lucide="moon" id="theme-icon" style="width:14px; height:14px;"></i> <span id="theme-text">Dark</span>
+                </button>
+                <div class="brand-badge" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); color: #6ee7b7; font-weight:700;">
+                    v9.2
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container" style="padding-top: 24px; padding-bottom: 40px;">
+
+        <!-- Top Selectable Reports Navigation Bar -->
+        <section style="margin-bottom: 24px; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 12px; padding: 16px;">
+            <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                <i data-lucide="list-filter" style="width:14px; height:14px; color:#a78bfa;"></i> Select Available Report / அறிக்கை தேர்வு செய்க:
+            </div>
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                <button id="tab-report-1" class="report-tab-btn active" onclick="switchReport(1)">
+                    <i data-lucide="map-pin" style="width:16px; height:16px;"></i>
+                    Report 1: Pincode Distribution & Grade Analysis (பின்கோடு அறிக்கை)
+                </button>
+                <button id="tab-report-2" class="report-tab-btn" onclick="switchReport(2)">
+                    <i data-lucide="layers" style="width:16px; height:16px;"></i>
+                    Report 2: Geographic Hierarchy (மண்டலம் ➔ மாவட்டம் ➔ ஒன்றியம் ➔ பின்கோடு)
+                </button>
+            </div>
+        </section>
+
+        <!-- Report Controls & Customization Toolbar -->
+        <section style="margin-bottom: 20px; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;">
+                
+                <!-- Left: View Mode Switcher -->
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                    <span style="font-size:0.85rem; font-weight:700; color:var(--text-muted);">View Mode:</span>
+                    <button id="btn-view-both" class="toggle-btn active" style="padding:6px 12px; font-size:0.82rem;" onclick="setViewMode('both')">
+                        <i data-lucide="layout-grid" style="width:13px; height:13px; vertical-align:middle;"></i> Combined View
+                    </button>
+                    <button id="btn-view-chart" class="toggle-btn" style="padding:6px 12px; font-size:0.82rem;" onclick="setViewMode('chart')">
+                        <i data-lucide="bar-chart-2" style="width:13px; height:13px; vertical-align:middle;"></i> Graphical Only
+                    </button>
+                    <button id="btn-view-table" class="toggle-btn" style="padding:6px 12px; font-size:0.82rem;" onclick="setViewMode('table')">
+                        <i data-lucide="table" style="width:13px; height:13px; vertical-align:middle;"></i> Data Table Only
+                    </button>
+                </div>
+
+                <!-- Middle: Chart Type Switcher -->
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                    <span style="font-size:0.85rem; font-weight:700; color:var(--text-muted);">Chart Format:</span>
+                    <select id="select-chart-type" class="select-custom" style="padding:6px 10px; font-size:0.82rem;" onchange="changeChartType(this.value)">
+                        <option value="bar">Vertical Bar 📊</option>
+                        <option value="horizontalBar">Horizontal Bar 📊</option>
+                        <option value="line">Line Chart 📈</option>
+                        <option value="doughnut">Doughnut / Pie 🍩</option>
+                    </select>
+                </div>
+
+                <!-- Right: Filters & Options -->
+                <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                    <label id="wrapper-grade-toggle" style="display:inline-flex; align-items:center; gap:6px; font-size:0.85rem; font-weight:700; color:#6ee7b7; cursor:pointer; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); padding:6px 12px; border-radius:6px;">
+                        <input type="checkbox" id="chk-include-grade" checked onchange="toggleGradeOption(this.checked)" style="accent-color:#10b981; width:15px; height:15px;">
+                        Include Grade Breakdown (A/B/C)
+                    </label>
+
+                    <select id="filter-report-region" class="select-custom" style="padding:6px 10px; font-size:0.82rem;" onchange="applyReportFilters()">
+                        <option value="">All Regions / மண்டலம்</option>
+                    </select>
+
+                    <select id="filter-report-district" class="select-custom" style="padding:6px 10px; font-size:0.82rem;" onchange="applyReportFilters()">
+                        <option value="">All Districts / மாவட்டம்</option>
+                    </select>
+
+                    <input type="text" id="report-search-input" class="search-input" style="padding:6px 12px; font-size:0.82rem; width:180px;" placeholder="Search report rows..." oninput="filterReportTable(this.value)">
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Capture Area Container (Target for Export as Image) -->
+        <div id="report-capture-area" style="background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(139, 92, 246, 0.35); border-radius: 12px; padding: 24px; margin-bottom: 24px;">
+            
+            <!-- Report Title & Summary Header -->
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 16px; margin-bottom: 20px;">
+                <div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="brand-badge" style="background:rgba(139,92,246,0.2); border-color:rgba(139,92,246,0.4); color:#c4b5fd; font-weight:700;" id="report-badge-id">REPORT #1</span>
+                        <h2 style="font-family:var(--font-heading); font-size:1.35rem; color:#f8fafc; margin:0;" id="report-main-title">Pincode Distribution & Grade Analysis</h2>
+                    </div>
+                    <p style="margin:6px 0 0 0; font-size:0.85rem; color:var(--text-muted);" id="report-sub-title">Showing total headcount, percentage distribution, and Grade A/B/C breakdown per Pincode across 62,521 records.</p>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-size:1.3rem; font-weight:800; color:#6ee7b7; font-family:'Outfit';" id="report-stat-count">0 Records</div>
+                    <div style="font-size:0.75rem; color:var(--text-muted);" id="report-timestamp">Generated live • NSNK v9.2</div>
+                </div>
+            </div>
+
+            <!-- Graphical View Section -->
+            <div id="section-chart" style="margin-bottom: 28px; background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 16px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <h3 style="margin:0; font-size:0.95rem; color:#c4b5fd; display:flex; align-items:center; gap:6px;">
+                        <i data-lucide="bar-chart-2" style="width:16px; height:16px;"></i> Graphical Analytics Visualization
+                    </h3>
+                    <span style="font-size:0.78rem; color:var(--text-muted);" id="chart-caption-info">Top 30 Records Displayed</span>
+                </div>
+                <div style="position:relative; height: 340px; width: 100%;">
+                    <canvas id="report-chart-canvas"></canvas>
+                </div>
+            </div>
+
+            <!-- Table Data View Section -->
+            <div id="section-table">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <h3 style="margin:0; font-size:0.95rem; color:#6ee7b7; display:flex; align-items:center; gap:6px;">
+                        <i data-lucide="table" style="width:16px; height:16px;"></i> Data Table Format
+                    </h3>
+                    <span style="font-size:0.78rem; color:var(--text-muted);" id="table-row-count-info">0 rows</span>
+                </div>
+
+                <div class="report-table-container" style="max-height: 500px; overflow-y: auto;">
+                    <table class="report-table" id="report-data-table">
+                        <thead id="report-table-head">
+                            <!-- Injected dynamically -->
+                        </thead>
+                        <tbody id="report-table-body">
+                            <!-- Injected dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Export & Share Action Toolbar -->
+        <section style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 12px; padding: 16px;">
+            <div style="font-size: 0.88rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 6px;">
+                <i data-lucide="share-2" style="width:16px; height:16px; color:#a78bfa;"></i> Report Export & Sharing Options:
+            </div>
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                <button class="export-img-btn" onclick="exportReportAsImage()">
+                    <i data-lucide="image" style="width:18px; height:18px;"></i> Export as Image (PNG/JPG) 🖼️
+                </button>
+                <button class="share-btn-wa" onclick="shareReportOnWhatsApp()">
+                    <i data-lucide="send" style="width:18px; height:18px;"></i> Share Report on WhatsApp 📱
+                </button>
+                <button class="toggle-btn" style="background: rgba(59, 130, 246, 0.2); border-color: rgba(59, 130, 246, 0.4); color: #93c5fd; padding:10px 18px; font-weight:700;" onclick="exportReportToExcel()">
+                    <i data-lucide="download" style="width:16px; height:16px; vertical-align:middle;"></i> Export Excel (.xlsx) 📊
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Dedicated Reports Hub Logic Script -->
+    <script src="reports.js"></script>
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
