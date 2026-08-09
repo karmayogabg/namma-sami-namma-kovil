@@ -157,6 +157,7 @@ Whenever any update is made to the dataset, UI layout, components, or features, 
 - **`v9.2`**: Dedicated Reports Hub Page (`reports.html` & `reports.js` featuring top selectable report switcher, dual Graphical & Table views, Report 1 Pincode Grade Analysis, Report 2 Geographic Hierarchy, PNG image exporter, and WhatsApp sharing).
 - **`v9.3`**: Interactive AI Report Assistant Chat Box (`reports.html` & `reports.js` with natural language query parsing, live graph & table filtering, quick shortcut chips, and synchronized versioning across all pages).
 - **`v9.4`**: Synchronized AI Assistant Report Context Switching (when switching between Report 1 and Report 2, the AI Assistant automatically updates its conversational context, prompt suggestions, and query parser scope live).
+- **`v9.5`**: Enhanced WhatsApp Report Sharing with Direct Live Link & Graph PNG Auto-Capture (clicking WhatsApp share includes direct interactive report URL link `https://karmayogabg.github.io/namma-sami-namma-kovil/reports.html`, text summary, and auto-captures/attaches report graph PNG via Web Share API or automatic download).
 
 > [!IMPORTANT]
 > **Mandatory Version Synchronization Protocol**: Whenever any update or feature is added to the application, **you MUST update the version badge across ALL app files simultaneously (`index.html`, `dashboard.html`, `reports.html`, `reports.js`) so that all pages remain at the exact same version level (e.g. `v9.3`)**.
