@@ -23,40 +23,18 @@ flowchart TD
 
 ---
 
-## 1. JSON Dataset Generation
+## 1. JSON Dataset Generation & Sync
 
-To convert or extract `.xlsx` spreadsheets into clean, fast JSON datasets:
+To keep `நம்ம சாமி நம்ம கோவில் - full.xlsx` and `namma_sami_namma_kovil_full.json` synchronized, use [`sync_xlsx_to_json.js`](file:///home/sabrisatharamanathan/my-project/Aram-NSNK/sync_xlsx_to_json.js) or the `syncNSNK` skill:
 
-### Export Script (`node parse_xlsx_to_json.js`)
-```javascript
-const fs = require('fs');
-const XLSX = require('xlsx');
+### Manual One-Time Sync:
+```bash
+node sync_xlsx_to_json.js
+```
 
-const workbook = XLSX.readFile('நம்ம சாமி நம்ம கோவில் - full.xlsx');
-const sheet = workbook.Sheets[workbook.SheetNames[0]];
-const range = XLSX.utils.decode_range(sheet['!ref']);
-const records = [];
-
-for (let r = 1; r <= range.e.r; r++) {
-  const getVal = (colIdx) => {
-    const cell = sheet[XLSX.utils.encode_cell({ r: r, c: colIdx })];
-    return cell ? String(cell.v).trim() : '';
-  };
-  const name = getVal(0);
-  if (name && name !== '-') {
-    records.push({
-      name,
-      mobile: getVal(1),
-      region: getVal(2),
-      district: getVal(3),
-      union: getVal(4),
-      pincode: getVal(5),
-      meaning: getVal(6)
-    });
-  }
-}
-
-fs.writeFileSync('namma_sami_namma_kovil_full.json', JSON.stringify(records, null, 2));
+### Live Auto-Watcher Mode (`--watch`):
+```bash
+node sync_xlsx_to_json.js --watch
 ```
 
 ---

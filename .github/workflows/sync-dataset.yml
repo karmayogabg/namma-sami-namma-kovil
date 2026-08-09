@@ -1,0 +1,42 @@
+name: Auto-Sync NSNK Excel to JSON
+
+on:
+  push:
+    paths:
+      - 'நம்ம சாமி நம்ம கோவில் - full.xlsx'
+      - '*.xlsx'
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  sync-dataset:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: |
+          npm install xlsx
+
+      - name: Execute XLS to JSON Sync Engine
+        run: |
+          node sync_xlsx_to_json.js
+
+      - name: Commit & Push Updated JSON Dataset
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore(data): auto-sync namma_sami_namma_kovil_full.json from updated Excel spreadsheet [skip ci]"
+          file_pattern: 'namma_sami_namma_kovil_full.json'
+          commit_user_name: 'NSNK Auto-Sync Bot'
+          commit_user_email: 'karmayogabg@gmail.com'

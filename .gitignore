@@ -4,7 +4,7 @@ node_modules/
 *.tmp
 .DS_Store
 *.xlsx
+!நம்ம சாமி நம்ம கோவில் - full.xlsx
 meanings_cache.json
 
-chrome/
 chrome/
