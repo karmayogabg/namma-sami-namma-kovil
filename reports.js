@@ -2,7 +2,7 @@
  * reports.js
  * Dedicated Reporting & Interactive Analytics Engine for Namma Sami Namma Kovil
  * Supports Pincode Grade Analysis (Report 1), Geographic Hierarchy (Report 2),
- * Multi-format Chart.js visualizer, Image Exporter (PNG), Instant WhatsApp Link Sharing,
+ * Multi-format Chart.js visualizer, Image Exporter (PNG), Instant Direct WhatsApp Link Sharing,
  * Per-Column Sorting & Filtering, and AI Assistant Chat Box with Natural Language Query Parsing.
  */
 
@@ -850,7 +850,7 @@ async function exportReportAsImage() {
     const captureArea = document.getElementById('report-capture-area');
     if (!captureArea) return;
 
-    const btn = event.currentTarget;
+    const btn = event ? event.currentTarget : null;
     const originalText = btn ? btn.innerHTML : '';
     if (btn) {
         btn.innerHTML = `⏳ Generating Image...`;
@@ -885,7 +885,7 @@ async function exportReportAsImage() {
 }
 
 // ==========================================
-// INSTANT SYNCHRONOUS WHATSAPP SHARE ENGINE
+// INSTANT DIRECT WHATSAPP LINK SHARING ENGINE
 // ==========================================
 function shareReportOnWhatsApp() {
     const reportName = currentReportId === 1 ? '📍 Pincode Distribution & Grade Analysis' : '🗺️ Geographic Hierarchy Breakdown';
@@ -912,66 +912,34 @@ function shareReportOnWhatsApp() {
 📅 *Date*: ${dateStr}
 👥 *Total Dataset Records*: ${totalRecords}
 
-🏆 *Top Categories*:
+🏆 *Top High-Density Categories*:
 ${topListText}
 
 📊 *Grade Summary*:
-🟢 Grade A: ${totalGradeA.toLocaleString()}
-🔵 Grade B: ${totalGradeB.toLocaleString()}
-🟠 Grade C: ${totalGradeC.toLocaleString()}
+🟢 Grade A (Interested to know more): ${totalGradeA.toLocaleString()}
+🔵 Grade B (Interested but no time): ${totalGradeB.toLocaleString()}
+🟠 Grade C (Not interested): ${totalGradeC.toLocaleString()}
 
-👉 *View Live Interactive Report & Graphs*:
+👉 *View Live Report & Interactive Graphs*:
 ${reportUrl}
 
-Shared via Namma Sami Namma Kovil Reports Hub (v9.8)`;
+Shared via Namma Sami Namma Kovil Reports Hub (v9.9)`;
 
-    // 1. Synchronously open native Web Share API (Mobile) or WhatsApp Web link (Desktop)
+    const encodedMsg = encodeURIComponent(message);
+    const waUrl = `https://api.whatsapp.com/send?text=${encodedMsg}`;
+
+    // Mobile Web Share API or Direct WhatsApp Deep Link
     if (navigator.share) {
         navigator.share({
             title: 'NSNK Analytics Report',
             text: message,
             url: reportUrl
-        }).then(() => {
-            console.log('✅ Shared via Web Share API successfully!');
         }).catch(err => {
-            console.log('Web share dismissed or unavailable, using wa.me fallback:', err);
-            openWhatsAppFallback(message);
+            console.log('Mobile web share dismissed or unavailable, using WhatsApp deep link:', err);
+            window.open(waUrl, '_blank');
         });
     } else {
-        openWhatsAppFallback(message);
-    }
-
-    // 2. Trigger graph image download asynchronously in the background
-    captureAndDownloadGraphImageInBackground();
-}
-
-function openWhatsAppFallback(message) {
-    const encodedMsg = encodeURIComponent(message);
-    const waUrl = `https://wa.me/?text=${encodedMsg}`;
-    window.open(waUrl, '_blank');
-}
-
-async function captureAndDownloadGraphImageInBackground() {
-    const captureArea = document.getElementById('report-capture-area');
-    if (!captureArea || typeof html2canvas === 'undefined') return;
-
-    try {
-        const canvas = await html2canvas(captureArea, {
-            scale: 2,
-            backgroundColor: '#070913',
-            useCORS: true,
-            logging: false
-        });
-
-        const link = document.createElement('a');
-        const reportSlug = currentReportId === 1 ? 'Pincode_Grade_Analysis' : 'Geographic_Hierarchy';
-        const timestamp = new Date().toISOString().split('T')[0];
-        link.download = `NSNK_Report_Graph_${reportSlug}_${timestamp}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-        console.log('✅ Background graph PNG captured and downloaded.');
-    } catch (e) {
-        console.warn('Background image capture info:', e.message);
+        window.open(waUrl, '_blank');
     }
 }
 
