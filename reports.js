@@ -2,7 +2,7 @@
  * reports.js
  * Dedicated Reporting & Interactive Analytics Engine for Namma Sami Namma Kovil
  * Supports Pincode Grade Analysis (Report 1), Geographic Hierarchy (Report 2),
- * Multi-format Chart.js visualizer, Image Exporter (PNG), Instant Direct WhatsApp Link Sharing,
+ * Multi-format Chart.js visualizer, Image Exporter (PNG), WhatsApp Sharing (Graph Image + Link),
  * Per-Column Sorting & Filtering, and AI Assistant Chat Box with Natural Language Query Parsing.
  */
 
@@ -890,28 +890,36 @@ async function exportReportAsImage() {
 }
 
 // ==========================================
-// INSTANT DIRECT WHATSAPP LINK SHARING ENGINE
+// WHATSAPP SHARE ENGINE (IMAGE FILE + LINK)
 // ==========================================
-function shareReportOnWhatsApp() {
-    const reportName = currentReportId === 1 ? '📍 Pincode Distribution & Grade Analysis' : '🗺️ Geographic Hierarchy Breakdown';
-    const totalRecords = dataset.length.toLocaleString();
-    const dateStr = new Date().toLocaleDateString();
-    const reportUrl = 'https://karmayogabg.github.io/namma-sami-namma-kovil/reports.html';
-
-    const top5 = filteredReportRows.slice(0, 5);
-    let topListText = '';
-
-    if (currentReportId === 1) {
-        topListText = top5.map((r, i) => `${i + 1}. Pincode *${r.pincode}*: ${r.count.toLocaleString()} persons (Grade A: ${r.gradeA})`).join('\n');
-    } else {
-        topListText = top5.map((r, i) => `${i + 1}. *${r.district}* (${r.union}): ${r.count.toLocaleString()} persons`).join('\n');
+async function shareReportOnWhatsApp() {
+    const btn = event ? event.currentTarget : null;
+    const originalText = btn ? btn.innerHTML : '';
+    if (btn) {
+        btn.innerHTML = `⏳ Capturing Graph & Link...`;
+        btn.disabled = true;
     }
 
-    const totalGradeA = filteredReportRows.reduce((sum, r) => sum + r.gradeA, 0);
-    const totalGradeB = filteredReportRows.reduce((sum, r) => sum + r.gradeB, 0);
-    const totalGradeC = filteredReportRows.reduce((sum, r) => sum + r.gradeC, 0);
+    try {
+        const reportName = currentReportId === 1 ? '📍 Pincode Distribution & Grade Analysis' : '🗺️ Geographic Hierarchy Breakdown';
+        const totalRecords = dataset.length.toLocaleString();
+        const dateStr = new Date().toLocaleDateString();
+        const reportUrl = 'https://karmayogabg.github.io/namma-sami-namma-kovil/reports.html';
 
-    const message = `📊 *நம்ம சாமி நம்ம கோவில் - Analytics Report*
+        const top5 = filteredReportRows.slice(0, 5);
+        let topListText = '';
+
+        if (currentReportId === 1) {
+            topListText = top5.map((r, i) => `${i + 1}. Pincode *${r.pincode}*: ${r.count.toLocaleString()} persons (Grade A: ${r.gradeA})`).join('\n');
+        } else {
+            topListText = top5.map((r, i) => `${i + 1}. *${r.district}* (${r.union}): ${r.count.toLocaleString()} persons`).join('\n');
+        }
+
+        const totalGradeA = filteredReportRows.reduce((sum, r) => sum + r.gradeA, 0);
+        const totalGradeB = filteredReportRows.reduce((sum, r) => sum + r.gradeB, 0);
+        const totalGradeC = filteredReportRows.reduce((sum, r) => sum + r.gradeC, 0);
+
+        const message = `📊 *நம்ம சாமி நம்ம கோவில் - Analytics Report*
 
 📋 *Report*: ${reportName}
 📅 *Date*: ${dateStr}
@@ -928,24 +936,100 @@ ${topListText}
 👉 *View Live Report & Interactive Graphs*:
 ${reportUrl}
 
-Shared via Namma Sami Namma Kovil Reports Hub (v10.0)`;
+Shared via Namma Sami Namma Kovil Reports Hub (v10.1)`;
 
-    const encodedMsg = encodeURIComponent(message);
-    const waUrl = `https://api.whatsapp.com/send?text=${encodedMsg}`;
+        // 1. Capture High-Res Canvas Image of Graph + Summary Table
+        const captureArea = document.getElementById('report-capture-area');
+        let imageFile = null;
 
-    // Mobile Web Share API or Direct WhatsApp Deep Link
-    if (navigator.share) {
-        navigator.share({
-            title: 'NSNK Analytics Report',
-            text: message,
-            url: reportUrl
-        }).catch(err => {
-            console.log('Mobile web share dismissed or unavailable, using WhatsApp deep link:', err);
-            window.open(waUrl, '_blank');
-        });
-    } else {
+        if (captureArea && typeof html2canvas !== 'undefined') {
+            try {
+                const canvas = await html2canvas(captureArea, {
+                    scale: 2,
+                    backgroundColor: '#070913',
+                    useCORS: true,
+                    logging: false
+                });
+
+                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+                if (blob) {
+                    const reportSlug = currentReportId === 1 ? 'Pincode_Grade_Analysis' : 'Geographic_Hierarchy';
+                    imageFile = new File([blob], `NSNK_Report_Graph_${reportSlug}.png`, { type: 'image/png' });
+
+                    // Copy PNG Image Blob to System Clipboard if supported
+                    if (navigator.clipboard && window.ClipboardItem) {
+                        try {
+                            await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+                            console.log('✅ Graph image copied to clipboard.');
+                        } catch (clipErr) {
+                            console.warn('Clipboard write note:', clipErr);
+                        }
+                    }
+                }
+            } catch (e) {
+                console.warn('Graph canvas capture note:', e.message);
+            }
+        }
+
+        // 2. Mobile Native Share Sheet (attaches BOTH Image File AND Text/Link to WhatsApp!)
+        if (imageFile && navigator.canShare && navigator.canShare({ files: [imageFile] })) {
+            await navigator.share({
+                title: 'NSNK Analytics Report',
+                text: message,
+                url: reportUrl,
+                files: [imageFile]
+            });
+            console.log('✅ Shared Graph PNG Image + Text Link via Native Web Share!');
+            return;
+        }
+
+        // 3. Desktop / Fallback: Open WhatsApp Web / App directly with text & link
+        const encodedMsg = encodeURIComponent(message);
+        const waUrl = `https://api.whatsapp.com/send?text=${encodedMsg}`;
         window.open(waUrl, '_blank');
+
+        showToastNotification('📋 Graph Image copied to Clipboard! Press Ctrl+V (Paste) in WhatsApp to attach the graph image with your link!');
+
+    } catch (err) {
+        console.error('WhatsApp share error:', err);
+    } finally {
+        if (btn) {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
     }
+}
+
+// Toast Notification Engine
+function showToastNotification(text) {
+    let toast = document.getElementById('nsnk-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'nsnk-toast';
+        toast.style.position = 'fixed';
+        toast.style.bottom = '30px';
+        toast.style.left = '50%';
+        toast.style.transform = 'translateX(-50%)';
+        toast.style.background = 'linear-gradient(135deg, #1e1b4b, #311b92)';
+        toast.style.color = '#fff';
+        toast.style.padding = '12px 24px';
+        toast.style.borderRadius = '30px';
+        toast.style.border = '1px solid rgba(168, 85, 247, 0.4)';
+        toast.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.5)';
+        toast.style.zIndex = '9999';
+        toast.style.fontSize = '0.88rem';
+        toast.style.fontWeight = '600';
+        toast.style.transition = 'all 0.3s ease';
+        document.body.appendChild(toast);
+    }
+    toast.innerHTML = text;
+    toast.style.opacity = '1';
+    toast.style.visibility = 'visible';
+
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.visibility = 'hidden';
+    }, 5000);
 }
 
 // ==========================================
