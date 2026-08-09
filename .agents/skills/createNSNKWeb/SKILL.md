@@ -154,6 +154,11 @@ Whenever any update is made to the dataset, UI layout, components, or features, 
 - **`v8.9`**: Excel/XLS Batch Import Engine (added 1-click `Import Excel (.xlsx) 📥` file upload tool supporting `.xlsx`, `.xls`, and `.csv` files with flexible column matching, grade normalization, automatic dataset matching, and live analytics sync).
 - **`v9.0`**: Unified Progress & Grade Evaluation Fix (fixed `updateOverallProgressStats()` and `applyFilters()` to evaluate `item.grade` directly alongside `item.survey`, ensuring the overall completion progress bar and grade chips update live when grades are assigned).
 - **`v9.1`**: Excel Export Column Layout Adjustment (positioned `Grade / தரம்` as the final column after `Tamil Meaning / தமிழ் பெயர் விளக்கம்` in all exported `.xlsx` spreadsheets).
+- **`v9.2`**: Dedicated Reports Hub Page (`reports.html` & `reports.js` featuring top selectable report switcher, dual Graphical & Table views, Report 1 Pincode Grade Analysis, Report 2 Geographic Hierarchy, PNG image exporter, and WhatsApp sharing).
+- **`v9.3`**: Interactive AI Report Assistant Chat Box (`reports.html` & `reports.js` with natural language query parsing, live graph & table filtering, quick shortcut chips, and synchronized versioning across all pages).
+
+> [!IMPORTANT]
+> **Mandatory Version Synchronization Protocol**: Whenever any update or feature is added to the application, **you MUST update the version badge across ALL app files simultaneously (`index.html`, `dashboard.html`, `reports.html`, `reports.js`) so that all pages remain at the exact same version level (e.g. `v9.3`)**.
 
 ---
 
