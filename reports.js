@@ -3,7 +3,7 @@
  * Dedicated Reporting & Interactive Analytics Engine for Namma Sami Namma Kovil
  * Supports Pincode Grade Analysis (Report 1), Geographic Hierarchy (Report 2),
  * Multi-format Chart.js visualizer, Image Exporter (PNG), WhatsApp Sharing (Graph + Link),
- * and AI Assistant Chat Box with Natural Language Query Parsing & Context Switching.
+ * Per-Column Sorting & Filtering, and AI Assistant Chat Box with Natural Language Query Parsing.
  */
 
 let dataset = [];
@@ -14,6 +14,11 @@ let includeGrade = true;
 let chartInstance = null;
 let currentReportRows = [];
 let filteredReportRows = [];
+
+// Column Sorting & Filtering State
+let sortKey = 'count';
+let sortOrder = 'desc'; // 'asc' or 'desc'
+let columnFilters = {};
 
 // AI Assistant State Variables
 let aiPincodeCondition = 'all'; // 'all', 'missing', 'present'
@@ -106,6 +111,9 @@ function switchReport(reportId) {
     }
 
     currentReportId = reportId;
+    columnFilters = {}; // Reset per-column filters on report switch
+    sortKey = 'count';
+    sortOrder = 'desc';
     
     // Update Tab UI
     document.getElementById('tab-report-1').classList.toggle('active', reportId === 1);
@@ -169,16 +177,98 @@ function applyReportFilters() {
     renderActiveReport();
 }
 
-// Filter Report Table rows live via search input
+// Global Filter Report Table rows live via search input
 function filterReportTable(query) {
-    const q = query.toLowerCase().trim();
-    if (!q) {
-        filteredReportRows = [...currentReportRows];
+    applyColumnSortingAndFiltering();
+}
+
+// ==========================================
+// COLUMN SORTING & PER-COLUMN FILTERING ENGINE
+// ==========================================
+function sortTableByColumn(key) {
+    if (sortKey === key) {
+        sortOrder = sortOrder === 'desc' ? 'asc' : 'desc';
     } else {
-        filteredReportRows = currentReportRows.filter(row => {
-            return Object.values(row).some(val => String(val).toLowerCase().includes(q));
-        });
+        sortKey = key;
+        sortOrder = 'desc';
     }
+    applyColumnSortingAndFiltering();
+}
+
+function onColumnFilterInput(colKey, val) {
+    columnFilters[colKey] = val.trim().toLowerCase();
+    applyColumnSortingAndFiltering();
+}
+
+function applyColumnSortingAndFiltering() {
+    let rows = [...currentReportRows];
+
+    // Global Search Bar Query
+    const searchInput = document.getElementById('report-search-input');
+    const globalQuery = searchInput ? searchInput.value.toLowerCase().trim() : '';
+
+    if (globalQuery) {
+        rows = rows.filter(r => Object.values(r).some(v => String(v).toLowerCase().includes(globalQuery)));
+    }
+
+    // Per-Column Filters
+    Object.keys(columnFilters).forEach(colKey => {
+        const filterVal = columnFilters[colKey];
+        if (!filterVal) return;
+
+        rows = rows.filter(r => {
+            const val = r[colKey];
+            if (val === undefined || val === null) return false;
+
+            // Numeric comparisons (e.g. >50, <100, 50-100, 50)
+            if (typeof val === 'number' || !isNaN(val)) {
+                const numVal = parseFloat(val);
+                if (filterVal.startsWith('>=')) {
+                    return numVal >= parseFloat(filterVal.substring(2));
+                } else if (filterVal.startsWith('>')) {
+                    return numVal > parseFloat(filterVal.substring(1));
+                } else if (filterVal.startsWith('<=')) {
+                    return numVal <= parseFloat(filterVal.substring(2));
+                } else if (filterVal.startsWith('<')) {
+                    return numVal < parseFloat(filterVal.substring(1));
+                } else if (filterVal.includes('-')) {
+                    const parts = filterVal.split('-').map(p => parseFloat(p));
+                    if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+                        return numVal >= parts[0] && numVal <= parts[1];
+                    }
+                } else {
+                    const targetNum = parseFloat(filterVal);
+                    if (!isNaN(targetNum)) return numVal >= targetNum;
+                }
+            }
+
+            // String substring comparison
+            return String(val).toLowerCase().includes(filterVal);
+        });
+    });
+
+    // Sorting
+    rows.sort((a, b) => {
+        let valA = a[sortKey];
+        let valB = b[sortKey];
+
+        if (valA === undefined) valA = '';
+        if (valB === undefined) valB = '';
+
+        let cmp = 0;
+        if (typeof valA === 'number' && typeof valB === 'number') {
+            cmp = valA - valB;
+        } else if (!isNaN(valA) && !isNaN(valB) && valA !== '' && valB !== '') {
+            cmp = parseFloat(valA) - parseFloat(valB);
+        } else {
+            cmp = String(valA).localeCompare(String(valB));
+        }
+
+        return sortOrder === 'desc' ? -cmp : cmp;
+    });
+
+    filteredReportRows = rows;
+    renderChart();
     renderTable();
 }
 
@@ -218,9 +308,7 @@ function renderActiveReport() {
         generateReport2GeoHierarchy(scopedData);
     }
 
-    filteredReportRows = [...currentReportRows];
-    renderChart();
-    renderTable();
+    applyColumnSortingAndFiltering();
 }
 
 // ==========================================
@@ -264,14 +352,11 @@ function generateReport1Pincode(scopedData) {
     const totalCount = scopedData.length || 1;
     currentReportRows = Array.from(pinMap.values()).map(r => ({
         ...r,
-        pct: ((r.count / totalCount) * 100).toFixed(2),
-        pctA: ((r.gradeA / (r.count || 1)) * 100).toFixed(1),
-        pctB: ((r.gradeB / (r.count || 1)) * 100).toFixed(1),
-        pctC: ((r.gradeC / (r.count || 1)) * 100).toFixed(1),
+        pct: parseFloat(((r.count / totalCount) * 100).toFixed(2)),
+        pctA: parseFloat(((r.gradeA / (r.count || 1)) * 100).toFixed(1)),
+        pctB: parseFloat(((r.gradeB / (r.count || 1)) * 100).toFixed(1)),
+        pctC: parseFloat(((r.gradeC / (r.count || 1)) * 100).toFixed(1)),
     }));
-
-    // Sort by count descending
-    currentReportRows.sort((a, b) => b.count - a.count);
 }
 
 // ==========================================
@@ -324,14 +409,11 @@ function generateReport2GeoHierarchy(scopedData) {
     const totalCount = scopedData.length || 1;
     currentReportRows = Array.from(geoMap.values()).map(r => ({
         ...r,
-        pct: ((r.count / totalCount) * 100).toFixed(2),
-        pctA: ((r.gradeA / (r.count || 1)) * 100).toFixed(1),
-        pctB: ((r.gradeB / (r.count || 1)) * 100).toFixed(1),
-        pctC: ((r.gradeC / (r.count || 1)) * 100).toFixed(1),
+        pct: parseFloat(((r.count / totalCount) * 100).toFixed(2)),
+        pctA: parseFloat(((r.gradeA / (r.count || 1)) * 100).toFixed(1)),
+        pctB: parseFloat(((r.gradeB / (r.count || 1)) * 100).toFixed(1)),
+        pctC: parseFloat(((r.gradeC / (r.count || 1)) * 100).toFixed(1)),
     }));
-
-    // Sort by count descending
-    currentReportRows.sort((a, b) => b.count - a.count);
 }
 
 // ==========================================
@@ -352,7 +434,7 @@ function renderChart() {
 
     const captionInfo = document.getElementById('chart-caption-info');
     if (captionInfo) {
-        captionInfo.textContent = `Displaying Top ${topRows.length} Categories (Total: ${filteredReportRows.length})`;
+        captionInfo.textContent = `Displaying Top ${topRows.length} Categories (Total: ${filteredReportRows.length.toLocaleString()})`;
     }
 
     const ctx = canvas.getContext('2d');
@@ -459,8 +541,14 @@ function renderChart() {
     chartInstance = new Chart(ctx, chartConfig);
 }
 
+// Helper: Format Sort Arrow Indicator
+function getSortArrow(key) {
+    if (sortKey !== key) return '';
+    return sortOrder === 'desc' ? ' ▼' : ' ▲';
+}
+
 // ==========================================
-// DATA TABLE RENDERING ENGINE
+// DATA TABLE RENDERING ENGINE (SORT + PER-COLUMN FILTER)
 // ==========================================
 function renderTable() {
     const thead = document.getElementById('report-table-head');
@@ -477,20 +565,43 @@ function renderTable() {
     tbody.innerHTML = '';
 
     if (currentReportId === 1) {
-        // REPORT 1: Pincode Table
+        // REPORT 1: Pincode Table Header (Row 1: Sort Titles, Row 2: Per-column Filter Inputs)
         let headHtml = `
             <tr>
-                <th>#</th>
-                <th>Pincode (பின்கோடு)</th>
-                <th>Total Persons</th>
-                <th>Share %</th>
+                <th style="width:40px;">#</th>
+                <th onclick="sortTableByColumn('pincode')" style="cursor:pointer;" title="Click to sort by Pincode">
+                    Pincode (பின்கோடு)${getSortArrow('pincode')}
+                </th>
+                <th onclick="sortTableByColumn('count')" style="cursor:pointer;" title="Click to sort by Total Persons">
+                    Total Persons${getSortArrow('count')}
+                </th>
+                <th onclick="sortTableByColumn('pct')" style="cursor:pointer;" title="Click to sort by Share %">
+                    Share %${getSortArrow('pct')}
+                </th>
         `;
         if (includeGrade) {
             headHtml += `
-                <th style="color:#6ee7b7;">🟢 Grade A</th>
-                <th style="color:#67e8f9;">🔵 Grade B</th>
-                <th style="color:#fde047;">🟠 Grade C</th>
-                <th style="color:#cbd5e1;">⚪ UnClassified</th>
+                <th onclick="sortTableByColumn('gradeA')" style="cursor:pointer; color:#6ee7b7;" title="Click to sort by Grade A">🟢 Grade A${getSortArrow('gradeA')}</th>
+                <th onclick="sortTableByColumn('gradeB')" style="cursor:pointer; color:#67e8f9;" title="Click to sort by Grade B">🔵 Grade B${getSortArrow('gradeB')}</th>
+                <th onclick="sortTableByColumn('gradeC')" style="cursor:pointer; color:#fde047;" title="Click to sort by Grade C">🟠 Grade C${getSortArrow('gradeC')}</th>
+                <th onclick="sortTableByColumn('ungraded')" style="cursor:pointer; color:#cbd5e1;" title="Click to sort by UnClassified">⚪ UnClassified${getSortArrow('ungraded')}</th>
+            `;
+        }
+        headHtml += `</tr>`;
+
+        // Row 2: Per-column Filter Inputs
+        headHtml += `<tr style="background: rgba(15, 23, 42, 0.95);">
+            <th></th>
+            <th><input type="text" class="col-filter-input" placeholder="Filter..." value="${columnFilters.pincode || ''}" oninput="onColumnFilterInput('pincode', this.value)"></th>
+            <th><input type="text" class="col-filter-input" placeholder="Min count..." value="${columnFilters.count || ''}" oninput="onColumnFilterInput('count', this.value)"></th>
+            <th><input type="text" class="col-filter-input" placeholder="Min %..." value="${columnFilters.pct || ''}" oninput="onColumnFilterInput('pct', this.value)"></th>
+        `;
+        if (includeGrade) {
+            headHtml += `
+                <th><input type="text" class="col-filter-input" placeholder="Grade A..." value="${columnFilters.gradeA || ''}" oninput="onColumnFilterInput('gradeA', this.value)"></th>
+                <th><input type="text" class="col-filter-input" placeholder="Grade B..." value="${columnFilters.gradeB || ''}" oninput="onColumnFilterInput('gradeB', this.value)"></th>
+                <th><input type="text" class="col-filter-input" placeholder="Grade C..." value="${columnFilters.gradeC || ''}" oninput="onColumnFilterInput('gradeC', this.value)"></th>
+                <th><input type="text" class="col-filter-input" placeholder="Filter U..." value="${columnFilters.ungraded || ''}" oninput="onColumnFilterInput('ungraded', this.value)"></th>
             `;
         }
         headHtml += `</tr>`;
@@ -517,19 +628,31 @@ function renderTable() {
         }).join('');
 
     } else if (currentReportId === 2) {
-        // REPORT 2: Geographic Hierarchy Table
+        // REPORT 2: Geographic Hierarchy Table Header & Filter Row
         thead.innerHTML = `
             <tr>
-                <th>#</th>
-                <th>மண்டலம் (Region)</th>
-                <th>மாவட்டம் (District)</th>
-                <th>ஒன்றியம் (Union)</th>
-                <th>பின்கோடு</th>
-                <th>Total Persons</th>
-                <th>Share %</th>
-                <th style="color:#6ee7b7;">🟢 Grade A</th>
-                <th style="color:#67e8f9;">🔵 Grade B</th>
-                <th style="color:#fde047;">🟠 Grade C</th>
+                <th style="width:40px;">#</th>
+                <th onclick="sortTableByColumn('region')" style="cursor:pointer;">மண்டலம் (Region)${getSortArrow('region')}</th>
+                <th onclick="sortTableByColumn('district')" style="cursor:pointer;">மாவட்டம் (District)${getSortArrow('district')}</th>
+                <th onclick="sortTableByColumn('union')" style="cursor:pointer;">ஒன்றியம் (Union)${getSortArrow('union')}</th>
+                <th onclick="sortTableByColumn('pincode')" style="cursor:pointer;">பின்கோடு${getSortArrow('pincode')}</th>
+                <th onclick="sortTableByColumn('count')" style="cursor:pointer;">Total Persons${getSortArrow('count')}</th>
+                <th onclick="sortTableByColumn('pct')" style="cursor:pointer;">Share %${getSortArrow('pct')}</th>
+                <th onclick="sortTableByColumn('gradeA')" style="cursor:pointer; color:#6ee7b7;">🟢 Grade A${getSortArrow('gradeA')}</th>
+                <th onclick="sortTableByColumn('gradeB')" style="cursor:pointer; color:#67e8f9;">🔵 Grade B${getSortArrow('gradeB')}</th>
+                <th onclick="sortTableByColumn('gradeC')" style="cursor:pointer; color:#fde047;">🟠 Grade C${getSortArrow('gradeC')}</th>
+            </tr>
+            <tr style="background: rgba(15, 23, 42, 0.95);">
+                <th></th>
+                <th><input type="text" class="col-filter-input" placeholder="Region..." value="${columnFilters.region || ''}" oninput="onColumnFilterInput('region', this.value)"></th>
+                <th><input type="text" class="col-filter-input" placeholder="District..." value="${columnFilters.district || ''}" oninput="onColumnFilterInput('district', this.value)"></th>
+                <th><input type="text" class="col-filter-input" placeholder="Union..." value="${columnFilters.union || ''}" oninput="onColumnFilterInput('union', this.value)"></th>
+                <th><input type="text" class="col-filter-input" placeholder="Pincode..." value="${columnFilters.pincode || ''}" oninput="onColumnFilterInput('pincode', this.value)"></th>
+                <th><input type="text" class="col-filter-input" placeholder="Min count..." value="${columnFilters.count || ''}" oninput="onColumnFilterInput('count', this.value)"></th>
+                <th><input type="text" class="col-filter-input" placeholder="Min %..." value="${columnFilters.pct || ''}" oninput="onColumnFilterInput('pct', this.value)"></th>
+                <th><input type="text" class="col-filter-input" placeholder="Grade A..." value="${columnFilters.gradeA || ''}" oninput="onColumnFilterInput('gradeA', this.value)"></th>
+                <th><input type="text" class="col-filter-input" placeholder="Grade B..." value="${columnFilters.gradeB || ''}" oninput="onColumnFilterInput('gradeB', this.value)"></th>
+                <th><input type="text" class="col-filter-input" placeholder="Grade C..." value="${columnFilters.gradeC || ''}" oninput="onColumnFilterInput('gradeC', this.value)"></th>
             </tr>
         `;
 
@@ -619,6 +742,7 @@ function processAiUserQuery(query) {
     if (q.includes('reset') || q.includes('clear') || q.includes('show all')) {
         aiPincodeCondition = 'all';
         aiGradeFilter = '';
+        columnFilters = {};
         const regEl = document.getElementById('filter-report-region');
         const distEl = document.getElementById('filter-report-district');
         if (regEl) regEl.value = '';
@@ -793,7 +917,7 @@ ${topListText}
 🔵 Grade B (Interested but no time): ${totalGradeB.toLocaleString()}
 🟠 Grade C (Not interested): ${totalGradeC.toLocaleString()}
 -------------------------------------------
-Shared via Namma Sami Namma Kovil Reports Hub (v9.5)`;
+Shared via Namma Sami Namma Kovil Reports Hub (v9.6)`;
 
     // Capture Graph & Summary Table Image for Web Share / Download
     const captureArea = document.getElementById('report-capture-area');
