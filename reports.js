@@ -3,7 +3,7 @@
  * Dedicated Reporting & Interactive Analytics Engine for Namma Sami Namma Kovil
  * Supports Pincode Grade Analysis (Report 1), Geographic Hierarchy (Report 2),
  * Multi-format Chart.js visualizer, Image Exporter (PNG), WhatsApp Sharing,
- * and AI Assistant Chat Box with Natural Language Query Parsing.
+ * and AI Assistant Chat Box with Natural Language Query Parsing & Context Switching.
  */
 
 let dataset = [];
@@ -98,8 +98,13 @@ function setupFilters() {
     });
 }
 
-// Switch Active Report (Report 1 vs Report 2)
+// Switch Active Report with Synchronized AI Assistant Context
 function switchReport(reportId) {
+    if (currentReportId === reportId) {
+        renderActiveReport();
+        return;
+    }
+
     currentReportId = reportId;
     
     // Update Tab UI
@@ -110,6 +115,16 @@ function switchReport(reportId) {
     const gradeWrapper = document.getElementById('wrapper-grade-toggle');
     if (gradeWrapper) {
         gradeWrapper.style.display = reportId === 1 ? 'inline-flex' : 'none';
+    }
+
+    // Notify AI Assistant & Update Chat Placeholder & Context
+    const aiInput = document.getElementById('ai-chat-input');
+    if (reportId === 1) {
+        if (aiInput) aiInput.placeholder = "Ask AI Assistant (e.g. 'filter Grade A without pincode')...";
+        appendAiChatMessage('assistant', `🔄 <strong>AI Context Switched to Report #1</strong>: Pincode Distribution & Grade Analysis.<br>Ask me about pincodes, missing pincodes, or Grade A/B/C filters!`);
+    } else if (reportId === 2) {
+        if (aiInput) aiInput.placeholder = "Ask AI Assistant (e.g. 'show Top 10 districts in தென்காசி region')...";
+        appendAiChatMessage('assistant', `🔄 <strong>AI Context Switched to Report #2</strong>: Geographic Hierarchy Breakdown (மண்டலம் ➔ மாவட்டம் ➔ ஒன்றியம் ➔ பின்கோடு).<br>Ask me about specific regions, districts, or union headcounts!`);
     }
 
     renderActiveReport();
@@ -587,6 +602,19 @@ function processAiUserQuery(query) {
     const q = query.toLowerCase();
     const actions = [];
 
+    // Report switching
+    if (q.includes('report 2') || q.includes('geographic') || q.includes('hierarchy') || q.includes('மண்டலம்')) {
+        if (currentReportId !== 2) {
+            switchReport(2);
+            actions.push('Switched to <strong>Report 2: Geographic Hierarchy</strong>');
+        }
+    } else if (q.includes('report 1') || q.includes('pincode report')) {
+        if (currentReportId !== 1) {
+            switchReport(1);
+            actions.push('Switched to <strong>Report 1: Pincode Distribution</strong>');
+        }
+    }
+
     // Reset command
     if (q.includes('reset') || q.includes('clear') || q.includes('show all')) {
         aiPincodeCondition = 'all';
@@ -625,6 +653,32 @@ function processAiUserQuery(query) {
         actions.push('Filter: <strong>⚪ UnClassified Records</strong>');
     }
 
+    // Dynamic Region & District matching
+    const regSelect = document.getElementById('filter-report-region');
+    const distSelect = document.getElementById('filter-report-district');
+
+    if (regSelect) {
+        for (let i = 1; i < regSelect.options.length; i++) {
+            const val = regSelect.options[i].value;
+            if (val && q.includes(val.toLowerCase())) {
+                regSelect.value = val;
+                actions.push(`Region Filter: <strong>${val}</strong>`);
+                break;
+            }
+        }
+    }
+
+    if (distSelect) {
+        for (let i = 1; i < distSelect.options.length; i++) {
+            const val = distSelect.options[i].value;
+            if (val && q.includes(val.toLowerCase())) {
+                distSelect.value = val;
+                actions.push(`District Filter: <strong>${val}</strong>`);
+                break;
+            }
+        }
+    }
+
     // Chart Format commands
     if (q.includes('horizontal') || q.includes('landscape bar')) {
         currentChartType = 'horizontalBar';
@@ -648,22 +702,15 @@ function processAiUserQuery(query) {
         actions.push('Chart: Switched to <strong>Vertical Bar Chart</strong>');
     }
 
-    // Report switching
-    if (q.includes('report 2') || q.includes('geographic') || q.includes('hierarchy') || q.includes('மண்டலம்')) {
-        switchReport(2);
-        actions.push('Switched to <strong>Report 2: Geographic Hierarchy</strong>');
-    } else if (q.includes('report 1') || q.includes('pincode report')) {
-        switchReport(1);
-        actions.push('Switched to <strong>Report 1: Pincode Distribution</strong>');
-    }
-
     // Apply & re-render
     renderActiveReport();
 
+    const activeReportLabel = currentReportId === 1 ? 'Report 1 (Pincode & Grade)' : 'Report 2 (Geographic Hierarchy)';
     const resultCount = filteredReportRows.reduce((acc, r) => acc + r.count, 0);
+
     const summaryMsg = actions.length > 0
-        ? `Applied AI Commands:<br>• ${actions.join('<br>• ')}<br><span style="color:#6ee7b7; font-weight:700;">✨ Found ${resultCount.toLocaleString()} matching records! Graphs & tables updated below.</span>`
-        : `Could not parse explicit filter parameters. Try asking: <em>"filter all A grade"</em> or <em>"show data without pincode"</em>.`;
+        ? `Applied AI Commands in <strong>${activeReportLabel}</strong>:<br>• ${actions.join('<br>• ')}<br><span style="color:#6ee7b7; font-weight:700;">✨ Found ${resultCount.toLocaleString()} matching records! Graphs & tables updated below.</span>`
+        : `Active Context: <strong>${activeReportLabel}</strong>. Could not parse explicit filter parameters. Try asking: <em>"filter Grade A in Report 2"</em> or <em>"show data without pincode"</em>.`;
 
     appendAiChatMessage('assistant', summaryMsg);
 }
@@ -744,7 +791,7 @@ ${topListText}
 🔵 Grade B (Interested but no time): ${totalGradeB.toLocaleString()}
 🟠 Grade C (Not interested): ${totalGradeC.toLocaleString()}
 -------------------------------------------
-Shared via Namma Sami Namma Kovil Reports Hub (v9.3)`;
+Shared via Namma Sami Namma Kovil Reports Hub (v9.4)`;
 
     const encodedMsg = encodeURIComponent(message);
     const waUrl = `https://api.whatsapp.com/send?text=${encodedMsg}`;
