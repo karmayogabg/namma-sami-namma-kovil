@@ -2,7 +2,7 @@
  * reports.js
  * Dedicated Reporting & Interactive Analytics Engine for Namma Sami Namma Kovil
  * Supports Pincode Grade Analysis (Report 1), Geographic Hierarchy (Report 2),
- * Multi-format Chart.js visualizer, Image Exporter (PNG), WhatsApp Sharing (Graph + Link),
+ * Multi-format Chart.js visualizer, Image Exporter (PNG), Instant WhatsApp Link Sharing,
  * Per-Column Sorting & Filtering, and AI Assistant Chat Box with Natural Language Query Parsing.
  */
 
@@ -851,9 +851,11 @@ async function exportReportAsImage() {
     if (!captureArea) return;
 
     const btn = event.currentTarget;
-    const originalText = btn.innerHTML;
-    btn.innerHTML = `⏳ Generating Image...`;
-    btn.disabled = true;
+    const originalText = btn ? btn.innerHTML : '';
+    if (btn) {
+        btn.innerHTML = `⏳ Generating Image...`;
+        btn.disabled = true;
+    }
 
     try {
         const canvas = await html2canvas(captureArea, {
@@ -875,15 +877,17 @@ async function exportReportAsImage() {
         console.error('❌ Failed to generate report image:', err);
         alert('Failed to generate report image. Please try again.');
     } finally {
-        btn.innerHTML = originalText;
-        btn.disabled = false;
+        if (btn) {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
     }
 }
 
 // ==========================================
-// INTEGRATED WHATSAPP SHARE ENGINE WITH GRAPH & DIRECT LINK
+// INSTANT SYNCHRONOUS WHATSAPP SHARE ENGINE
 // ==========================================
-async function shareReportOnWhatsApp() {
+function shareReportOnWhatsApp() {
     const reportName = currentReportId === 1 ? '📍 Pincode Distribution & Grade Analysis' : '🗺️ Geographic Hierarchy Breakdown';
     const totalRecords = dataset.length.toLocaleString();
     const dateStr = new Date().toLocaleDateString();
@@ -903,75 +907,72 @@ async function shareReportOnWhatsApp() {
     const totalGradeC = filteredReportRows.reduce((sum, r) => sum + r.gradeC, 0);
 
     const message = `📊 *நம்ம சாமி நம்ம கோவில் - Analytics Report*
--------------------------------------------
+
 📋 *Report*: ${reportName}
 📅 *Date*: ${dateStr}
 👥 *Total Dataset Records*: ${totalRecords}
-🌐 *Live Report Link*: ${reportUrl}
--------------------------------------------
-🏆 *Top High-Density Categories*:
+
+🏆 *Top Categories*:
 ${topListText}
 
 📊 *Grade Summary*:
-🟢 Grade A (Interested to know more): ${totalGradeA.toLocaleString()}
-🔵 Grade B (Interested but no time): ${totalGradeB.toLocaleString()}
-🟠 Grade C (Not interested): ${totalGradeC.toLocaleString()}
--------------------------------------------
-Shared via Namma Sami Namma Kovil Reports Hub (v9.7)`;
+🟢 Grade A: ${totalGradeA.toLocaleString()}
+🔵 Grade B: ${totalGradeB.toLocaleString()}
+🟠 Grade C: ${totalGradeC.toLocaleString()}
 
-    // Capture Graph & Summary Table Image for Web Share / Download
-    const captureArea = document.getElementById('report-capture-area');
-    let imageBlob = null;
-    let fileToShare = null;
+👉 *View Live Interactive Report & Graphs*:
+${reportUrl}
 
-    if (captureArea) {
-        try {
-            const canvas = await html2canvas(captureArea, {
-                scale: 2,
-                backgroundColor: '#070913',
-                useCORS: true,
-                logging: false
-            });
+Shared via Namma Sami Namma Kovil Reports Hub (v9.8)`;
 
-            // Auto-download PNG image so user has graph ready to send
-            const link = document.createElement('a');
-            const reportSlug = currentReportId === 1 ? 'Pincode_Grade_Analysis' : 'Geographic_Hierarchy';
-            const timestamp = new Date().toISOString().split('T')[0];
-            const fileName = `NSNK_Report_Graph_${reportSlug}_${timestamp}.png`;
-            link.download = fileName;
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-
-            // Create File Blob for Web Share API if supported
-            const dataUrl = canvas.toDataURL('image/png');
-            const res = await fetch(dataUrl);
-            imageBlob = await res.blob();
-            fileToShare = new File([imageBlob], fileName, { type: 'image/png' });
-        } catch (e) {
-            console.warn('Image capture for WhatsApp note:', e.message);
-        }
+    // 1. Synchronously open native Web Share API (Mobile) or WhatsApp Web link (Desktop)
+    if (navigator.share) {
+        navigator.share({
+            title: 'NSNK Analytics Report',
+            text: message,
+            url: reportUrl
+        }).then(() => {
+            console.log('✅ Shared via Web Share API successfully!');
+        }).catch(err => {
+            console.log('Web share dismissed or unavailable, using wa.me fallback:', err);
+            openWhatsAppFallback(message);
+        });
+    } else {
+        openWhatsAppFallback(message);
     }
 
-    // Web Share API (Mobile native share drawer supporting direct image attachment)
-    if (fileToShare && navigator.canShare && navigator.canShare({ files: [fileToShare] })) {
-        try {
-            await navigator.share({
-                title: 'NSNK Analytics Report',
-                text: message,
-                url: reportUrl,
-                files: [fileToShare]
-            });
-            console.log('✅ Shared report graph and link via Web Share API!');
-            return;
-        } catch (err) {
-            console.log('Fallback to WhatsApp web protocol:', err);
-        }
-    }
+    // 2. Trigger graph image download asynchronously in the background
+    captureAndDownloadGraphImageInBackground();
+}
 
-    // Fallback: Open WhatsApp Web / App protocol
+function openWhatsAppFallback(message) {
     const encodedMsg = encodeURIComponent(message);
-    const waUrl = `https://api.whatsapp.com/send?text=${encodedMsg}`;
+    const waUrl = `https://wa.me/?text=${encodedMsg}`;
     window.open(waUrl, '_blank');
+}
+
+async function captureAndDownloadGraphImageInBackground() {
+    const captureArea = document.getElementById('report-capture-area');
+    if (!captureArea || typeof html2canvas === 'undefined') return;
+
+    try {
+        const canvas = await html2canvas(captureArea, {
+            scale: 2,
+            backgroundColor: '#070913',
+            useCORS: true,
+            logging: false
+        });
+
+        const link = document.createElement('a');
+        const reportSlug = currentReportId === 1 ? 'Pincode_Grade_Analysis' : 'Geographic_Hierarchy';
+        const timestamp = new Date().toISOString().split('T')[0];
+        link.download = `NSNK_Report_Graph_${reportSlug}_${timestamp}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        console.log('✅ Background graph PNG captured and downloaded.');
+    } catch (e) {
+        console.warn('Background image capture info:', e.message);
+    }
 }
 
 // ==========================================
@@ -1000,7 +1001,7 @@ function exportReportToExcel() {
                 'S.No': idx + 1,
                 'Region / மண்டலம்': r.region,
                 'District / மாவட்டம்': r.district,
-                'Union / ஒன்றியம்': r.union,
+                'Union / interim': r.union,
                 'Pincode / பின்கோடு': r.pincode,
                 'Total Persons / நபர்கள் எண்ணிக்கை': r.count,
                 'Share Percentage (%)': r.pct + '%',

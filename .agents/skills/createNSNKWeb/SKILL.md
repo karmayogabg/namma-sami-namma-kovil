@@ -160,6 +160,7 @@ Whenever any update is made to the dataset, UI layout, components, or features, 
 - **`v9.5`**: Enhanced WhatsApp Report Sharing with Direct Live Link & Graph PNG Auto-Capture (clicking WhatsApp share includes direct interactive report URL link `https://karmayogabg.github.io/namma-sami-namma-kovil/reports.html`, text summary, and auto-captures/attaches report graph PNG via Web Share API or automatic download).
 - **`v9.6`**: Interactive Data Table Per-Column Sorting & Per-Column Filtering (clicking any column header sorts ascending/descending with visual indicators, per-column text & numeric threshold filters update table rows and graphs live).
 - **`v9.7`**: Top Positioned Export & Sharing Action Toolbar (relocated Export Image, WhatsApp Share, and Excel Export buttons to the top section of the page, directly above the AI Report Assistant prompt card).
+- **`v9.8`**: Synchronous Popup-Safe WhatsApp Link Sharing (fixed WhatsApp popup blocker issue by triggering `navigator.share` / `wa.me` instantly on user gesture with live URL link `https://karmayogabg.github.io/namma-sami-namma-kovil/reports.html` formatted on its own line for rich preview cards).
 
 > [!IMPORTANT]
 > **Mandatory Version Synchronization Protocol**: Whenever any update or feature is added to the application, **you MUST update the version badge across ALL app files simultaneously (`index.html`, `dashboard.html`, `reports.html`, `reports.js`) so that all pages remain at the exact same version level (e.g. `v9.3`)**.
