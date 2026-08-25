@@ -1,0 +1,2342 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>நம்ம சாமி நம்ம கோவில் - Program Briefing & Resource Portal</title>
+    <meta name="description" content="நம்ம சாமி நம்ம கோவில் விரிவான விளக்கக் கையேடு: தலைப்பு 1 - நம்ம, தலைப்பு 2 - நம்ம சாமி, தலைப்பு 3 - நம்ம கோவில் மற்றும் ஆடியோ ஆவணப் பெட்டகம்.">
+    
+    <!-- Google Fonts for Tamil and English Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Lora:ital,wght@0,400..700;1,400..700&family=Noto+Sans+Tamil:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        :root {
+            --bg-base: #0a0e17;
+            --bg-surface: #121826;
+            --bg-card: #182234;
+            --bg-card-hover: #1f2b42;
+            --border-color: rgba(255, 255, 255, 0.09);
+            --border-focus: rgba(245, 158, 11, 0.5);
+            
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            
+            /* Spiritual / Cultural Theme Palette */
+            --saffron-primary: #f59e0b;
+            --saffron-dark: #d97706;
+            --saffron-glow: rgba(245, 158, 11, 0.25);
+            --maroon-accent: #dc2626;
+            --gold-accent: #fbbf24;
+            --teal-accent: #0d9488;
+            --indigo-accent: #6366f1;
+            
+            --font-tamil: 'Noto Sans Tamil', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-heading: 'Cinzel', 'Noto Sans Tamil', serif;
+            --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-serif: 'Lora', 'Noto Sans Tamil', serif;
+            
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 10px 30px -8px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 20px 45px -10px rgba(0, 0, 0, 0.7);
+            --shadow-saffron: 0 8px 30px rgba(245, 158, 11, 0.15);
+        }
+
+        [data-theme="temple"] {
+            --bg-base: #130a04;
+            --bg-surface: #201207;
+            --bg-card: #2d1a0b;
+            --bg-card-hover: #3d230e;
+            --border-color: rgba(251, 191, 36, 0.15);
+            --text-main: #fffbeb;
+            --text-muted: #d6bb9e;
+            --text-dim: #9a7d61;
+            --saffron-primary: #f59e0b;
+            --saffron-dark: #b45309;
+            --saffron-glow: rgba(245, 158, 11, 0.35);
+        }
+
+        [data-theme="light"] {
+            --bg-base: #f8fafc;
+            --bg-surface: #ffffff;
+            --bg-card: #f1f5f9;
+            --bg-card-hover: #e2e8f0;
+            --border-color: #cbd5e1;
+            --border-focus: #f59e0b;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --text-dim: #64748b;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 16px 36px rgba(0, 0, 0, 0.12);
+            --shadow-saffron: 0 8px 24px rgba(245, 158, 11, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: var(--font-tamil);
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            line-height: 1.8;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Reading Progress Bar */
+        #read-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            width: 0%;
+            background: linear-gradient(90deg, #f59e0b, #ef4444, #fbbf24);
+            z-index: 10000;
+            transition: width 0.1s linear;
+        }
+
+        /* Header Navbar */
+        .header-nav {
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            background: rgba(18, 24, 38, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="temple"] .header-nav {
+            background: rgba(32, 18, 7, 0.92);
+        }
+
+        [data-theme="light"] .header-nav {
+            background: rgba(255, 255, 255, 0.92);
+        }
+
+        .nav-container {
+            max-width: 1380px;
+            margin: 0 auto;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .brand-box {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .brand-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, #f59e0b, #dc2626);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            box-shadow: var(--shadow-saffron);
+            flex-shrink: 0;
+        }
+
+        .brand-titles h1 {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+        }
+
+        .brand-titles span {
+            font-size: 0.8rem;
+            color: var(--saffron-primary);
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            list-style: none;
+        }
+
+        .nav-link {
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: #ffffff;
+            background: var(--saffron-glow);
+            color: var(--saffron-primary);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--saffron-primary);
+            color: var(--saffron-primary);
+            transform: translateY(-1px);
+        }
+
+        /* Hero Banner */
+        .hero-section {
+            position: relative;
+            padding: 60px 24px 50px;
+            background: radial-gradient(circle at 50% 20%, rgba(245, 158, 11, 0.12), transparent 70%),
+                        linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-base) 100%);
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 950px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border-radius: 9999px;
+            background: rgba(245, 158, 11, 0.12);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            color: var(--saffron-primary);
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero-title {
+            font-family: var(--font-heading);
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1.25;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-title span {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #ea580c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+
+        .topic-pill-group {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .topic-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            border-radius: var(--radius-md);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .topic-pill:hover {
+            border-color: var(--saffron-primary);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-saffron);
+            color: var(--saffron-primary);
+        }
+
+        .topic-pill .pill-num {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--saffron-primary);
+            color: #000;
+            font-weight: 800;
+            font-size: 0.78rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Search and Filter Bar */
+        .search-bar-wrap {
+            max-width: 680px;
+            margin: 28px auto 0;
+            position: relative;
+        }
+
+        .search-input-field {
+            width: 100%;
+            padding: 14px 20px 14px 48px;
+            border-radius: var(--radius-md);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            font-family: var(--font-tamil);
+            font-size: 1rem;
+            outline: none;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+        }
+
+        .search-input-field:focus {
+            border-color: var(--saffron-primary);
+            box-shadow: 0 0 0 3px var(--saffron-glow);
+        }
+
+        .search-icon-pos {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-dim);
+            pointer-events: none;
+        }
+
+        /* Main Content Layout */
+        .main-wrapper {
+            max-width: 1380px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 36px;
+            align-items: start;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: sticky;
+            top: 86px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            max-height: calc(100vh - 110px);
+            overflow-y: auto;
+        }
+
+        .sidebar-heading {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toc-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .toc-item a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            line-height: 1.4;
+        }
+
+        .toc-item a:hover, .toc-item a.active {
+            background: var(--saffron-glow);
+            color: var(--saffron-primary);
+            font-weight: 600;
+        }
+
+        .toc-item.nested a {
+            padding-left: 28px;
+            font-size: 0.84rem;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 16px 0;
+        }
+
+        /* Quick Stats / Info Widget in Sidebar */
+        .sidebar-widget {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            margin-top: 16px;
+        }
+
+        .sidebar-widget-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--saffron-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sidebar-widget p {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Article & Section Styling */
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            gap: 48px;
+        }
+
+        .brief-section {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            padding: 36px 40px;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            scroll-margin-top: 100px;
+            transition: border-color 0.3s ease;
+        }
+
+        .brief-section:hover {
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .topic-badge {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, var(--saffron-primary), var(--saffron-dark));
+            color: #000;
+            font-weight: 800;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-saffron);
+            flex-shrink: 0;
+        }
+
+        .section-title-wrap h2 {
+            font-family: var(--font-heading);
+            font-size: 1.85rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.3;
+        }
+
+        .section-title-wrap p {
+            font-size: 0.95rem;
+            color: var(--saffron-primary);
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin-top: 24px;
+        }
+
+        .concept-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            position: relative;
+        }
+
+        .concept-card:hover {
+            background: var(--bg-card-hover);
+            border-color: rgba(245, 158, 11, 0.4);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-icon-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            background: var(--saffron-glow);
+            color: var(--saffron-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .card-icon-header h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .concept-card p {
+            font-size: 0.98rem;
+            color: var(--text-muted);
+            line-height: 1.75;
+        }
+
+        /* Callout Box / Highlight Box */
+        .callout-box {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(220, 38, 38, 0.05) 100%);
+            border-left: 4px solid var(--saffron-primary);
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            padding: 20px 24px;
+            margin: 24px 0;
+            position: relative;
+        }
+
+        .callout-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--saffron-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .callout-box p {
+            font-size: 0.96rem;
+            color: var(--text-main);
+            line-height: 1.75;
+        }
+
+        /* Tamil Verses & Poetry Card */
+        .verse-box {
+            background: radial-gradient(circle at top right, rgba(245, 158, 11, 0.1), transparent 60%), var(--bg-card);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: var(--radius-lg);
+            padding: 26px;
+            margin: 24px 0;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+        }
+
+        .verse-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .verse-tag {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--gold-accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-copy-verse {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            font-size: 0.78rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+        }
+
+        .btn-copy-verse:hover {
+            border-color: var(--saffron-primary);
+            color: var(--saffron-primary);
+        }
+
+        .verse-text {
+            font-family: var(--font-serif);
+            font-size: 1.18rem;
+            font-weight: 600;
+            color: #fef08a;
+            line-height: 1.9;
+            margin-bottom: 12px;
+            white-space: pre-line;
+            border-left: 3px solid var(--saffron-primary);
+            padding-left: 16px;
+        }
+
+        [data-theme="light"] .verse-text {
+            color: #b45309;
+        }
+
+        .verse-author {
+            text-align: right;
+            font-size: 0.92rem;
+            color: var(--saffron-primary);
+            font-weight: 700;
+            font-style: italic;
+        }
+
+        .verse-explanation {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px dashed var(--border-color);
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* Numbered List Feature Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .feature-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            transition: all 0.2s ease;
+        }
+
+        .feature-item:hover {
+            border-color: rgba(245, 158, 11, 0.4);
+            transform: translateX(4px);
+        }
+
+        .feature-num {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--saffron-primary);
+            font-weight: 800;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .feature-body h4 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        .feature-body p {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Summary Points Box */
+        .summary-banner {
+            background: linear-gradient(135deg, #1e1b4b 0%, #172554 100%);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            margin: 32px 0 16px;
+        }
+
+        [data-theme="temple"] .summary-banner {
+            background: linear-gradient(135deg, #381a06 0%, #291305 100%);
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        [data-theme="light"] .summary-banner {
+            background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+            border-color: #c7d2fe;
+        }
+
+        .summary-banner h3 {
+            font-size: 1.3rem;
+            color: #a5b4fc;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        [data-theme="temple"] .summary-banner h3 {
+            color: var(--gold-accent);
+        }
+
+        [data-theme="light"] .summary-banner h3 {
+            color: #3730a3;
+        }
+
+        .summary-points-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 12px;
+        }
+
+        .summary-point {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            background: rgba(255, 255, 255, 0.05);
+            font-size: 0.95rem;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        [data-theme="light"] .summary-point {
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        .summary-point i {
+            color: #38bdf8;
+            flex-shrink: 0;
+        }
+
+        [data-theme="temple"] .summary-point i {
+            color: var(--saffron-primary);
+        }
+
+        /* Documents & Audio Section */
+        .resource-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 20px 0 32px;
+        }
+
+        .resource-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .resource-card:hover {
+            border-color: var(--saffron-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .resource-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .resource-icon-badge {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-sm);
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .resource-icon-badge.docx {
+            background: rgba(59, 130, 246, 0.15);
+            color: #3b82f6;
+        }
+
+        .resource-text h4 {
+            font-size: 0.98rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .resource-text span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .btn-view-doc {
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            background: var(--saffron-glow);
+            border: 1px solid var(--saffron-primary);
+            color: var(--saffron-primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-view-doc:hover {
+            background: var(--saffron-primary);
+            color: #000;
+        }
+
+        /* Audio Player Suite */
+        .audio-suite {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-top: 24px;
+        }
+
+        .audio-suite-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .audio-suite-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .audio-suite-title h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .audio-track-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 14px;
+            max-height: 480px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .audio-track-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 14px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .audio-track-card:hover {
+            border-color: var(--saffron-primary);
+        }
+
+        .audio-track-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .audio-track-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            word-break: break-all;
+        }
+
+        .audio-track-size {
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .audio-player-elem {
+            width: 100%;
+            height: 38px;
+            border-radius: var(--radius-sm);
+            outline: none;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border-color);
+            padding: 40px 24px 30px;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .footer p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Print View Styles */
+        @media print {
+            body {
+                background: #fff !important;
+                color: #000 !important;
+                font-size: 12pt;
+            }
+
+            .header-nav, .sidebar, .topic-pill-group, .search-bar-wrap, .btn-icon, .audio-suite, .btn-copy-verse, #read-progress {
+                display: none !important;
+            }
+
+            .main-wrapper {
+                display: block;
+                padding: 0;
+                margin: 0;
+            }
+
+            .brief-section {
+                border: none !important;
+                box-shadow: none !important;
+                padding: 20px 0 !important;
+                page-break-after: always;
+            }
+
+            .concept-card, .verse-box, .callout-box {
+                border: 1px solid #ddd !important;
+                background: #fafafa !important;
+                color: #000 !important;
+                break-inside: avoid;
+            }
+
+            .verse-text {
+                color: #854d0e !important;
+            }
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1024px) {
+            .main-wrapper {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.1rem;
+            }
+            .brief-section {
+                padding: 24px 20px;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Reading Progress Bar -->
+    <div id="read-progress"></div>
+
+    <!-- Header Navbar -->
+    <header class="header-nav">
+        <div class="nav-container">
+            <a href="#hero" class="brand-box">
+                <div class="brand-icon">
+                    <i data-lucide="flame" style="width:24px; height:24px;"></i>
+                </div>
+                <div class="brand-titles">
+                    <h1>நம்ம சாமி நம்ம கோவில்</h1>
+                    <span>Program Briefing & Reference Portal</span>
+                </div>
+            </a>
+
+            <!-- Navigation Links -->
+            <ul class="nav-links">
+                <li><a href="#topic1" class="nav-link"><i data-lucide="users" style="width:16px;"></i> நம்ம</a></li>
+                <li><a href="#topic2" class="nav-link"><i data-lucide="sparkles" style="width:16px;"></i> நம்ம சாமி</a></li>
+                <li><a href="#topic3" class="nav-link"><i data-lucide="landmark" style="width:16px;"></i> நம்ம கோவில்</a></li>
+                <li><a href="#documents" class="nav-link"><i data-lucide="folder-archive" style="width:16px;"></i> ஆவணங்கள் & ஆடியோ</a></li>
+            </ul>
+
+            <!-- Controls -->
+            <div class="nav-actions">
+                <button class="btn-icon" id="font-dec-btn" title="எழுத்துருவைக் குறைக்கவும் (Decrease Font)" onclick="changeFontSize(-1)">
+                    <span style="font-weight:700; font-size:0.85rem;">A-</span>
+                </button>
+                <button class="btn-icon" id="font-inc-btn" title="எழுத்துருவை அதிகரிக்கவும் (Increase Font)" onclick="changeFontSize(1)">
+                    <span style="font-weight:700; font-size:0.95rem;">A+</span>
+                </button>
+                <button class="btn-icon" id="theme-btn" title="வண்ண அமைப்பு (Change Theme)" onclick="cycleTheme()">
+                    <i data-lucide="palette" id="theme-icon" style="width:18px; height:18px;"></i>
+                </button>
+                <button class="btn-icon" title="அச்சிடுக / Print" onclick="window.print()">
+                    <i data-lucide="printer" style="width:18px; height:18px;"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Banner -->
+    <section class="hero-section" id="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i data-lucide="book-open-check" style="width:16px; height:16px;"></i>
+                முழுமையான வழிகாட்டுக் கையேடு (Official Program Brief)
+            </div>
+            <h1 class="hero-title">
+                <span>நம்ம சாமி நம்ம கோவில்</span>
+            </h1>
+            <p class="hero-subtitle">
+                பாரம்பரியம், மொழி, பண்பாடு, ஆன்மீகக் கோட்பாடுகள் மற்றும் சமுதாய ஒருமைப்பாட்டின் அடித்தளமாகத் திகழும் திருத்தலங்களின் விரிவான ஆவணத் தொகுப்பு.
+            </p>
+
+            <!-- Topic Navigation Pills -->
+            <div class="topic-pill-group">
+                <a href="#topic1" class="topic-pill">
+                    <span class="pill-num">1</span>
+                    <span>தலைப்பு 1: நம்ம (சுய அடையாளம்)</span>
+                </a>
+                <a href="#topic2" class="topic-pill">
+                    <span class="pill-num">2</span>
+                    <span>தலைப்பு 2: நம்ம சாமி (இறைத் தத்துவம்)</span>
+                </a>
+                <a href="#topic3" class="topic-pill">
+                    <span class="pill-num">3</span>
+                    <span>தலைப்பு 3: நம்ம கோவில் (சமூக மையம்)</span>
+                </a>
+                <a href="#documents" class="topic-pill">
+                    <i data-lucide="file-text" style="width:18px; height:18px; color:var(--saffron-primary);"></i>
+                    <span>ஆவணங்கள் & ஆடியோ</span>
+                </a>
+            </div>
+
+            <!-- Instant Search Bar -->
+            <div class="search-bar-wrap">
+                <i data-lucide="search" class="search-icon-pos" style="width:20px; height:20px;"></i>
+                <input type="text" id="live-search" class="search-input-field" placeholder="தேட வேண்டிய வார்த்தையை உள்ளிடவும் (எ.கா: மொழி, குலசாமி, ஆகமம், திருமூலர், திருவிழா...)" onkeyup="filterContent()">
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Container Layout -->
+    <main class="main-wrapper">
+
+        <!-- Sticky Table of Contents Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-heading">
+                <i data-lucide="list" style="width:16px; height:16px;"></i> பொருளடக்கம் (Contents)
+            </div>
+            <ul class="toc-list">
+                <li class="toc-item"><a href="#topic1"><i data-lucide="chevron-right" style="width:14px;"></i> 1. நம்ம (Namma)</a></li>
+                <li class="toc-item nested"><a href="#topic1-lang">நமது மொழி</a></li>
+                <li class="toc-item nested"><a href="#topic1-greeting">வணக்கம் மரபு</a></li>
+                <li class="toc-item nested"><a href="#topic1-attire">பாரம்பரிய உடை</a></li>
+                <li class="toc-item nested"><a href="#topic1-festivals">விழாக்களின் அறிவியல்</a></li>
+
+                <li class="sidebar-divider"></li>
+
+                <li class="toc-item"><a href="#topic2"><i data-lucide="chevron-right" style="width:14px;"></i> 2. நம்ம சாமி (Namma Sami)</a></li>
+                <li class="toc-item nested"><a href="#topic2-whatis">சாமி என்றால் யார்?</a></li>
+                <li class="toc-item nested"><a href="#topic2-stories">சிந்தனைக் கதைகள்</a></li>
+                <li class="toc-item nested"><a href="#topic2-three-tiers">சாமியின் 3 நிலைகள்</a></li>
+                <li class="toc-item nested"><a href="#topic2-kamban">கம்பராமாயணப் பாடல்</a></li>
+
+                <li class="sidebar-divider"></li>
+
+                <li class="toc-item"><a href="#topic3"><i data-lucide="chevron-right" style="width:14px;"></i> 3. நம்ம கோவில் (Namma Kovil)</a></li>
+                <li class="toc-item nested"><a href="#topic3-forms">வழிபாட்டு வடிவங்கள்</a></li>
+                <li class="toc-item nested"><a href="#topic3-yugas">4 யுகங்களும் மூர்த்தி வழிபாடும்</a></li>
+                <li class="toc-item nested"><a href="#topic3-etymology">சொல்லின் பொருள் & திருமூலர்</a></li>
+                <li class="toc-item nested"><a href="#topic3-history">வரலாற்றுத் திருப்பணிகள்</a></li>
+                <li class="toc-item nested"><a href="#topic3-triad">மூர்த்தி – தலம் – தீர்த்தம்</a></li>
+                <li class="toc-item nested"><a href="#topic3-agamas">கோவில்களும் ஆகமங்களும்</a></li>
+                <li class="toc-item nested"><a href="#topic3-social">சமூக & பண்பாட்டு மையம்</a></li>
+
+                <li class="sidebar-divider"></li>
+
+                <li class="toc-item"><a href="#documents"><i data-lucide="chevron-right" style="width:14px;"></i> 4. ஆவணங்கள் & ஆடியோ</a></li>
+            </ul>
+
+            <!-- Sidebar Brief Highlight -->
+            <div class="sidebar-widget">
+                <div class="sidebar-widget-title">
+                    <i data-lucide="sparkles" style="width:15px; height:15px;"></i> குறிக்கோள்
+                </div>
+                <p>
+                    நமது பண்பாட்டின் ஆணிவேரான மொழி, பாரம்பரியம், வழிபாட்டு நெறி மற்றும் திருக்கோவில்களின் பெருமைகளை உணர்ந்து அடுத்த தலைமுறைக்குக் கடத்துதல்.
+                </p>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <div class="content-area">
+
+            <!-- ========================================== -->
+            <!-- TOPIC 1: நம்ம (NAMMA) -->
+            <!-- ========================================== -->
+            <section class="brief-section" id="topic1">
+                <div class="section-header">
+                    <div class="section-title-wrap">
+                        <div class="topic-badge">1</div>
+                        <div>
+                            <h2>தலைப்பு 1: நம்ம</h2>
+                            <p>நமது அடையாளம், மொழி, பண்பாடு மற்றும் அறிவியல் மரபு</p>
+                        </div>
+                    </div>
+                </div>
+
+                <p style="font-size:1.05rem; color:var(--text-muted); margin-bottom:20px;">
+                    'நம்ம' என்ற உணர்வே மனித சமுதாயத்தை ஒன்றிணைக்கும் மூலவிசை. நமது தொன்மையான பாரதப் பண்பாட்டில் நமது மொழி, உடை, வாழ்வியல் முறைகள் மற்றும் கொண்டாட்டங்கள் ஒவ்வொன்றிலும் ஆழமான அறிவியலும் ஆன்மீகமும் இழையோடியுள்ளன.
+                </p>
+
+                <!-- Cards Grid for Topic 1 -->
+                <div class="cards-grid">
+                    
+                    <!-- Language Card -->
+                    <div class="concept-card" id="topic1-lang">
+                        <div class="card-icon-header">
+                            <div class="card-icon">
+                                <i data-lucide="languages"></i>
+                            </div>
+                            <h3>நமது மொழி</h3>
+                        </div>
+                        <p>
+                            கூடி வாழும் மக்களிடையே கருத்துக்கள் பரிமாறிக் கொள்ளவே மொழி உருவாகிறது. மொழியின் சொந்தக்காரர்களான மக்களின் எண்ணங்களும், சிந்தனைகளும், கருத்துக்களும் பரிமாறிக் கொள்ளத் தேவையான வார்த்தைகளே அந்த மக்களின் மொழியில் இருக்கும்.
+                        </p>
+                        <p>
+                            அந்த மக்கள் அவர்களது தாய்மொழியைப் பயன்படுத்துவதன் மூலமே அவர்களது சிந்தனைகளும் உணர்வுகளும் முழுமையாகவும் சரியாகவும் வெளிப்படுத்தப்படும். ஆகவே அவரவர் மொழியைப் பயன்படுத்துவது மொழியைப் பாதுகாப்பதோடு மட்டுமின்றி, நமது ஆழமான சிந்தனைகளைப் பகிர்ந்து கொள்ளவும் வழிவகுக்கிறது.
+                        </p>
+                    </div>
+
+                    <!-- Greeting Card -->
+                    <div class="concept-card" id="topic1-greeting">
+                        <div class="card-icon-header">
+                            <div class="card-icon">
+                                <i data-lucide="hand-heart"></i>
+                            </div>
+                            <h3>வணக்கம் சொல்லும் மரபு</h3>
+                        </div>
+                        <p>
+                            கொரோனா தொற்று பேரிடர் காலத்தில் நோய் தொற்றைத் தவிர்க்க உலகத்தவர்கள் அனைவரும் கைகுலுக்குவதைத் தவிர்த்து, நமது பாரம்பரிய 'வணக்கம்' முறையைப் பின்பற்றினார்கள்.
+                        </p>
+                        <p>
+                            ஒருவரை ஒருவர் சந்திக்கும்போது கைகூப்பி வணங்குவதன் மூலம் <strong>"இருப்பதெல்லாம் இறைவனே"</strong> என்னும் மகத்தான வேதக்கருத்தை அங்கீகரிக்கிறோம். எதிரில் இருப்பவரிடம் உறையும் பரம்பொருளைத் தலைவணங்கி ஏற்கும் உயர்ந்த சமத்துவ நெறியே வணக்கம்.
+                        </p>
+                    </div>
+
+                    <!-- Traditional Attire Card -->
+                    <div class="concept-card" id="topic1-attire">
+                        <div class="card-icon-header">
+                            <div class="card-icon">
+                                <i data-lucide="shirt"></i>
+                            </div>
+                            <h3>நமது பாரம்பரிய உடை</h3>
+                        </div>
+                        <p>
+                            உலகில் முதல் முதலில் நூல் நூற்று, நெய்து, ஆடை உடுத்திய பெருமை நமது நாகரீகத்திற்கே உரியது. பல்லாயிரக்கணக்கான ஆண்டுகளாக நமது பண்பாடு பின்பற்றி வரும் கம்பீரமான உடை நமது வேட்டியும் சேலையும் ஆகும்.
+                        </p>
+                        <p>
+                            இன்றும் உலகிலேயே மிக அழகிய, கண்ணியமான உடையாக சேலை திகழ்கிறது. நமது தட்பவெப்ப நிலைக்கும் காலசூழ்நிலைக்கும் மிகவும் ஏற்ற வேட்டி கலாச்சாரம் நம்மிடம் இருந்து விலகாமல், வாய்ப்புள்ள போதெல்லாம் பாரம்பரிய உடைகளை உடுத்தி பழைமை வாய்ந்த பெருமிதத்துடன் வாழ்வோம்.
+                        </p>
+                    </div>
+
+                    <!-- Festivals Card -->
+                    <div class="concept-card" id="topic1-festivals">
+                        <div class="card-icon-header">
+                            <div class="card-icon">
+                                <i data-lucide="sun-moon"></i>
+                            </div>
+                            <h3>விழாக்களும் வானவியலும்</h3>
+                        </div>
+                        <p>
+                            நமது பண்டிகைகளும் விழாக்களும் வெறும் கேளிக்கைகள் அல்ல; அவை வானவியலோடும் (Astronomy) புவியியலோடும் (Geography) இணைந்து அறிவியல் பூர்வமாக வடிவமைக்கப்பட்டவை.
+                        </p>
+                        <p>
+                            சூரியனை பூமி சுற்றி வரும் பாதையில் நாம் எங்கு பிறந்தோமோ, அதே புள்ளியில் மீண்டும் பூமி வரும் சுழற்சியை அடிப்படையாகக் கொண்டு பிறந்த நாள் மற்றும் முக்கிய நிகழ்வுகள் கணிக்கப்படுகின்றன. சந்திரன் சுழற்சியை அடிப்படையாகக் கொண்ட 'சந்திரமானம்' மற்றும் சூரியனின் இயக்கத்தை அடிப்படையாகக் கொண்ட 'சூரியமானம்' வழியே தமிழ் நாட்காட்டியில் நமது விழாக்கள் தீர்மானிக்கப்படுகின்றன.
+                        </p>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ========================================== -->
+            <!-- TOPIC 2: நம்ம சாமி (NAMMA SAMI) -->
+            <!-- ========================================== -->
+            <section class="brief-section" id="topic2">
+                <div class="section-header">
+                    <div class="section-title-wrap">
+                        <div class="topic-badge">2</div>
+                        <div>
+                            <h2>தலைப்பு 2: நம்ம சாமி</h2>
+                            <p>இறைவன் யார்? எங்கே இருக்கிறார்? வழிபாட்டின் 3 முக்கிய நிலைகள்</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Core Philosophical Questions -->
+                <div class="callout-box" id="topic2-whatis">
+                    <div class="callout-title">
+                        <i data-lucide="help-circle"></i> சாமி என்றால் என்ன? எங்கே இருக்கிறார்?
+                    </div>
+                    <p style="font-size:1.05rem; margin-bottom:8px;">
+                        <strong>சாமி என்றால் என்ன?</strong> – <em>"உடையவர்"</em> (அனைத்தையும் உடையவன், காப்பவன், தலைவன்).
+                    </p>
+                    <p style="font-size:1.05rem; margin-bottom:8px;">
+                        <strong>சாமி மொத்தம் எத்தனை?</strong> – சாமி ஒன்றே பலவாகத் திகழ்கிறார்.
+                    </p>
+                    <p style="font-size:1.05rem;">
+                        <strong>சாமி எங்கே இருக்கிறார்?</strong> – <em>"ஈசா வாஸ்யம் இதம் ஸர்வம்"</em> (அனைத்திலும் இறைவன் வியாபித்திருக்கிறார்), <em>"அங்கிங்கெனாதபடி எங்கும் பிரகாசமாய்..."</em>
+                    </p>
+                </div>
+
+                <!-- Stories Section -->
+                <div style="margin:28px 0;" id="topic2-stories">
+                    <h3 style="font-size:1.25rem; font-weight:700; color:var(--text-main); margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+                        <i data-lucide="book-marked" style="color:var(--saffron-primary);"></i> சிந்தனைக்குரிய ஆன்மீகக் கதைகள்
+                    </h3>
+
+                    <div class="cards-grid">
+                        <div class="concept-card">
+                            <div class="card-icon-header">
+                                <div class="card-icon"><i data-lucide="heart-handshake"></i></div>
+                                <h3>ஸ்ரீ ராமகிருஷ்ணர் அருளிய உண்மை</h3>
+                            </div>
+                            <p>
+                                இறைவன் அனைத்திலும் உறைகிறார் என்பதை ஸ்ரீ ராமகிருஷ்ண பரமஹம்சர் மிக எளிய உவமைகளின் மூலம் விளக்கினார். உலக உயிர்கள் அனைத்திலும் அந்த பரம்பொருளின் இருப்பைக் காண்பதே மெய்யான பக்தி.
+                            </p>
+                        </div>
+
+                        <div class="concept-card">
+                            <div class="card-icon-header">
+                                <div class="card-icon"><i data-lucide="shield-alert"></i></div>
+                                <h3>குரு - சிஷ்யர் & யானை கதை</h3>
+                            </div>
+                            <p>
+                                <em>"எல்லாம் நாராயணன்"</em> என குரு உபதேசித்தபின், வீதியில் மதம் பிடித்து ஓடிவந்த யானையைக் கண்டு விலகாமல் நின்ற சிஷ்யனை யானை தூக்கி வீசியது.
+                            </p>
+                            <p>
+                                காயம்பட்ட சிஷ்யனிடம் குரு கூறினார்: "யானையில் நாராயணன் இருப்பது உண்மையே; ஆனால் யானையின் மேல் அமர்ந்து <strong>'விலகிப் போ!'</strong> என்று எச்சரித்த பாகனிலும் நாராயணனே பேசினான். அவனது பேச்சை நீ ஏன் கேட்கவில்லை?" — பக்தி என்பது விவேகத்துடனும் பகுத்தறிவுடனும் இணைய வேண்டும் என்பதை உணர்த்தும் பாடம்.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hand Shloka Banner -->
+                <div class="callout-box" style="border-left-color:#10b981; background:rgba(16, 185, 129, 0.08);">
+                    <div class="callout-title" style="color:#10b981;">
+                        <i data-lucide="sparkle"></i> அனைத்திலும் இருக்கும் இறைவன் நம்மிலும் இருக்கிறார்!
+                    </div>
+                    <p style="font-size:1.05rem; font-weight:600; font-family:var(--font-serif); margin-bottom:6px;">
+                        "கராக்ரே வசதே லக்ஷ்மி: கரமத்யே ஸரஸ்வதீ | கரமூலே ஸ்திதே கௌரீ ப்ரபாதே கரதர்சனம் ||"
+                    </p>
+                    <p style="font-size:0.92rem; color:var(--text-muted);">
+                        காலையில் விழித்தவுடன் நமது கைகளைப் பார்ப்பதன் மூலம் செல்வம், கல்வி, சக்தி ஆகிய தெய்வீக ஆற்றல்கள் நமது சுய முயற்சியிலும் உழைப்பிலும் அடங்கியுள்ளன என்பதை உணர்கிறோம்.
+                    </p>
+                </div>
+
+                <!-- Three Tiers of Sami -->
+                <div style="margin-top:36px;" id="topic2-three-tiers">
+                    <h3 style="font-size:1.35rem; font-weight:800; color:var(--text-main); margin-bottom:18px; display:flex; align-items:center; gap:10px;">
+                        <i data-lucide="layers" style="color:var(--saffron-primary);"></i> சாமியின் மூன்று நிலைகள்
+                    </h3>
+
+                    <div class="cards-grid">
+                        
+                        <!-- Tier 1: Kulasami -->
+                        <div class="concept-card" style="border-top:4px solid #f59e0b;">
+                            <div class="card-icon-header">
+                                <div class="card-icon"><i data-lucide="shield"></i></div>
+                                <div>
+                                    <span style="font-size:0.78rem; font-weight:700; color:#f59e0b; text-transform:uppercase;">நிலை 1</span>
+                                    <h3>குலசாமி</h3>
+                                </div>
+                            </div>
+                            <p>
+                                <strong>குலம் என்றால் என்ன?</strong> ஒரே முன்னோர்களை அடிப்படையாகக் கொண்டு, இரத்த உறவு மற்றும் வம்சாவழி பாரம்பரியத்தால் இணைக்கப்பட்டுள்ள மனிதர்களின் ஒரு பெரிய குடும்பக் குழுவைக் குறிக்கும்.
+                            </p>
+                            <p>
+                                இந்த குலத்தைக் காப்பவரே <strong>குலசாமி</strong>. வம்சாவழியின் தொடர்ச்சிக்கும், குடும்பங்களின் நல்வாழ்வுக்கும் குலதெய்வ வழிபாடு முதன்மையானது.
+                            </p>
+                            <div style="background:rgba(245, 158, 11, 0.1); padding:10px 14px; border-radius:var(--radius-sm); font-size:0.88rem; color:#fbbf24; font-weight:600;">
+                                "குலம் தரும் செல்வம் தந்திடும்..."<br>
+                                <span style="font-size:0.8rem; color:var(--text-dim);">- திருமங்கையாழ்வார் பாசுரம்</span>
+                            </div>
+                        </div>
+
+                        <!-- Tier 2: Gramasami -->
+                        <div class="concept-card" style="border-top:4px solid #3b82f6;">
+                            <div class="card-icon-header">
+                                <div class="card-icon" style="background:rgba(59, 130, 246, 0.15); color:#3b82f6;"><i data-lucide="map-pin"></i></div>
+                                <div>
+                                    <span style="font-size:0.78rem; font-weight:700; color:#3b82f6; text-transform:uppercase;">நிலை 2</span>
+                                    <h3>கிராமசாமி (ஊர் சாமி)</h3>
+                                </div>
+                            </div>
+                            <p>
+                                ஊர் மக்களை இணைப்பது கிராம சாமி. ஒரு கிராமத்தில் அல்லது ஊரில் வாழும் அனைத்து சமுதாய மக்களையும் பேதமின்றி ஒன்றிணைக்கும் பெருஞ்சக்தியாக கிராமக் கோவில் விளங்குகிறது.
+                            </p>
+                            <p>
+                                ஊர் நலன், மழை வளம், விவசாய செழிப்பு மற்றும் சமுதாய நல்லிணக்கத்தைக் காக்கும் பொதுத் தெய்வமாக கிராம தேவதைகள் வழிபடப்படுகின்றன.
+                            </p>
+                        </div>
+
+                        <!-- Tier 3: Ishtatheivam -->
+                        <div class="concept-card" style="border-top:4px solid #ec4899;">
+                            <div class="card-icon-header">
+                                <div class="card-icon" style="background:rgba(236, 72, 153, 0.15); color:#ec4899;"><i data-lucide="heart"></i></div>
+                                <div>
+                                    <span style="font-size:0.78rem; font-weight:700; color:#ec4899; text-transform:uppercase;">நிலை 3</span>
+                                    <h3>இஷ்டதெய்வம்</h3>
+                                </div>
+                            </div>
+                            <p>
+                                தனிமனிதனை ஆன்மீக ரீதியில் மேன்மையாக்குவது இஷ்டதெய்வ வழிபாடு ஆகும்.
+                            </p>
+                            <p>
+                                எவ்வித நிர்ப்பந்தமும் இன்றி, தனக்குப் பிடித்த வடிவிலும் குணத்திலும் இறைவனைத் தேர்ந்தெடுத்து பக்தி செலுத்தும் உயர்ந்த சுதந்திரமும் உரிமையும் சனாதன தர்மத்தில் ஒவ்வொரு மனிதனுக்கும் வழங்கப்பட்டுள்ளது.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Verse Box: Kambaramayanam -->
+                <div class="verse-box" id="topic2-kamban">
+                    <div class="verse-header">
+                        <div class="verse-tag">
+                            <i data-lucide="scroll"></i> கம்பராமாயணம் - இரணியன் வதைப்படலம்
+                        </div>
+                        <button class="btn-copy-verse" onclick="copyVerse('kamban-verse')">
+                            <i data-lucide="copy" style="width:13px; height:13px;"></i> நகலெடு
+                        </button>
+                    </div>
+                    <div class="verse-text" id="kamban-verse">
+“சாணிலும் உளன்; ஓர் தன்மை,
+அணுவினைச் சத கூறு இட்ட
+கோணினும் உளன்; மா மேருக்
+குன்றினும் உளன்; இந் நின்ற
+தூணினும் உளன்; நீ சொன்ன
+சொல்லினும் உளன்; இத் தன்மை
+காணுதி விரைவின்” என்றான்;
+                    </div>
+                    <div class="verse-author">— கவிச்சக்கரவர்த்தி கம்பர்</div>
+                    <div class="verse-explanation">
+                        <strong>பொருள் விளக்கம்:</strong> தந்தை இரணியனின் கேள்விக்கு பாலன் பிரஹலாதன் பதிலளிக்கிறான்: "இறைவன் ஒரு சாண் அளவிலும் இருப்பான்; ஒரு அணுவை நூறு கூறுகளாகப் பிளந்த அதன் சிறிய கோணத்திலும் இருப்பான்; மாபெரும் மேரு மலையிலும் இருப்பான்; எதிரில் நிற்கும் இந்தத் தூணிலும் இருப்பான்; நீ பேசிய சொல்லிலும் இருப்பான்! இதனை நீ உடனே காண்பாய்!" என இறைவனின் எங்கும் நிறைந்த சர்வ வியாபகத் தன்மையை பறைசாற்றுகிறான்.
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- ========================================== -->
+            <!-- TOPIC 3: நம்ம கோவில் (NAMMA KOVIL) -->
+            <!-- ========================================== -->
+            <section class="brief-section" id="topic3">
+                <div class="section-header">
+                    <div class="section-title-wrap">
+                        <div class="topic-badge">3</div>
+                        <div>
+                            <h2>தலைப்பு 3: நம்ம கோவில்</h2>
+                            <p>ஆன்மீக, சமூக, கலை, நீர்மேலாண்மை மற்றும் பண்பாட்டுப் பெட்டகம்</p>
+                        </div>
+                    </div>
+                </div>
+
+                <p style="font-size:1.05rem; color:var(--text-muted); margin-bottom:24px;">
+                    நம்ம சாமியை அமர்த்தும் இடமே <strong>கோவில்</strong>. ஆயிரம் ஆண்டுகளாக பாரத தேசம் முழுவதும் கடைப்பிடிக்கப்பட்டு வரும் உன்னத தத்துவமே கோவில் வழிபாடு.
+                </p>
+
+                <!-- Temple Forms Grid -->
+                <div style="margin-bottom:32px;" id="topic3-forms">
+                    <h3 style="font-size:1.25rem; font-weight:700; color:var(--text-main); margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+                        <i data-lucide="shapes" style="color:var(--saffron-primary);"></i> பலதரப்பட்ட வழிபாட்டு வடிவங்கள்
+                    </h3>
+                    <div class="cards-grid">
+                        <div class="concept-card">
+                            <div class="card-icon-header">
+                                <div class="card-icon"><i data-lucide="image"></i></div>
+                                <h3>பட வழிபாடு</h3>
+                            </div>
+                            <p>இறைவனின் உருவத்தை அழகிய படமாக வைத்து வணங்குதல்.</p>
+                        </div>
+
+                        <div class="concept-card">
+                            <div class="card-icon-header">
+                                <div class="card-icon"><i data-lucide="mountain"></i></div>
+                                <h3>கல் & பளிங்குச் சிலைகள்</h3>
+                            </div>
+                            <p>கல்லில் மூர்த்தியாக வடித்தும், பளிங்குக் கற்களில் அலங்கரித்தும் வழிபாடுகள் நடத்துவது மிகவும் பிரபலமானது.</p>
+                        </div>
+
+                        <div class="concept-card">
+                            <div class="card-icon-header">
+                                <div class="card-icon"><i data-lucide="disc"></i></div>
+                                <h3>யந்திர வழிபாடு</h3>
+                            </div>
+                            <p>சிலை மூர்த்தியே இல்லாமல் தாமிரம், வெள்ளி, தங்கத் தகடுகளில் யந்திர வடிவில் மந்திரங்களை வடித்து வழிபடுதல்.</p>
+                        </div>
+
+                        <div class="concept-card">
+                            <div class="card-icon-header">
+                                <div class="card-icon"><i data-lucide="flame"></i></div>
+                                <h3>விளக்கு & அக்கினி (யாகம்)</h3>
+                            </div>
+                            <p>தீபத்தை ஜோதி வடிவாகப் பாவித்தும், ஹோம குண்டத்தில் அக்கினி பகவான் வழியே இறைவனை ஆராதித்தும் வழிபடுதல்.</p>
+                        </div>
+
+                        <div class="concept-card">
+                            <div class="card-icon-header">
+                                <div class="card-icon"><i data-lucide="sparkles"></i></div>
+                                <h3>மண் & பஞ்சலோக மூர்த்திகள்</h3>
+                            </div>
+                            <p>மண்ணில் பொம்மைகளாக வடித்தும், விழாக்களில் பஞ்சலோகத்தில் வடித்த உற்சவ மூர்த்திகளை வீதியுலா எடுத்தும் வழிபடுதல்.</p>
+                        </div>
+
+                        <div class="concept-card">
+                            <div class="card-icon-header">
+                                <div class="card-icon"><i data-lucide="quote"></i></div>
+                                <h3>முன்னோர் பொன்மொழிகள்</h3>
+                            </div>
+                            <p>
+                                ஔவையார்: <em>"கோவிலில்லா ஊரில் குடியிருக்க வேண்டாம்"</em><br>
+                                <em>"ஆலயம் தொழுவது சாலவும் நன்று"</em><br>
+                                <em>"கோபுர தரிசனம் கோடி புண்ணியம்"</em>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4 Yugas Section -->
+                <div class="callout-box" id="topic3-yugas">
+                    <div class="callout-title">
+                        <i data-lucide="history"></i> 4 யுகங்களும் கலியுகத்தின் விக்ர ஆராதனையும்
+                    </div>
+                    <p style="margin-bottom:10px;">
+                        காலத்தை முன்னோர்கள் 4 யுகங்களாகப் பிரித்துள்ளனர்: <strong>க்ருதயுகம், த்ரேதாயுகம், துவாபரயுகம் மற்றும் கலியுகம்</strong>.
+                    </p>
+                    <p style="margin-bottom:10px;">
+                        முதல் மூன்று யுகங்களிலும் மக்கள் பக்தி செலுத்துவது, இறைவழிபாடு ஆகியவற்றை யாகங்கள், தபஸ், யோகாப்பியாசம் மூலமாகப் பின்பற்றினார்கள்; இறைவனுடனேயே வாழ்ந்தும் உள்ளார்கள்.
+                    </p>
+                    <p>
+                        ஆனால் <strong>விக்ர ஆராதனை (மூர்த்தி வழிபாடு)</strong> என்பது கலியுகத்திற்கே உரிய தனித்துவமான விசேஷம் ஆகும். பக்தி மனிதனைப் பக்குவப்படுத்தி தன்னை உணரச் செய்கிறது. பக்தி இயக்கத்தின் மூலமாகவே நாயன்மார்கள், ஆழ்வார்கள் மற்றும் இறையடியார்கள் மக்களை நல்வழிப்படுத்தி தெய்வீகம் நிறைந்த மனித சமுதாயத்தை உருவாக்கினார்கள்.
+                    </p>
+                </div>
+
+                <!-- Etymology of Kovil and Aalayam -->
+                <div style="margin:30px 0;" id="topic3-etymology">
+                    <div class="features-grid">
+                        <div class="feature-item">
+                            <div class="feature-num" style="background:var(--saffron-primary); color:#000;">கோ</div>
+                            <div class="feature-body">
+                                <h4>கோவில் (கோ + இல்)</h4>
+                                <p><strong>கோ</strong> = தலைவன் (இறைவன்) | <strong>இல்</strong> = வீடு (வசிப்பிடம்).<br>கோவில் என்றால் <strong>"இறைவனின் வசிப்பிடம்"</strong> என்று பொருள்.</p>
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-num" style="background:#0d9488; color:#fff;">ஆ</div>
+                            <div class="feature-body">
+                                <h4>ஆலயம் (ஆ + லயம்)</h4>
+                                <p><strong>ஆ</strong> = ஜீவாத்மா (உயிர்) | <strong>லயம்</strong> = ஒடுங்கும் இடம்.<br>ஆலயம் என்றால் <strong>"ஜீவாத்மா இறைவனிடம் ஒடுங்கும் புனித இடம்"</strong> என்று பொருள்.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Thirumoolar Verses -->
+                <div class="verse-box">
+                    <div class="verse-header">
+                        <div class="verse-tag">
+                            <i data-lucide="book-open"></i> திருமூலர் - திருமந்திரம் (பாடல் 1)
+                        </div>
+                        <button class="btn-copy-verse" onclick="copyVerse('thirumoolar-1')">
+                            <i data-lucide="copy" style="width:13px; height:13px;"></i> நகலெடு
+                        </button>
+                    </div>
+                    <div class="verse-text" id="thirumoolar-1">
+"படமாடக் கோயில் பகவற்கு ஒன்று ஈயில்
+நடமாடக் கோயில் நம்பர்க்கு அங்கு ஆகா
+நடமாடக் கோயில் நம்பர்க்கு ஒன்று ஈயில்
+படமாடக் கோயில் பகவற்கு அது ஆமே"
+                    </div>
+                    <div class="verse-author">— திருமூலர்</div>
+                    <div class="verse-explanation">
+                        <strong>விளக்கம்:</strong> இறைவனை படமாடக் கோயில் பகவன் என்றும், சக மனிதனை நடமாடும் கோயில் நம்பர் என்றும் குறிப்பிடுகிறார் திருமூலர். மனித நேயத்துடன் சக மக்களுக்குச் செய்யும் தொண்டே இறைவனுக்குச் சென்றடையும் உயர்ந்த வழிபாடாகும் என்பதை இதன் மூலம் வலியுறுத்துகிறார்.
+                    </div>
+                </div>
+
+                <div class="verse-box">
+                    <div class="verse-header">
+                        <div class="verse-tag">
+                            <i data-lucide="book-open"></i> திருமூலர் - திருமந்திரம் (பாடல் 2)
+                        </div>
+                        <button class="btn-copy-verse" onclick="copyVerse('thirumoolar-2')">
+                            <i data-lucide="copy" style="width:13px; height:13px;"></i> நகலெடு
+                        </button>
+                    </div>
+                    <div class="verse-text" id="thirumoolar-2">
+"உள்ளம் பெருங்கோயில் ஊனுடம்பு ஆலயம்
+வள்ளற் பிரானார்க்கு வாய் கோபுர வாசல்
+தெள்ளத் தெளிந்தார்க்குச் சீவன் சிவலிங்கம்
+கள்ளப் புலனைந்தும் காளா மணிவிளக்கே"
+                    </div>
+                    <div class="verse-author">— திருமூலர்</div>
+                    <div class="verse-explanation">
+                        <strong>விளக்கம்:</strong> திருமூலர் இந்த மனித உடலையே கோவிலுடன் ஒப்பிடுகிறார். உள்ளமே கருவறை, உடம்பே ஆலயம், வாய் கோபுர வாசல், தெளிந்த ஆன்மாவே சிவலிங்கம், ஐம்புலன்களே சுடர்விடும் மணிவிளக்குகள் என மனித தேகத்தையும் இறை ஆலயத்தையும் இணைத்துப் போற்றுகிறார்.
+                    </div>
+                </div>
+
+                <!-- Historical Royal Devotion -->
+                <div class="callout-box" id="topic3-history">
+                    <div class="callout-title">
+                        <i data-lucide="crown"></i> மன்னர்களின் அர்ப்பணிப்பும் வரலாற்றுத் திருப்பணிகளும்
+                    </div>
+                    <p style="margin-bottom:10px;">
+                        கண்ணகிக்கு கோவில் அமைக்க சேரன் செங்குட்டுவன் (நெடுஞ்சேரலாதன்) இமயத்திலிருந்து கல் கொண்டு வந்தான் என சிலப்பதிகார வரலாறு கூறுகிறது.
+                    </p>
+                    <p style="margin-bottom:10px;">
+                        ஒவ்வொரு மன்னர்களும் தங்கள் ராஜ்ஜியத்தில் இறைவனுக்குக் கலைநயத்துடன் கூடிய கோவில்களை எழுப்ப நிலங்கள், பொன், நவரத்தின ஆபரணங்கள், அலங்காரப் பொருட்கள், யானை, குதிரை வாகனங்கள், தேர்கள் என அள்ளி வழங்கினர். மன்னர்கள் வாழ்விலும் கோவில் நிர்மாணமும் திருவிழாக்களும் மையமாக இருந்தன.
+                    </p>
+                    <p>
+                        வசதிபடைத்தவர் முதல் எளியவர் வரை கோவில்களுக்கு வாரி வழங்கியுள்ளனர். நாயன்மார்களில் <strong>குங்கிலியக்கலய நாயனார், சாக்கிய நாயனார், பூசலார் நாயனார்</strong>, ஆழ்வார்களில் <strong>பெரியாழ்வார்</strong>, தஞ்சைப் பெருவுடையார் கோவில் விமான உச்சிக்கு ஒரே கல்லாக நல்கிய <strong>அழகிப் பாட்டி</strong> வரை பலரும் தங்கள் பக்தியை அர்ப்பணித்துள்ளனர்.
+                    </p>
+                </div>
+
+                <!-- Moorthi - Thalam - Theertham -->
+                <div style="margin:32px 0;" id="topic3-triad">
+                    <h3 style="font-size:1.35rem; font-weight:800; color:var(--text-main); margin-bottom:18px; display:flex; align-items:center; gap:10px;">
+                        <i data-lucide="compass" style="color:var(--saffron-primary);"></i> (ii) மூர்த்தி – தலம் – தீர்த்தம் தத்துவம்
+                    </h3>
+                    <p style="color:var(--text-muted); margin-bottom:16px;">
+                        கோவில்களை நிர்மாணிப்பதில் முன்னோர்கள் வகுத்த மூன்று தூண்களே மூர்த்தி, தலம், தீர்த்தம் ஆகும்:
+                    </p>
+
+                    <div class="cards-grid">
+                        <div class="concept-card">
+                            <div class="card-icon-header">
+                                <div class="card-icon"><i data-lucide="user-check"></i></div>
+                                <h3>மூர்த்தி</h3>
+                            </div>
+                            <p>வழிபடும் தெய்வம் சிலை ரூபத்தில் அல்லது சுயம்புவாகத் தோன்றி அருள்பாலித்தல். புராண வரலாற்றுச் சம்பவங்களோடு தொடர்புடையவை.</p>
+                        </div>
+
+                        <div class="concept-card">
+                            <div class="card-icon-header">
+                                <div class="card-icon"><i data-lucide="map"></i></div>
+                                <h3>தலம்</h3>
+                            </div>
+                            <p>புண்ணிய க்ஷேத்திரங்கள், கோவில் அமைந்திருக்கும் ஊர் மற்றும் காலங்காலமாகக் கடைப்பிடிக்கப்பட்டு வரும் வழிபாட்டுத் தலங்கள்.</p>
+                        </div>
+
+                        <div class="concept-card">
+                            <div class="card-icon-header">
+                                <div class="card-icon"><i data-lucide="droplet"></i></div>
+                                <h3>தீர்த்தம்</h3>
+                            </div>
+                            <p>நதிக்கரைகள், திருக்குளங்கள், புஷ்கரணிகள். தாமிரபரணி, வைகை, காவிரி, தென்பெண்ணை, பாலாறு போன்ற புண்ணிய நதிகளின் கரைகளில் அமைந்த புனித நீர்நிலைகள்.</p>
+                        </div>
+                    </div>
+
+                    <!-- Examples of Sacred Shrines & Saints -->
+                    <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius-lg); padding:24px; margin-top:20px;">
+                        <h4 style="font-size:1.1rem; color:var(--saffron-primary); margin-bottom:12px;">புண்ணிய தலங்களும் அவதரித்த மகான்களும்:</h4>
+                        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:14px; font-size:0.95rem;">
+                            <div>
+                                <strong style="color:var(--text-main);">புண்ணிய க்ஷேத்திரங்கள்:</strong>
+                                <ul style="margin-left:20px; color:var(--text-muted); margin-top:6px; line-height:1.7;">
+                                    <li>52 சக்தி பீடங்கள்</li>
+                                    <li>12 ஜோதிர்லிங்கங்கள்</li>
+                                    <li>108 வைணவ திவ்ய தேசங்கள்</li>
+                                    <li>பாடல் பெற்ற சிவஸ்தலங்கள்</li>
+                                    <li>பஞ்சபூத தலங்கள் (நிலம், நீர், நெருப்பு, காற்று, ஆகாயம்)</li>
+                                    <li>அறுபடை வீடுகள் & நவக்கிரக தலங்கள்</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <strong style="color:var(--text-main);">அவதரித்து பெருமை சேர்த்த மகான்கள்:</strong>
+                                <ul style="margin-left:20px; color:var(--text-muted); margin-top:6px; line-height:1.7;">
+                                    <li><strong>ஆதி சங்கரர்</strong> – காலடி</li>
+                                    <li><strong>ஸ்ரீ ராமானுஜர்</strong> – ஸ்ரீபெரும்புதூர்</li>
+                                    <li><strong>ராமலிங்க அடிகள் (வள்ளலார்)</strong> – வடலூர்</li>
+                                    <li><strong>தாயுமானவர்</strong> – திருச்சி</li>
+                                    <li><strong>பட்டினத்தார்</strong> – சென்னைப்பட்டணம்</li>
+                                    <li><strong>கிருபானந்த வாரியார், ரமணர், பாம்பன் சுவாமிகள்</strong></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <p style="margin-top:14px; font-size:0.9rem; color:var(--text-dim); border-top:1px dashed var(--border-color); padding-top:10px;">
+                            ஸ்ரீரங்கம், சிதம்பரம், வாரணாசி, கேதார்நாத், பத்ரிநாத், அமர்நாத், சாரநாத், ராமேஸ்வரம், பண்டரிபுரம், பூரி ஜெகன்நாத், மதுரை, திருவண்ணாமலை என கருடபுராணம் மூர்த்தி-தலம்-தீர்த்தக் கோட்பாட்டின் பெருமைகளை விரிவாக விளக்குகிறது.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Agamas & Ritual Science -->
+                <div class="callout-box" id="topic3-agamas">
+                    <div class="callout-title">
+                        <i data-lucide="scroll-text"></i> (iii) கோவில்களும் ஆகமங்களும் (Code Book)
+                    </div>
+                    <p style="margin-bottom:12px;">
+                        கோவில்களை நிர்மாணிப்பதில் நமது முன்னோர்கள் வகுத்த நெறிமுறைகளே (Code Book) <strong>ஆகமங்கள்</strong> எனப்படுகின்றன. நமது சமுதாயத்தில் முன்னோர்கள் வழங்கிய மிகப்பெரிய கொடை <strong>சமய சுதந்திரமும் வழிபாட்டு சுதந்திரமும்</strong> ஆகும்.
+                    </p>
+                    <p style="margin-bottom:12px;">
+                        மக்கள் தங்களுக்குப் பிடித்த வடிவிலும் முறையிலும் நிர்ப்பந்தங்கள் இன்றி வழிபடலாம். இந்த வழிபாட்டு சுதந்திரத்தால்தான் எத்தனையோ சோதனைகள் வந்தபோதும் நமது தர்மம் இன்றும் சிரஞ்சீவியாக நிலைத்து நிற்கிறது.
+                    </p>
+                    
+                    <h4 style="font-size:1.05rem; color:var(--text-main); margin:16px 0 8px;">ஆகமம் கூறும் 2 அடிப்படைக் கூறுகள்:</h4>
+                    <ol style="margin-left:20px; color:var(--text-muted); line-height:1.7;">
+                        <li><strong>கட்டிட அமைப்பு:</strong> வழிபாட்டு மூர்த்தியின் இயல்புக்கேற்ப கர்ப்பக்கிருகம், அர்த்த மண்டபம், வசந்த மண்டபம், ராஜகோபுரம், த்வஜஸ்தம்பம் (கொடிமரம்), பலிபீடங்கள், பரிவார தெய்வங்கள் எவ்வாறு அமைய வேண்டும் என்பதை விளக்குகிறது.</li>
+                        <li><strong>பூஜை & உற்சவ முறைகள்:</strong> மூர்த்திக்குரிய வேத மந்திரங்கள், தினசரி ஆராதனைகள், திருவிழாக்கள் எவ்வாறு நடைபெற வேண்டும் என்பதைத் தெளிவாகக் கூறுகிறது.</li>
+                    </ol>
+
+                    <div style="background:rgba(255,255,255,0.05); padding:14px; border-radius:var(--radius-sm); margin-top:14px;">
+                        <strong style="color:var(--saffron-primary);">மந்திரம் – யந்திரம் – தந்திரம்:</strong><br>
+                        <span style="font-size:0.92rem; color:var(--text-muted);">
+                            சிலை ரூபமான மூர்த்திக்கு சக்தி ஊட்டுவது <strong>மந்திரம்</strong>. அந்த மந்திரத்தை நிலைநிறுத்தி சக்தியுள்ளதாக ஆக்க உலோகத் தகடுகளில் வரிவடிவமாக பொறிக்கப்படும் கருவி <strong>யந்திரம்</strong>. அதனை முறைப்படி ஆராதிக்கும் வழிமுறையே <strong>தந்திரம்</strong> ஆகும்.
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Social and Cultural Nexus -->
+                <div style="margin-top:36px;" id="topic3-social">
+                    <h3 style="font-size:1.35rem; font-weight:800; color:var(--text-main); margin-bottom:18px; display:flex; align-items:center; gap:10px;">
+                        <i data-lucide="building-2" style="color:var(--saffron-primary);"></i> (iv) கோவில்கள் சமய அடையாளம் மட்டுமல்ல – சமுதாய ஒருங்கிணைப்பு மையம்!
+                    </h3>
+                    <p style="color:var(--text-muted); margin-bottom:16px;">
+                        கோவில்கள் சமய வழிபாடுகளின் மையமாக மட்டுமின்றி, ஒரு உன்னதமான சமுதாயத்தைக் கட்டமைக்கும் மையமாகத் திகழ்ந்தன:
+                    </p>
+
+                    <!-- 10 Societal Aspects Grid -->
+                    <div class="features-grid">
+                        <div class="feature-item">
+                            <div class="feature-num">1</div>
+                            <div class="feature-body">
+                                <h4>நகர நிர்மாணம்</h4>
+                                <p>கோவிலை மையமாக வைத்தே மாடவீதி, சித்திரை வீதி, ரத வீதிகள் போன்ற அமைப்புகளுடன் மதுரை, ஸ்ரீரங்கம் போன்ற நகரங்கள் வடிவமைக்கப்பட்டன.</p>
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-num">2</div>
+                            <div class="feature-body">
+                                <h4>தூய்மையான வீதிகள் & கால்வாய்கள்</h4>
+                                <p>அகன்ற தூய்மையான வீதிகளும், முறையான மழைநீர் வடிகால் கால்வாய்களும் அமைக்கப்பட்டு நகர்ப்புற சுகாதாரம் பேணப்பட்டது.</p>
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-num">3</div>
+                            <div class="feature-body">
+                                <h4>விண்ணுயர்ந்த கோபுரங்கள்</h4>
+                                <p>நகரத்தின் அழகையும் திசையையும் அடையாளப்படுத்தும் கம்பீரமான கோபுரங்கள் <em>"கோபுர தரிசனம் கோடி புண்ணியம்"</em> என்ற ஆன்மீக ஒளியைத் தந்தன.</p>
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-num">4</div>
+                            <div class="feature-body">
+                                <h4>திருக்குளங்கள் & நீராதாரம்</h4>
+                                <p>கோவில் புஷ்கரணிகள் நகரின் நிலத்தடி நீராதாரத்தின் ஊற்றுக் கண்களாகத் திகழ்ந்து மழைநீரைச் சேமித்து வளம் பெருக்கின.</p>
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-num">5</div>
+                            <div class="feature-body">
+                                <h4>கல்வெட்டுகள் & வரலாற்று ஆவணங்கள்</h4>
+                                <p>அரசின் திட்டங்கள், வரலாற்று நிகழ்வுகள், செப்புப் பட்டயங்கள் கோவில்களில் கல்வெட்டுகளாகப் பதியப்பட்டு வரலாற்றுச் செய்தி சேகரிப்பு மையமாக விளங்கின.</p>
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-num">6</div>
+                            <div class="feature-body">
+                                <h4>64 கலைகளின் அரங்கம்</h4>
+                                <p>இயல், இசை, நாடகம், சிற்பக்கலைகள் கோவில்களில் வளர்க்கப்பட்டன. தில்லையில் சேக்கிழாரின் பெரியபுராணம் அரங்கேறியது போல நூல்கள் தெய்வசன்னிதியிலேயே அரங்கேற்றப்பட்டன.</p>
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-num">7</div>
+                            <div class="feature-body">
+                                <h4>சமூக நல்லிணக்கத் திருவிழாக்கள்</h4>
+                                <p>திருவிழாக்களில் ஒவ்வொரு நாளும் நகரின் பல்வேறு சமுதாயத்தினருக்கும் கட்டளைகள் ஒதுக்கப்பட்டு, அனைவரும் ஒன்றிணைந்து பங்குகொண்டனர்.</p>
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-num">8</div>
+                            <div class="feature-body">
+                                <h4>உள்ளூர்ப் பொருளாதாரம் & வர்த்தகம்</h4>
+                                <p>மலர், வானவேடிக்கை, பால், பழம், பூ, எண்ணெய் மற்றும் தின்பண்ட வணிகங்கள் மூலம் லட்சக்கணக்கான மக்களின் வாழ்வாதாரம் சிறப்படைந்தது.</p>
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-num">9</div>
+                            <div class="feature-body">
+                                <h4>தேர்த்திருவிழா – சமத்துவ வடம்</h4>
+                                <p>அனைத்துத் தரப்பு ஆண்களும் பெண்களும் குழந்தைகளும் புத்தாடை உடுத்தி ஒரே வடம்பிடித்துத் தேர் இழுக்கும் காட்சி சமுதாய ஒற்றுமையின் உச்சக்கட்டம்.</p>
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-num">10</div>
+                            <div class="feature-body">
+                                <h4>ஆலயப் பாதுகாப்பு தியாக வரலாறு</h4>
+                                <p>அன்னிய ஆக்கிரமிப்புகளிலிருந்து ஆலயங்களின் புனிதத்தைக் காக்க எண்ணற்ற முன்னோர்கள் தங்கள் இன்னுயிரையும் ஈந்து போராடிய தியாக வரலாறு நினைவுகூரத்தக்கது.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grand Summary Box -->
+                <div class="summary-banner">
+                    <h3>
+                        <i data-lucide="sparkles"></i> இப்படிப்பட்ட கோவில்கள் நம்மை என்ன செய்கின்றன?
+                    </h3>
+                    <div class="summary-points-grid">
+                        <div class="summary-point"><i data-lucide="check-circle-2"></i> நம்மை ஒருங்கிணக்கின்றன</div>
+                        <div class="summary-point"><i data-lucide="check-circle-2"></i> நம்மை நெறிப்படுத்துகின்றன</div>
+                        <div class="summary-point"><i data-lucide="check-circle-2"></i> நம்மை மகிழ்வுறச் செய்கின்றன</div>
+                        <div class="summary-point"><i data-lucide="check-circle-2"></i> பிறவிப்பயன் பெறச் செய்கின்றன</div>
+                        <div class="summary-point"><i data-lucide="check-circle-2"></i> வரும் தலைமுறையை நல்வழிப்படுத்துகின்றன</div>
+                        <div class="summary-point"><i data-lucide="check-circle-2"></i> நமது தொன்மையை காத்து வருகின்றன</div>
+                    </div>
+                    <p style="margin-top:20px; font-size:1.02rem; color:var(--text-main); font-weight:600; text-align:center;">
+                        "நமது சமூகத்தைக் காக்கும் ஆன்மிகப் பெட்டகம் திருக்கோவில்கள். கோவில்களை மையமாகக் கொண்டு நமது வாழ்வினை அமைத்திடுவோம். நமது பிறவிப் பயனைப் பெறுவோம்!"
+                    </p>
+                </div>
+
+            </section>
+
+            <!-- ========================================== -->
+            <!-- SECTION 4: DOCUMENTS & AUDIO BRIEFINGS -->
+            <!-- ========================================== -->
+            <section class="brief-section" id="documents">
+                <div class="section-header">
+                    <div class="section-title-wrap">
+                        <div class="topic-badge" style="background:linear-gradient(135deg, #3b82f6, #1d4ed8); color:#fff;"><i data-lucide="folder-archive" style="width:24px; height:24px;"></i></div>
+                        <div>
+                            <h2>மூல ஆவணங்கள் & ஆடியோ உரைகள்</h2>
+                            <p>NSNK-ProgramBrief கோப்பில் உள்ள குறிப்புகள், கையேடுகள் மற்றும் ஒலிப்பதிவுகள்</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Documents List -->
+                <h3 style="font-size:1.2rem; font-weight:700; color:var(--text-main); margin-bottom:14px; display:flex; align-items:center; gap:8px;">
+                    <i data-lucide="file-text" style="color:var(--saffron-primary);"></i> பதிவிறக்கம் செய்யக்கூடிய ஆவணங்கள்
+                </h3>
+
+                <div class="resource-card-grid">
+                    
+                    <!-- Docx Card -->
+                    <div class="resource-card">
+                        <div class="resource-info">
+                            <div class="resource-icon-badge docx">DOCX</div>
+                            <div class="resource-text">
+                                <h4>நம்ம.docx</h4>
+                                <span>தலைப்பு 1 கையேடு • 14 KB</span>
+                            </div>
+                        </div>
+                        <a href="நம்ம.docx" class="btn-view-doc" download>
+                            <i data-lucide="download" style="width:15px; height:15px;"></i> பதிவிறக்கு
+                        </a>
+                    </div>
+
+                    <!-- PDF 1 Card -->
+                    <div class="resource-card">
+                        <div class="resource-info">
+                            <div class="resource-icon-badge">PDF</div>
+                            <div class="resource-text">
+                                <h4>நம்ம சாமி.pdf</h4>
+                                <span>தலைப்பு 2 கையேடு • 2 பக்கங்கள் • 185 KB</span>
+                            </div>
+                        </div>
+                        <a href="நம்ம சாமி.pdf" target="_blank" class="btn-view-doc">
+                            <i data-lucide="external-link" style="width:15px; height:15px;"></i> பார்வையிடு
+                        </a>
+                    </div>
+
+                    <!-- PDF 2 Card -->
+                    <div class="resource-card">
+                        <div class="resource-info">
+                            <div class="resource-icon-badge">PDF</div>
+                            <div class="resource-text">
+                                <h4>நம்ம கோவில்.pdf</h4>
+                                <span>தலைப்பு 3 கையேடு • 6 பக்கங்கள் • 246 KB</span>
+                            </div>
+                        </div>
+                        <a href="நம்ம கோவில்.pdf" target="_blank" class="btn-view-doc">
+                            <i data-lucide="external-link" style="width:15px; height:15px;"></i> பார்வையிடு
+                        </a>
+                    </div>
+
+                </div>
+
+                <!-- Integrated Audio Player Suite -->
+                <div class="audio-suite">
+                    <div class="audio-suite-header">
+                        <div class="audio-suite-title">
+                            <i data-lucide="headphones" style="color:var(--saffron-primary); width:24px; height:24px;"></i>
+                            <div>
+                                <h3>ஆடியோ விளக்கப் பதிவுகள் (19 Audio Briefings)</h3>
+                                <span style="font-size:0.82rem; color:var(--text-muted);">WhatsApp Audio Recordings in this folder</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <span style="font-size:0.85rem; color:var(--saffron-primary); font-weight:700;">19 பதிவுகள் உள்ளன</span>
+                        </div>
+                    </div>
+
+                    <div class="audio-track-list">
+
+                        <!-- Track 1 -->
+                        <div class="audio-track-card">
+                            <div class="audio-track-top">
+                                <div class="audio-track-name">
+                                    <i data-lucide="volume-2" style="width:16px; color:var(--saffron-primary);"></i>
+                                    <span>பகுதி 1: WhatsApp Audio (21.45.36)</span>
+                                </div>
+                                <span class="audio-track-size">5.2 MB</span>
+                            </div>
+                            <audio class="audio-player-elem" controls preload="none">
+                                <source src="WhatsApp Audio 2026-08-24 at 21.45.36.mpeg" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </div>
+
+                        <!-- Track 2 -->
+                        <div class="audio-track-card">
+                            <div class="audio-track-top">
+                                <div class="audio-track-name">
+                                    <i data-lucide="volume-2" style="width:16px; color:var(--saffron-primary);"></i>
+                                    <span>பகுதி 2: WhatsApp Audio (21.45.37 - 1)</span>
+                                </div>
+                                <span class="audio-track-size">14.5 MB</span>
+                            </div>
+                            <audio class="audio-player-elem" controls preload="none">
+                                <source src="WhatsApp Audio 2026-08-24 at 21.45.37 (1).mpeg" type="audio/mpeg">
+                            </audio>
+                        </div>
+
+                        <!-- Track 3 -->
+                        <div class="audio-track-card">
+                            <div class="audio-track-top">
+                                <div class="audio-track-name">
+                                    <i data-lucide="volume-2" style="width:16px; color:var(--saffron-primary);"></i>
+                                    <span>பகுதி 3: WhatsApp Audio (21.45.37)</span>
+                                </div>
+                                <span class="audio-track-size">11.6 MB</span>
+                            </div>
+                            <audio class="audio-player-elem" controls preload="none">
+                                <source src="WhatsApp Audio 2026-08-24 at 21.45.37.mpeg" type="audio/mpeg">
+                            </audio>
+                        </div>
+
+                        <!-- Track 4 -->
+                        <div class="audio-track-card">
+                            <div class="audio-track-top">
+                                <div class="audio-track-name">
+                                    <i data-lucide="volume-2" style="width:16px; color:var(--saffron-primary);"></i>
+                                    <span>பகுதி 4: WhatsApp Audio (21.45.38 - 1)</span>
+                                </div>
+                                <span class="audio-track-size">10.2 MB</span>
+                            </div>
+                            <audio class="audio-player-elem" controls preload="none">
+                                <source src="WhatsApp Audio 2026-08-24 at 21.45.38 (1).mpeg" type="audio/mpeg">
+                            </audio>
+                        </div>
+
+                        <!-- Track 5 -->
+                        <div class="audio-track-card">
+                            <div class="audio-track-top">
+                                <div class="audio-track-name">
+                                    <i data-lucide="volume-2" style="width:16px; color:var(--saffron-primary);"></i>
+                                    <span>பகுதி 5: WhatsApp Audio (21.45.38 - 2)</span>
+                                </div>
+                                <span class="audio-track-size">12.6 MB</span>
+                            </div>
+                            <audio class="audio-player-elem" controls preload="none">
+                                <source src="WhatsApp Audio 2026-08-24 at 21.45.38 (2).mpeg" type="audio/mpeg">
+                            </audio>
+                        </div>
+
+                        <!-- Track 6 -->
+                        <div class="audio-track-card">
+                            <div class="audio-track-top">
+                                <div class="audio-track-name">
+                                    <i data-lucide="volume-2" style="width:16px; color:var(--saffron-primary);"></i>
+                                    <span>பகுதி 6: WhatsApp Audio (21.45.38)</span>
+                                </div>
+                                <span class="audio-track-size">12.7 MB</span>
+                            </div>
+                            <audio class="audio-player-elem" controls preload="none">
+                                <source src="WhatsApp Audio 2026-08-24 at 21.45.38.mpeg" type="audio/mpeg">
+                            </audio>
+                        </div>
+
+                        <!-- Track 7 -->
+                        <div class="audio-track-card">
+                            <div class="audio-track-top">
+                                <div class="audio-track-name">
+                                    <i data-lucide="volume-2" style="width:16px; color:var(--saffron-primary);"></i>
+                                    <span>பகுதி 7: WhatsApp Audio (21.49.43)</span>
+                                </div>
+                                <span class="audio-track-size">4.9 MB</span>
+                            </div>
+                            <audio class="audio-player-elem" controls preload="none">
+                                <source src="WhatsApp Audio 2026-08-24 at 21.49.43.mpeg" type="audio/mpeg">
+                            </audio>
+                        </div>
+
+                        <!-- Track 8 -->
+                        <div class="audio-track-card">
+                            <div class="audio-track-top">
+                                <div class="audio-track-name">
+                                    <i data-lucide="volume-2" style="width:16px; color:var(--saffron-primary);"></i>
+                                    <span>பகுதி 8: WhatsApp Audio (21.56.39)</span>
+                                </div>
+                                <span class="audio-track-size">12.8 MB</span>
+                            </div>
+                            <audio class="audio-player-elem" controls preload="none">
+                                <source src="WhatsApp Audio 2026-08-24 at 21.56.39.mpeg" type="audio/mpeg">
+                            </audio>
+                        </div>
+
+                        <!-- Track 9 -->
+                        <div class="audio-track-card">
+                            <div class="audio-track-top">
+                                <div class="audio-track-name">
+                                    <i data-lucide="volume-2" style="width:16px; color:var(--saffron-primary);"></i>
+                                    <span>பகுதி 9: WhatsApp Audio (21.59.45)</span>
+                                </div>
+                                <span class="audio-track-size">6.0 MB</span>
+                            </div>
+                            <audio class="audio-player-elem" controls preload="none">
+                                <source src="WhatsApp Audio 2026-08-24 at 21.59.45.mpeg" type="audio/mpeg">
+                            </audio>
+                        </div>
+
+                        <!-- Track 10 -->
+                        <div class="audio-track-card">
+                            <div class="audio-track-top">
+                                <div class="audio-track-name">
+                                    <i data-lucide="volume-2" style="width:16px; color:var(--saffron-primary);"></i>
+                                    <span>பகுதி 10: WhatsApp Audio (22.04.53)</span>
+                                </div>
+                                <span class="audio-track-size">8.3 MB</span>
+                            </div>
+                            <audio class="audio-player-elem" controls preload="none">
+                                <source src="WhatsApp Audio 2026-08-24 at 22.04.53.mpeg" type="audio/mpeg">
+                            </audio>
+                        </div>
+
+                        <!-- Track 11 -->
+                        <div class="audio-track-card">
+                            <div class="audio-track-top">
+                                <div class="audio-track-name">
+                                    <i data-lucide="volume-2" style="width:16px; color:var(--saffron-primary);"></i>
+                                    <span>பகுதி 11: WhatsApp Audio (22.05.07)</span>
+                                </div>
+                                <span class="audio-track-size">8.5 MB</span>
+                            </div>
+                            <audio class="audio-player-elem" controls preload="none">
+                                <source src="WhatsApp Audio 2026-08-24 at 22.05.07.mpeg" type="audio/mpeg">
+                            </audio>
+                        </div>
+
+                        <!-- Track 12 -->
+                        <div class="audio-track-card">
+                            <div class="audio-track-top">
+                                <div class="audio-track-name">
+                                    <i data-lucide="volume-2" style="width:16px; color:var(--saffron-primary);"></i>
+                                    <span>பகுதி 12: WhatsApp Audio (22.05.09)</span>
+                                </div>
+                                <span class="audio-track-size">2.5 MB</span>
+                            </div>
+                            <audio class="audio-player-elem" controls preload="none">
+                                <source src="WhatsApp Audio 2026-08-24 at 22.05.09.mpeg" type="audio/mpeg">
+                            </audio>
+                        </div>
+
+                        <!-- Track 13 -->
+                        <div class="audio-track-card">
+                            <div class="audio-track-top">
+                                <div class="audio-track-name">
+                                    <i data-lucide="volume-2" style="width:16px; color:var(--saffron-primary);"></i>
+                                    <span>பகுதி 13: WhatsApp Audio (22.06.18)</span>
+                                </div>
+                                <span class="audio-track-size">11.1 MB</span>
+                            </div>
+                            <audio class="audio-player-elem" controls preload="none">
+                                <source src="WhatsApp Audio 2026-08-24 at 22.06.18.mpeg" type="audio/mpeg">
+                            </audio>
+                        </div>
+
+                        <!-- Track 14 -->
+                        <div class="audio-track-card">
+                            <div class="audio-track-top">
+                                <div class="audio-track-name">
+                                    <i data-lucide="volume-2" style="width:16px; color:var(--saffron-primary);"></i>
+                                    <span>பகுதி 14: WhatsApp Audio (22.06.43 - 1)</span>
+                                </div>
+                                <span class="audio-track-size">9.7 MB</span>
+                            </div>
+                            <audio class="audio-player-elem" controls preload="none">
+                                <source src="WhatsApp Audio 2026-08-24 at 22.06.43 (1).mpeg" type="audio/mpeg">
+                            </audio>
+                        </div>
+
+                        <!-- Track 15 -->
+                        <div class="audio-track-card">
+                            <div class="audio-track-top">
+                                <div class="audio-track-name">
+                                    <i data-lucide="volume-2" style="width:16px; color:var(--saffron-primary);"></i>
+                                    <span>பகுதி 15: WhatsApp Audio (22.06.43)</span>
+                                </div>
+                                <span class="audio-track-size">9.7 MB</span>
+                            </div>
+                            <audio class="audio-player-elem" controls preload="none">
+                                <source src="WhatsApp Audio 2026-08-24 at 22.06.43.mpeg" type="audio/mpeg">
+                            </audio>
+                        </div>
+
+                        <!-- Track 16 -->
+                        <div class="audio-track-card">
+                            <div class="audio-track-top">
+                                <div class="audio-track-name">
+                                    <i data-lucide="volume-2" style="width:16px; color:var(--saffron-primary);"></i>
+                                    <span>பகுதி 16: WhatsApp Audio (22.06.44)</span>
+                                </div>
+                                <span class="audio-track-size">12.5 MB</span>
+                            </div>
+                            <audio class="audio-player-elem" controls preload="none">
+                                <source src="WhatsApp Audio 2026-08-24 at 22.06.44.mpeg" type="audio/mpeg">
+                            </audio>
+                        </div>
+
+                        <!-- Track 17 -->
+                        <div class="audio-track-card">
+                            <div class="audio-track-top">
+                                <div class="audio-track-name">
+                                    <i data-lucide="volume-2" style="width:16px; color:var(--saffron-primary);"></i>
+                                    <span>பகுதி 17: WhatsApp Audio (22.06.46)</span>
+                                </div>
+                                <span class="audio-track-size">13.9 MB</span>
+                            </div>
+                            <audio class="audio-player-elem" controls preload="none">
+                                <source src="WhatsApp Audio 2026-08-24 at 22.06.46.mpeg" type="audio/mpeg">
+                            </audio>
+                        </div>
+
+                        <!-- Track 18 -->
+                        <div class="audio-track-card">
+                            <div class="audio-track-top">
+                                <div class="audio-track-name">
+                                    <i data-lucide="volume-2" style="width:16px; color:var(--saffron-primary);"></i>
+                                    <span>பகுதி 18: WhatsApp Audio (22.07.08)</span>
+                                </div>
+                                <span class="audio-track-size">14.7 MB</span>
+                            </div>
+                            <audio class="audio-player-elem" controls preload="none">
+                                <source src="WhatsApp Audio 2026-08-24 at 22.07.08.mpeg" type="audio/mpeg">
+                            </audio>
+                        </div>
+
+                        <!-- Track 19 -->
+                        <div class="audio-track-card">
+                            <div class="audio-track-top">
+                                <div class="audio-track-name">
+                                    <i data-lucide="volume-2" style="width:16px; color:var(--saffron-primary);"></i>
+                                    <span>பகுதி 19: WhatsApp Audio (22.07.40)</span>
+                                </div>
+                                <span class="audio-track-size">25.0 MB</span>
+                            </div>
+                            <audio class="audio-player-elem" controls preload="none">
+                                <source src="WhatsApp Audio 2026-08-24 at 22.07.40.mpeg" type="audio/mpeg">
+                            </audio>
+                        </div>
+
+                    </div>
+                </div>
+
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <i data-lucide="sparkles" style="color:var(--saffron-primary);"></i>
+                <span>நம்ம சாமி நம்ம கோவில் • Program Brief</span>
+            </div>
+            <p>
+                நமது முன்னோர்களின் அரிய சிந்தனைகளையும், கோவில் அமைப்பின் மகத்துவங்களையும் பேணிப் பாதுகாத்து, வருங்காலத் தலைமுறையினரை நல்வழிப்படுத்துவோம்.
+            </p>
+            <div style="font-size:0.78rem; color:var(--text-dim);">
+                NSNK Program Briefing Portal • Created for Namma Sami Namma Kovil
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification for Copy -->
+    <div id="toast" style="position:fixed; bottom:24px; right:24px; background:#10b981; color:#fff; padding:10px 18px; border-radius:var(--radius-sm); font-size:0.9rem; font-weight:600; display:none; z-index:9999; box-shadow:var(--shadow-md);">
+        பாடல் வரிகள் நகலெடுக்கப்பட்டன! (Copied to Clipboard)
+    </div>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Reading Progress Indicator
+        window.addEventListener('scroll', () => {
+            const docElem = document.documentElement;
+            const scrollTop = docElem.scrollTop || document.body.scrollTop;
+            const scrollHeight = docElem.scrollHeight - docElem.clientHeight;
+            const scrollPercent = (scrollTop / scrollHeight) * 100;
+            document.getElementById('read-progress').style.width = scrollPercent + '%';
+
+            // Update TOC active state
+            updateActiveToc();
+        });
+
+        // Theme Switcher (Dark -> Temple Gold -> Light)
+        const themes = ['dark', 'temple', 'light'];
+        let currentThemeIndex = 0;
+
+        function cycleTheme() {
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+            const newTheme = themes[currentThemeIndex];
+            if (newTheme === 'dark') {
+                document.documentElement.removeAttribute('data-theme');
+            } else {
+                document.documentElement.setAttribute('data-theme', newTheme);
+            }
+        }
+
+        // Font Size Adjuster
+        let baseFontSize = 16;
+        function changeFontSize(delta) {
+            baseFontSize = Math.min(Math.max(baseFontSize + delta, 13), 22);
+            document.documentElement.style.fontSize = baseFontSize + 'px';
+        }
+
+        // Copy Tamil Verse to Clipboard
+        function copyVerse(elemId) {
+            const elem = document.getElementById(elemId);
+            if (!elem) return;
+            const text = elem.innerText || elem.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const toast = document.getElementById('toast');
+                toast.style.display = 'block';
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                }, 2500);
+            });
+        }
+
+        // Real-time Search Filter
+        function filterContent() {
+            const query = document.getElementById('live-search').value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.concept-card, .verse-box, .feature-item, .callout-box');
+            
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (!query || text.includes(query)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Highlight Active Table of Contents Link
+        function updateActiveToc() {
+            const sections = document.querySelectorAll('.brief-section, .concept-card[id], .callout-box[id], .verse-box[id]');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            let currentActiveId = '';
+
+            const scrollPos = window.scrollY + 140;
+
+            sections.forEach(sec => {
+                if (sec.offsetTop <= scrollPos) {
+                    currentActiveId = sec.getAttribute('id');
+                }
+            });
+
+            if (currentActiveId) {
+                tocLinks.forEach(link => {
+                    if (link.getAttribute('href') === '#' + currentActiveId) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
