@@ -2249,6 +2249,25 @@ ${allTracksHtml}
                         </a>
                     </div>
 
+                    <!-- TRAINING PROGRAM AGENDA POSTER -->
+                    <div class="resource-card" style="border: 2px solid #6366f1; background: rgba(99, 102, 241, 0.08); grid-column: 1 / -1;">
+                        <div class="resource-info">
+                            <div class="resource-icon-badge" style="background: linear-gradient(135deg, #4f46e5, #4338ca); color: #fff; font-weight: 800; padding: 0 16px;">AGENDA POSTER</div>
+                            <div class="resource-text">
+                                <h4 style="color: #a5b4fc; font-size: 1.25rem;">பயிற்சிப் பட்டறை கால அட்டவணை — உயர் தெளிவு விளக்கப் படம் (Training Program Agenda Poster)</h4>
+                                <span>3 மணி நேர முழுப் பயிற்சித் திட்டம் • 14 கட்டங்கள் • A4/A3 Print Ready High-Res PNG • 1.2 MB</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                            <a href="Training_Program_Agenda_Posters.png" target="_blank" class="btn-view-doc" style="background: #6366f1; color: #fff; font-weight: 800; font-size: 0.95rem; padding: 10px 20px;">
+                                <i data-lucide="image" style="width:18px; height:18px;"></i> அட்டவணைப் படத்தைப் பார் (HD PNG)
+                            </a>
+                            <a href="Training-Program-Agenda.jpeg" target="_blank" class="btn-view-doc" style="border-color: #6366f1; color: #c7d2fe; font-size: 0.95rem; padding: 10px 16px;">
+                                <i data-lucide="file-image" style="width:16px; height:16px;"></i> மூல கையெழுத்துப் பிரதி
+                            </a>
+                        </div>
+                    </div>
+
                     <!-- 12 Giant Printable Infographic Poster Sheets (A4/A3 Ready) -->
                     <div style="grid-column: 1 / -1; margin-top: 10px; margin-bottom: 6px;">
                         <h3 style="color: var(--saffron-primary); font-size: 1.25rem; display: flex; align-items: center; gap: 8px;">
