@@ -8,3 +8,8 @@ node_modules/
 meanings_cache.json
 
 chrome/
+
+# Environment variables
+.env
+.env.*
+

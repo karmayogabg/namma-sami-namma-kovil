@@ -936,7 +936,7 @@ ${topListText}
 👉 *View Live Report & Interactive Graphs*:
 ${reportUrl}
 
-Shared via Namma Sami Namma Kovil Reports Hub (v10.1)`;
+Shared via Namma Sami Namma Kovil Reports Hub (v10.2)`;
 
         // 1. Capture High-Res Canvas Image of Graph + Summary Table
         const captureArea = document.getElementById('report-capture-area');
