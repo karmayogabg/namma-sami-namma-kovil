@@ -2109,6 +2109,30 @@ const htmlContent = `<!DOCTYPE html>
                             </tfoot>
                         </table>
                     </div>
+
+                    <!-- Embedded Agenda Poster Image Viewer -->
+                    <div style="margin-top: 24px; text-align: center; background: rgba(0,0,0,0.2); padding: 18px; border-radius: 12px; border: 1px solid rgba(245,158,11,0.25);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px; text-align:left;">
+                            <div>
+                                <h4 style="color:var(--saffron-primary); margin:0; font-size:1.1rem; display:flex; align-items:center; gap:8px;">
+                                    <i data-lucide="image" style="width:18px; height:18px;"></i>
+                                    பயிற்சிப் பட்டறை விளக்கப் படம் (Agenda Poster Preview)
+                                </h4>
+                                <span style="font-size:0.82rem; color:var(--text-muted);">உயர் தெளிவு அச்சுப் படம் (A4/A3 Print Ready HD PNG)</span>
+                            </div>
+                            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                                <a href="Training_Program_Agenda_Posters.png" target="_blank" class="btn-view-doc" style="background:var(--saffron-primary); color:#000; font-weight:700; font-size:0.85rem; padding:8px 16px;">
+                                    <i data-lucide="maximize-2" style="width:15px; height:15px;"></i> முழு அளவில் காண்க (Full HD)
+                                </a>
+                                <a href="Training_Program_Agenda_Posters.png" download="NSNK_Training_Program_Agenda_Poster.png" class="btn-view-doc" style="border-color:var(--saffron-primary); color:var(--saffron-primary); font-size:0.85rem; padding:8px 14px;">
+                                    <i data-lucide="download" style="width:15px; height:15px;"></i> பதிவிறக்கு
+                                </a>
+                            </div>
+                        </div>
+                        <a href="Training_Program_Agenda_Posters.png" target="_blank" title="கிளிக் செய்து முழு அளவில் பார்க்கவும்">
+                            <img src="Training_Program_Agenda_Posters.png" alt="நம்ம சாமி நம்ம கோவில் - பயிற்சிப் பட்டறை கால அட்டவணை" style="max-width: 100%; height: auto; max-height: 850px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.35); border: 2px solid rgba(245,158,11,0.3); transition: transform 0.25s ease;" onmouseover="this.style.transform='scale(1.01)'" onmouseout="this.style.transform='scale(1)'">
+                        </a>
+                    </div>
                 </div>
 
             </section>
