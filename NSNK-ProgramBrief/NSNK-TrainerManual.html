@@ -1,0 +1,2059 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>நம்ம சாமி நம்ம கோவில் — பயிற்றுநர் வழிகாட்டிக் கையேடு (Trainer Instruction Manual)</title>
+    <meta name="description" content="நம்ம சாமி நம்ம கோவில் அதிகாரப்பூர்வ பயிற்றுநர் வழிகாட்டிக் கையேடு: நம்ம, நம்ம சாமி, நம்ம கோவில் சுருக்கக் குறிப்புகள், ஊடாடும் குழுச் செயல்பாடுகள், 180 நிமிடப் பயிற்சி அட்டவணை மற்றும் கள ஆய்வு நெறிமுறைகள்.">
+    
+    <!-- Google Fonts for Tamil and English Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Mukta+Malar:wght@400;500;600;700;800&family=Noto+Sans+Tamil:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        :root {
+            --bg-base: #0a0e17;
+            --bg-surface: #111827;
+            --bg-card: #182234;
+            --bg-card-hover: #1f2d45;
+            --border-color: rgba(255, 255, 255, 0.09);
+            --border-focus: rgba(245, 158, 11, 0.6);
+            
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            
+            /* Cultural Theme Palette */
+            --saffron-primary: #f59e0b;
+            --saffron-dark: #d97706;
+            --saffron-glow: rgba(245, 158, 11, 0.25);
+            --maroon-accent: #e11d48;
+            --gold-accent: #fbbf24;
+            --teal-accent: #0d9488;
+            --indigo-accent: #6366f1;
+            
+            --font-tamil: 'Mukta Malar', 'Noto Sans Tamil', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-heading: 'Cinzel', 'Mukta Malar', serif;
+            --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 10px 30px -8px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 20px 45px -10px rgba(0, 0, 0, 0.7);
+        }
+
+        [data-theme="temple"] {
+            --bg-base: #130a04;
+            --bg-surface: #201207;
+            --bg-card: #2d1a0b;
+            --bg-card-hover: #3d230e;
+            --border-color: rgba(251, 191, 36, 0.18);
+            --text-main: #fffbeb;
+            --text-muted: #d6bb9e;
+            --text-dim: #9a7d61;
+            --saffron-primary: #f59e0b;
+            --saffron-dark: #b45309;
+            --saffron-glow: rgba(245, 158, 11, 0.35);
+        }
+
+        [data-theme="light"] {
+            --bg-base: #f8fafc;
+            --bg-surface: #ffffff;
+            --bg-card: #f1f5f9;
+            --bg-card-hover: #e2e8f0;
+            --border-color: #cbd5e1;
+            --border-focus: #f59e0b;
+            --text-main: #0f172a;
+            --text-muted: #334155;
+            --text-dim: #64748b;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 16px 36px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: var(--font-tamil);
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            line-height: 1.8;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Reading Progress Bar */
+        #read-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            width: 0%;
+            background: linear-gradient(90deg, #f59e0b, #ef4444, #10b981, #6366f1);
+            z-index: 10000;
+            transition: width 0.1s linear;
+        }
+
+        /* Header Navbar */
+        .header-nav {
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            background: rgba(17, 24, 39, 0.95);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="temple"] .header-nav {
+            background: rgba(32, 18, 7, 0.95);
+        }
+
+        [data-theme="light"] .header-nav {
+            background: rgba(255, 255, 255, 0.96);
+        }
+
+        .nav-container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .brand-box {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .brand-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f59e0b, #e11d48);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            box-shadow: 0 4px 16px var(--saffron-glow);
+        }
+
+        .brand-titles h1 {
+            font-size: 1.22rem;
+            font-weight: 800;
+            line-height: 1.2;
+            color: var(--text-main);
+        }
+
+        .brand-titles span {
+            font-size: 0.74rem;
+            font-family: var(--font-sans);
+            color: var(--saffron-primary);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            list-style: none;
+        }
+
+        .nav-link {
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--saffron-primary);
+            background: rgba(245, 158, 11, 0.12);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            background: var(--bg-surface);
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--saffron-primary);
+            color: var(--saffron-primary);
+            transform: translateY(-2px);
+        }
+
+        .btn-subnav {
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.84rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            border: 1px solid var(--border-color);
+            background: var(--bg-surface);
+            color: var(--text-main);
+        }
+
+        .btn-subnav:hover {
+            border-color: var(--saffron-primary);
+            color: var(--saffron-primary);
+        }
+
+        .btn-print-master {
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #000;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3);
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-print-master:hover {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Banner */
+        .hero-section {
+            background: linear-gradient(180deg, rgba(245, 158, 11, 0.1) 0%, transparent 100%);
+            border-bottom: 1px solid var(--border-color);
+            padding: 44px 24px 32px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 18px;
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            border-radius: 999px;
+            color: var(--saffron-primary);
+            font-size: 0.88rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .hero-title {
+            font-size: 2.6rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 12px;
+            line-height: 1.25;
+            color: var(--text-main);
+        }
+
+        .hero-subtitle {
+            font-size: 1.12rem;
+            color: var(--text-muted);
+            max-width: 880px;
+            margin: 0 auto 26px;
+            line-height: 1.75;
+        }
+
+        .hero-quick-jumps {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .jump-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 18px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+
+        .jump-pill:hover {
+            border-color: var(--saffron-primary);
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--saffron-primary);
+            transform: translateY(-2px);
+        }
+
+        .jump-pill.namma:hover { border-color: #f59e0b; color: #f59e0b; }
+        .jump-pill.sami:hover { border-color: #f43f5e; color: #f43f5e; }
+        .jump-pill.kovil:hover { border-color: #14b8a6; color: #14b8a6; }
+        .jump-pill.survey:hover { border-color: #6366f1; color: #6366f1; }
+
+        /* Main Layout */
+        .main-wrapper {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 36px 24px;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 36px;
+            flex: 1;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .sidebar-sticky {
+            position: sticky;
+            top: 86px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .sidebar-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 20px;
+        }
+
+        .sidebar-title {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 12px;
+        }
+
+        .toc-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .toc-list a {
+            display: block;
+            padding: 6px 10px;
+            border-radius: var(--radius-sm);
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            line-height: 1.4;
+        }
+
+        .toc-list a:hover, .toc-list a.active {
+            color: var(--saffron-primary);
+            background: rgba(245, 158, 11, 0.1);
+            border-left-color: var(--saffron-primary);
+        }
+
+        /* Section Layouts */
+        .manual-section {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            padding: 36px 32px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Section Grand Banner */
+        .section-banner {
+            border-radius: var(--radius-lg);
+            padding: 24px 28px;
+            margin-bottom: 28px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .banner-agenda {
+            background: linear-gradient(135deg, #1e1b4b, #312e81);
+            border: 2px solid #6366f1;
+        }
+
+        .banner-namma {
+            background: linear-gradient(135deg, #78350f, #451a03);
+            border: 2px solid #f59e0b;
+        }
+
+        .banner-sami {
+            background: linear-gradient(135deg, #881337, #4c0519);
+            border: 2px solid #f43f5e;
+        }
+
+        .banner-kovil {
+            background: linear-gradient(135deg, #134e4a, #042f2e);
+            border: 2px solid #14b8a6;
+        }
+
+        .banner-survey {
+            background: linear-gradient(135deg, #064e3b, #022c22);
+            border: 2px solid #10b981;
+        }
+
+        .banner-cheatsheet {
+            background: linear-gradient(135deg, #374151, #1f2937);
+            border: 2px solid #9ca3af;
+        }
+
+        .banner-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 12px;
+            border-radius: 999px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.18);
+            color: #fff;
+        }
+
+        .banner-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.25;
+            margin-bottom: 4px;
+        }
+
+        .banner-desc {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.5;
+        }
+
+        .banner-icon-box {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        /* Subheadings */
+        .subheading {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 28px 0 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 8px;
+        }
+
+        /* Pointer Grid */
+        .pointer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .pointer-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .pointer-card:hover {
+            border-color: var(--border-focus);
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+        }
+
+        .pointer-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pointer-num {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--saffron-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .pointer-card h4 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .pointer-card p {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            line-height: 1.65;
+        }
+
+        /* Trainer Script / Quote Box */
+        .trainer-say-box {
+            background: rgba(99, 102, 241, 0.07);
+            border-left: 4px solid var(--indigo-accent);
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            padding: 16px 20px;
+            margin: 20px 0;
+        }
+
+        .trainer-say-label {
+            font-size: 0.84rem;
+            font-weight: 800;
+            color: #a5b4fc;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .trainer-say-text {
+            font-size: 0.95rem;
+            color: var(--text-main);
+            line-height: 1.7;
+        }
+
+        /* Shloka Box */
+        .verse-box {
+            background: rgba(245, 158, 11, 0.05);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .verse-text {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fef08a;
+            line-height: 1.8;
+            white-space: pre-line;
+            margin-bottom: 8px;
+        }
+
+        .verse-meaning {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            line-height: 1.65;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 10px;
+        }
+
+        .btn-copy-verse {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-dim);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+            float: right;
+        }
+
+        .btn-copy-verse:hover {
+            color: var(--text-main);
+            border-color: var(--text-muted);
+        }
+
+        /* Workshop Activity Module within Topic */
+        .activity-feature-box {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.04), rgba(245, 158, 11, 0.01));
+            border: 2px dashed rgba(245, 158, 11, 0.35);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-top: 28px;
+        }
+
+        .activity-header-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .activity-title-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .activity-icon-badge {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: var(--saffron-primary);
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+        }
+
+        .activity-meta-badge {
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--saffron-primary);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .activity-steps-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .act-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .act-step-num {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 800;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .act-step-text {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .act-step-text strong {
+            color: var(--text-main);
+        }
+
+        .activity-debrief {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid #10b981;
+            padding: 12px 18px;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            margin-top: 16px;
+        }
+
+        .activity-debrief strong {
+            color: #6ee7b7;
+            font-size: 0.88rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .activity-debrief p {
+            font-size: 0.9rem;
+            color: var(--text-main);
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        /* Interactive 10-Minute Activity Timer */
+        .activity-timer-bar {
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .timer-display {
+            font-family: var(--font-sans);
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--saffron-primary);
+            background: rgba(0, 0, 0, 0.25);
+            padding: 4px 14px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            letter-spacing: 1px;
+        }
+
+        .timer-buttons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-act-timer {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-act-timer:hover {
+            border-color: var(--saffron-primary);
+            color: var(--saffron-primary);
+        }
+
+        /* Tables */
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92rem;
+            margin-top: 16px;
+        }
+
+        .custom-table th {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--saffron-primary);
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 2px solid rgba(245, 158, 11, 0.3);
+            font-weight: 700;
+        }
+
+        .custom-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .custom-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--text-main);
+        }
+
+        /* Mock Call Script Box */
+        .mock-call-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            margin: 20px 0;
+        }
+
+        .chat-exchange {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-top: 14px;
+        }
+
+        .chat-bubble {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .caller-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #6366f1;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .public-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #10b981;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .bubble-body {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 10px 16px;
+            font-size: 0.92rem;
+            color: var(--text-main);
+            line-height: 1.6;
+            flex: 1;
+        }
+
+        .bubble-speaker {
+            font-size: 0.76rem;
+            font-weight: 800;
+            color: var(--saffron-primary);
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        /* Cheat sheet quick table */
+        .cheat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 18px;
+        }
+
+        .cheat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 18px;
+        }
+
+        .cheat-card h5 {
+            font-size: 0.98rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: var(--saffron-primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .cheat-card ul {
+            padding-left: 18px;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.65;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border-color);
+            padding: 36px 24px;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Print Specific Styles (A4 Master Print Ready) */
+        @media print {
+            html, body {
+                background: #ffffff !important;
+                color: #0f172a !important;
+                font-size: 10pt !important;
+                line-height: 1.5 !important;
+            }
+
+            .header-nav, .sidebar, .hero-quick-jumps, .btn-print-master, .btn-icon, .btn-subnav, #read-progress, .activity-timer-bar, .btn-copy-verse {
+                display: none !important;
+            }
+
+            .main-wrapper {
+                display: block !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .manual-section {
+                border: none !important;
+                box-shadow: none !important;
+                padding: 16px 0 !important;
+                page-break-before: always !important;
+                break-before: page !important;
+            }
+
+            .section-banner {
+                padding: 12px 16px !important;
+                border-radius: 6px !important;
+                page-break-after: avoid !important;
+            }
+
+            .banner-title {
+                font-size: 14pt !important;
+                color: #fff !important;
+            }
+
+            .pointer-card, .verse-box, .trainer-say-box, .activity-feature-box, .mock-call-box, .cheat-card {
+                border: 1px solid #cbd5e1 !important;
+                background: #f8fafc !important;
+                color: #1e293b !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                margin-bottom: 12px !important;
+            }
+
+            .verse-text {
+                color: #991b1b !important;
+            }
+
+            .custom-table th {
+                background: #f1f5f9 !important;
+                color: #0f172a !important;
+            }
+
+            .custom-table td {
+                color: #334155 !important;
+                border-bottom: 1px solid #e2e8f0 !important;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .main-wrapper {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.1rem;
+            }
+            .manual-section {
+                padding: 22px 18px;
+            }
+            .pointer-grid, .cheat-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Reading Progress Bar -->
+    <div id="read-progress"></div>
+
+    <!-- Header Navbar -->
+    <header class="header-nav">
+        <div class="nav-container">
+            <a href="NSNK-ProgramBriefing.html" class="brand-box">
+                <div class="brand-icon">
+                    <i data-lucide="book-open-check" style="width:24px; height:24px;"></i>
+                </div>
+                <div class="brand-titles">
+                    <h1>நம்ம சாமி நம்ம கோவில்</h1>
+                    <span>பயிற்றுநர் வழிகாட்டிக் கையேடு (Trainer Instruction Manual)</span>
+                </div>
+            </a>
+
+            <!-- Navigation Links -->
+            <ul class="nav-links">
+                <li><a href="#agenda-180" class="nav-link"><i data-lucide="calendar-clock" style="width:16px;"></i> அட்டவணை</a></li>
+                <li><a href="#pillar-namma" class="nav-link"><i data-lucide="users" style="width:16px;"></i> தூண் 1: நம்ம</a></li>
+                <li><a href="#pillar-sami" class="nav-link"><i data-lucide="sparkles" style="width:16px;"></i> தூண் 2: நம்ம சாமி</a></li>
+                <li><a href="#pillar-kovil" class="nav-link"><i data-lucide="landmark" style="width:16px;"></i> தூண் 3: நம்ம கோவில்</a></li>
+                <li><a href="#survey-drill" class="nav-link"><i data-lucide="phone-call" style="width:16px;"></i> மாதிரி அழைப்பு</a></li>
+                <li><a href="#cheatsheet" class="nav-link"><i data-lucide="zap" style="width:16px;"></i> விரைவுக் குறிப்பு</a></li>
+            </ul>
+
+            <!-- Actions -->
+            <div class="nav-actions">
+                <a href="NSNK-ProgramBriefing.html" class="btn-subnav" title="திட்ட விளக்க முதன்மைப் பக்கம் (Program Briefing Portal)">
+                    <i data-lucide="external-link" style="width:14px; height:14px;"></i>
+                    <span>திட்ட கையேடு</span>
+                </a>
+                <a href="NSNK-WorkshopActivities.html" class="btn-subnav" title="குழுச் செயல்பாடுகள் கையேடு (Workshop Activities)">
+                    <i data-lucide="sparkles" style="width:14px; height:14px;"></i>
+                    <span>செயல்பாடுகள்</span>
+                </a>
+                <button class="btn-icon" id="font-dec-btn" title="எழுத்துருவைக் குறைக்க (Font -)" onclick="changeFontSize(-1)">
+                    <span style="font-weight:700; font-size:0.85rem;">A-</span>
+                </button>
+                <button class="btn-icon" id="font-inc-btn" title="எழுத்துருவை அதிகரிக்க (Font +)" onclick="changeFontSize(1)">
+                    <span style="font-weight:700; font-size:0.95rem;">A+</span>
+                </button>
+                <button class="btn-icon" id="theme-btn" title="வண்ண அமைப்பு (Theme)" onclick="cycleTheme()">
+                    <i data-lucide="palette" style="width:18px; height:18px;"></i>
+                </button>
+                <button class="btn-print-master" onclick="window.print()" title="அச்சுப் பிரதி / PDF (Print)">
+                    <i data-lucide="printer" style="width:16px; height:16px;"></i>
+                    <span>🖨️ A4 அச்சிடு</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Banner -->
+    <section class="hero-section" id="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i data-lucide="award" style="width:16px; height:16px;"></i>
+                பயிற்றுநர்களுக்கான அதிகாரப்பூர்வ பயிற்றுவிப்பு வழிகாட்டி (Master Trainer Playbook)
+            </div>
+            <h1 class="hero-title">பயிற்றுநர் வழிகாட்டிக் கையேடு</h1>
+            <p class="hero-subtitle">
+                3 மணி நேர (180 நிமிடங்கள்) பயிற்சிப் பட்டறையை வழிநடத்தும் பயிற்றுநர்கள் வகுப்பறையில் எளிமையாகக் கையாள வேண்டிய <strong>சுருக்கக் குறிப்புகள் (Brief Pointers)</strong>, ஒவ்வொரு தலைப்பிற்குமான <strong>ஊடாடும் குழுச் செயல்பாடுகள் (Interactive Activities)</strong> மற்றும் <strong>கள ஆய்வு மாதிரிப் பயிற்சிகள்</strong>.
+            </p>
+
+            <div class="hero-quick-jumps">
+                <a href="#agenda-180" class="jump-pill">
+                    <i data-lucide="clock" style="width:15px; height:15px;"></i>
+                    <span>180 நிமிட அட்டவணை</span>
+                </a>
+                <a href="#pillar-namma" class="jump-pill namma">
+                    <i data-lucide="users" style="width:15px; height:15px; color:#f59e0b;"></i>
+                    <span>தூண் 1: நம்ம (குறிப்புகள் + செயல்பாடு)</span>
+                </a>
+                <a href="#pillar-sami" class="jump-pill sami">
+                    <i data-lucide="sparkles" style="width:15px; height:15px; color:#f43f5e;"></i>
+                    <span>தூண் 2: நம்ம சாமி (குறிப்புகள் + செயல்பாடு)</span>
+                </a>
+                <a href="#pillar-kovil" class="jump-pill kovil">
+                    <i data-lucide="landmark" style="width:15px; height:15px; color:#14b8a6;"></i>
+                    <span>தூண் 3: நம்ம கோவில் (குறிப்புகள் + செயல்பாடு)</span>
+                </a>
+                <a href="#survey-drill" class="jump-pill survey">
+                    <i data-lucide="phone-call" style="width:15px; height:15px; color:#10b981;"></i>
+                    <span>கள ஆய்வு மாதிரி அழைப்பு</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Wrapper -->
+    <main class="main-wrapper">
+
+        <!-- Sidebar / TOC -->
+        <aside class="sidebar">
+            <div class="sidebar-sticky">
+                <div class="sidebar-card">
+                    <div class="sidebar-title">
+                        <i data-lucide="list-checks" style="color:var(--saffron-primary);"></i>
+                        <span>கையேட்டின் பகுதிகள்</span>
+                    </div>
+                    <ul class="toc-list">
+                        <li><a href="#agenda-180">• 1. 180 நிமிடப் பயிற்சி அட்டவணை</a></li>
+                        <li><a href="#pillar-namma">• 2. தூண் 1: நம்ம (சுய அடையாளம்)</a></li>
+                        <li><a href="#namma-activity" style="padding-left:18px;">— 10 நிமிட செயல்பாடு: 4-Corner ID</a></li>
+                        <li><a href="#pillar-sami">• 3. தூண் 2: நம்ம சாமி (தத்துவம்)</a></li>
+                        <li><a href="#sami-activity" style="padding-left:18px;">— 10 நிமிட செயல்பாடு: கரதர்சனம் & 3 நிலைகள்</a></li>
+                        <li><a href="#pillar-kovil">• 4. தூண் 3: நம்ம கோவில் (அறிவியல்)</a></li>
+                        <li><a href="#kovil-activity" style="padding-left:18px;">— 10 நிமிட செயல்பாடு: 10 தூண்கள் கூரை</a></li>
+                        <li><a href="#survey-drill">• 5. கள ஆய்வு மாதிரி அழைப்பு பயிற்சி</a></li>
+                        <li><a href="#cheatsheet">• 6. பயிற்றுநர் நினைவூட்டல் & FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div class="sidebar-card" style="background:rgba(245,158,11,0.05); border-color:rgba(245,158,11,0.2);">
+                    <h4 style="font-size:0.88rem; color:var(--saffron-primary); margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+                        <i data-lucide="lightbulb" style="width:16px; height:16px;"></i> பயிற்றுநர் பொன்விதி
+                    </h4>
+                    <p style="font-size:0.84rem; color:var(--text-muted); line-height:1.55;">
+                        "விவாதத்தைத் தர்க்கமாக மாற்றாமல் மெய்ஞ்ஞான உணர்வாகவும், பெருமிதமாகவும் மாற்றுவதே சிறந்த பயிற்றுநரின் கலை!"
+                    </p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <div class="content-area">
+
+            <!-- ========================================================= -->
+            <!-- SECTION 1: 180-MINUTE WORKSHOP MASTER AGENDA -->
+            <!-- ========================================================= -->
+            <section class="manual-section" id="agenda-180">
+                <div class="section-banner banner-agenda">
+                    <div>
+                        <div class="banner-badge">பகுதி 1 • நேர மேலாண்மை</div>
+                        <h2 class="banner-title">180 நிமிடப் பயிற்சிப் பட்டறை கால அட்டவணை</h2>
+                        <p class="banner-desc">அனைத்து 14 கட்டங்களின் துல்லியமான நேரப் பகிர்வு, பயிற்றுநரின் பேச்சு மற்றும் பங்கேற்பாளர் செயல்பாடு.</p>
+                    </div>
+                    <div class="banner-icon-box">
+                        <i data-lucide="calendar-clock" style="width:32px; height:32px;"></i>
+                    </div>
+                </div>
+
+                <p style="color:var(--text-muted); font-size:0.96rem; margin-bottom:16px;">
+                    பயிற்றுநர் ஒவ்வொரு கட்டத்திற்கும் ஒதுக்கப்பட்டுள்ள நேர வரம்பைக் கச்சிதமாகப் பின்பற்றுவது வகுப்பறையின் உற்சாகத்தைத் தக்கவைக்க உதவும்:
+                </p>
+
+                <div style="overflow-x:auto;">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th style="width:60px;">கட்டம்</th>
+                                <th style="width:200px;">நிகழ்ச்சி / செயல்பாடு</th>
+                                <th style="width:100px;">நேரம்</th>
+                                <th>பயிற்றுநர் வழிகாட்டல் & முக்கிய நோக்கம்</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight:700; color:var(--saffron-primary);">1</td>
+                                <td style="font-weight:700; color:var(--text-main);">பிரார்த்தனை (Prayer)</td>
+                                <td style="color:#fbbf24; font-weight:700;">5 நிமிடம்</td>
+                                <td>அமைதியான இறை வணக்கம். வகுப்பில் ஆன்மீக நல்லதிர்வை உருவாக்குதல்.</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:700; color:var(--saffron-primary);">2</td>
+                                <td style="font-weight:700; color:var(--text-main);">சுய அறிமுகம் (Self Intro)</td>
+                                <td style="color:#fbbf24; font-weight:700;">15 நிமிடம்</td>
+                                <td>பங்கேற்பாளர்கள் தங்களது பெயர், சொந்த ஊர், ஆர்வத்தைப் பகிர்ந்துகொள்ளுதல்.</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:700; color:var(--saffron-primary);">3</td>
+                                <td style="font-weight:700; color:var(--text-main);">திட்ட நோக்கம் (Program Motto)</td>
+                                <td style="color:#fbbf24; font-weight:700;">15 நிமிடம்</td>
+                                <td>நம்ம சாமி நம்ம கோவில் இயக்கத்தின் பின்னணி மற்றும் பண்பாட்டு மீட்டெடுப்பு.</td>
+                            </tr>
+                            <tr style="background:rgba(245,158,11,0.05);">
+                                <td style="font-weight:700; color:#fbbf24;">4</td>
+                                <td style="font-weight:700; color:#fbbf24;">தலைப்பு 1: நம்ம (விளக்கம்)</td>
+                                <td style="color:#fbbf24; font-weight:700;">20 நிமிடம்</td>
+                                <td>தாய்மொழி, வணக்கம், உடை, வானியல், குடும்பம், உறவுகள், பஞ்சாங்கம் பற்றிய சுருக்கக் குறிப்புகள்.</td>
+                            </tr>
+                            <tr style="background:rgba(245,158,11,0.05);">
+                                <td style="font-weight:700; color:#fbbf24;">5</td>
+                                <td style="font-weight:700; color:#fbbf24;">தலைப்பு 1: குழுச் செயல்பாடு</td>
+                                <td style="color:#fbbf24; font-weight:700;">10 நிமிடம்</td>
+                                <td>தங்க அடையாள அட்டை (4-Corner ID) செயல்முறைப் பயிற்சி.</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:700; color:#38bdf8;">6</td>
+                                <td style="font-weight:700; color:#38bdf8;">☕ தேநீர் இடைவேளை (Tea Break)</td>
+                                <td style="color:#38bdf8; font-weight:700;">15 நிமிடம்</td>
+                                <td>நட்புறவுப் பகிர்வு & புத்துணர்ச்சி.</td>
+                            </tr>
+                            <tr style="background:rgba(244,63,94,0.05);">
+                                <td style="font-weight:700; color:#fda4af;">7</td>
+                                <td style="font-weight:700; color:#fda4af;">தலைப்பு 2: நம்ம சாமி (விளக்கம்)</td>
+                                <td style="color:#fda4af; font-weight:700;">20 நிமிடம்</td>
+                                <td>சாமி தத்துவம், கரதர்சனம், ராமகிருஷ்ணர் கதை, யானை கதை, 3 நிலைகள் (குல, கிராம, இஷ்ட தெய்வம்).</td>
+                            </tr>
+                            <tr style="background:rgba(244,63,94,0.05);">
+                                <td style="font-weight:700; color:#fda4af;">8</td>
+                                <td style="font-weight:700; color:#fda4af;">தலைப்பு 2: குழுச் செயல்பாடு</td>
+                                <td style="color:#fda4af; font-weight:700;">10 நிமிடம்</td>
+                                <td>கரதர்சனம் ஸ்லோகம் & உள்ளிருக்கும் நாணயம் பரிசோதனை.</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:700; color:var(--text-dim);">9</td>
+                                <td style="color:var(--text-dim);">சிறிய இடைவேளை (Short Break)</td>
+                                <td style="color:var(--text-dim);">5 நிமிடம்</td>
+                                <td>சுருக்கமான ஆசுவாசம்.</td>
+                            </tr>
+                            <tr style="background:rgba(20,184,166,0.05);">
+                                <td style="font-weight:700; color:#5eead4;">10</td>
+                                <td style="font-weight:700; color:#5eead4;">தலைப்பு 3: நம்ம கோவில் (விளக்கம்)</td>
+                                <td style="color:#5eead4; font-weight:700;">20 நிமிடம்</td>
+                                <td>சொல்லிலக்கணம், 5 வடிவங்கள், திருமூலர் பாடல், மூர்த்தி-தலம்-தீர்த்தம், 10 சமுதாயப் பெருமைகள்.</td>
+                            </tr>
+                            <tr style="background:rgba(20,184,166,0.05);">
+                                <td style="font-weight:700; color:#5eead4;">11</td>
+                                <td style="font-weight:700; color:#5eead4;">தலைப்பு 3: குழுச் செயல்பாடு</td>
+                                <td style="color:#5eead4; font-weight:700;">10 நிமிடம்</td>
+                                <td>10 தூண்கள் தாங்கும் சமுதாயக் கூரை மாதிரி செயல்முறை.</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:700; color:var(--text-dim);">12</td>
+                                <td style="color:var(--text-dim);">சிறிய இடைவேளை (Short Break)</td>
+                                <td style="color:var(--text-dim);">5 நிமிடம்</td>
+                                <td>சுருக்கமான ஆசுவாசம்.</td>
+                            </tr>
+                            <tr style="background:rgba(99,102,241,0.05);">
+                                <td style="font-weight:700; color:#a5b4fc;">13</td>
+                                <td style="font-weight:700; color:#a5b4fc;">கள மாதிரிப் பயிற்சி (Mock Calling Drill)</td>
+                                <td style="color:#a5b4fc; font-weight:700;">20 நிமிடம்</td>
+                                <td>3 முதன்மைக் கேள்விகளைக் கொண்டு தொலைபேசி மாதிரி அழைப்பு & A/B/C தர மதிப்பீடு.</td>
+                            </tr>
+                            <tr style="background:rgba(16,185,129,0.05);">
+                                <td style="font-weight:700; color:#6ee7b7;">14</td>
+                                <td style="font-weight:700; color:#6ee7b7;">சங்கல்பம் & நிறைவு சமர்ப்பணம்</td>
+                                <td style="color:#6ee7b7; font-weight:700;">10 நிமிடம்</td>
+                                <td>தர்மப் பணிக்கான உறுதிமொழி, சான்றிதழ்/கையேடு வழங்கல், வந்தே மாதரம்.</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr style="background:rgba(245,158,11,0.12); font-weight:800; border-top:2px solid var(--saffron-primary);">
+                                <td colspan="2" style="color:var(--saffron-primary);">மொத்தப் பயிற்சி நேரம் (Total Duration)</td>
+                                <td style="color:var(--saffron-primary); font-size:1.05rem;">180 நிமிடம்</td>
+                                <td style="color:var(--saffron-primary);">3 மணி நேர முழுமையான பயிற்றுவிப்புத் தொகுப்பு</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </section>
+
+
+            <!-- ========================================================= -->
+            <!-- SECTION 2: PILLAR 1 — NAMMA (POINTERS & ACTIVITY) -->
+            <!-- ========================================================= -->
+            <section class="manual-section" id="pillar-namma">
+                <div class="section-banner banner-namma">
+                    <div>
+                        <div class="banner-badge">தூண் 1 • சுய அடையாளம் & பண்பாடு</div>
+                        <h2 class="banner-title">தலைப்பு 1: நம்ம — பயிற்றுநர் சுருக்கக் குறிப்புகள்</h2>
+                        <p class="banner-desc">பயிற்றுநர் 20 நிமிட விரிவுரையில் அழுத்தமாக எடுத்துரைக்க வேண்டிய 8 மையக் கருத்துக்கள்.</p>
+                    </div>
+                    <div class="banner-icon-box">
+                        <i data-lucide="users" style="width:32px; height:32px;"></i>
+                    </div>
+                </div>
+
+                <div class="trainer-say-box">
+                    <div class="trainer-say-label"><i data-lucide="mic"></i> பயிற்றுநர் தொடக்க உரை (Trainer Icebreaker Opening)</div>
+                    <p class="trainer-say-text">
+                        "நண்பர்களே! 'நம்ம' என்ற ஒற்றைச் சொல்தான் மனித இதயங்களை இணைக்கும் பாலம். நம் முன்னோர்கள் நமக்கு அளித்த தாய்மொழி, வணக்கம் சொல்லும் முறை, பாரம்பரிய உடை, குடும்ப அமைப்பு ஆகியவற்றில் மூடநம்பிக்கை இல்லை; மிக உயர்ந்த அறிவியலும் உளவியலும் நிறைந்துள்ளன!"
+                    </p>
+                </div>
+
+                <div class="pointer-grid">
+                    <div class="pointer-card">
+                        <div class="pointer-header">
+                            <div class="pointer-num">1.1</div>
+                            <h4>தாய்மொழியும் சிந்தனையும்</h4>
+                        </div>
+                        <p>மனிதனின் ஆழமான உணர்வுகளும், ஆன்மீகத் தத்துவங்களும் தாய்மொழியில் மட்டுமே முழுமையாக மலர முடியும். தாய்மொழியைப் பேசுவது மொழியைக் காப்பது மட்டுமல்ல, நம் சிந்தனையைத் தெளிவாக்குகிறது.</p>
+                    </div>
+
+                    <div class="pointer-card">
+                        <div class="pointer-header">
+                            <div class="pointer-num">1.2</div>
+                            <h4>வணக்கம் — வேத மரபின் சமத்துவம்</h4>
+                        </div>
+                        <p>இரு கைகளையும் குவித்து நெஞ்சோடு சேர்த்து வணக்கம் சொல்வது <em>"ஈசாவாஸ்யம் இதம் சர்வம்"</em> (எல்லாவற்றிலும் இறைவன் உள்ளான்) என்னும் வேத நெறி. எதிரில் நிற்பவரிடம் உறையும் பரம்பொருளை வணங்கும் சமத்துவ வெளிப்பாடு.</p>
+                    </div>
+
+                    <div class="pointer-card">
+                        <div class="pointer-header">
+                            <div class="pointer-num">1.3</div>
+                            <h4>பாரம்பரிய உடை (வேட்டி & சேலை)</h4>
+                        </div>
+                        <p>உலகிலேயே முதன்முதலில் நூல் நூற்று ஆடை அணிந்த நாகரிகம் பாரதம். நமது தட்பவெப்ப நிலைக்கு ஏற்ற, கண்ணியமான, காற்றோட்டமான பருத்தி ஆடைகளே வேட்டியும் சேலையும் ஆகும்.</p>
+                    </div>
+
+                    <div class="pointer-card">
+                        <div class="pointer-header">
+                            <div class="pointer-num">1.4</div>
+                            <h4>தமிழ் வானவியலும் பிறந்தநாளும்</h4>
+                        </div>
+                        <p>நமது கொண்டாட்டங்கள் வானவியலோடு (Astronomy) இணைந்தவை. பூமி சூரியனைச் சுற்றி வரும் பாதையில் நாம் பிறந்த அதே புள்ளியில் பூமி மீண்டும் வரும் நாளைக் கணிப்பதே நமது பிறந்தநாள் மரபு (சூரியமானம் + சந்திரமானம்).</p>
+                    </div>
+
+                    <div class="pointer-card">
+                        <div class="pointer-header">
+                            <div class="pointer-num">1.5</div>
+                            <h4>குடும்பமும் 6 தர்ம கர்மங்களும்</h4>
+                        </div>
+                        <p>பெரியோரை மதித்தல், முன்னோர்கள் வழிபாடு, விருந்தோம்பல், உறவுகளைப் பேணுதல், தானம் வழங்குதல், தர்ம நெறி காத்தல் ஆகியவை குடும்பத்தில் அமைதியையும் சமூகப் பிணைப்பையும் உறுதி செய்கின்றன.</p>
+                    </div>
+
+                    <div class="pointer-card">
+                        <div class="pointer-header">
+                            <div class="pointer-num">1.6</div>
+                            <h4>உறவுமுறைகளின் அறிவியல்</h4>
+                        </div>
+                        <p>தாய்மாமன், அத்தை, பெரியப்பா போன்ற முறைப்பெயர்கள் வெறும் வாய்வார்த்தைகள் அல்ல; அவை மரபணுப் பாதுகாப்பு (Genetic Safeguarding), குடும்ப ஒற்றுமை மற்றும் உளவியல் பாதுகாப்பின் கவசங்கள்.</p>
+                    </div>
+
+                    <div class="pointer-card">
+                        <div class="pointer-header">
+                            <div class="pointer-num">1.7</div>
+                            <h4>பஞ்சாங்கமும் காலக்கணக்கீடும்</h4>
+                        </div>
+                        <p>திதி, வாரம், நட்சத்திரம், யோகம், கரணம் என்னும் ஐந்து அங்கங்களைக் கொண்ட பஞ்சாங்கம், காலத்தை துல்லியமாகக் கணிக்கும் அதிநவீன பாரத வானியல் அறிவியலின் சான்றாகும்.</p>
+                    </div>
+
+                    <div class="pointer-card">
+                        <div class="pointer-header">
+                            <div class="pointer-num">1.8</div>
+                            <h4>உபசார மொழியும் தியாகமும்</h4>
+                        </div>
+                        <p>"வாங்க", "வணக்கம்", "சாப்பிட்டீங்களா" என இன்முகத்தோடு வரவேற்பது தமிழரின் தலையாய பண்பாடு. சுயநலமற்ற தியாகமே ஒரு மனிதனை உன்னத சமுதாயத் தலைவனாக உயர்த்துகிறது.</p>
+                    </div>
+                </div>
+
+                <!-- Activity for Topic 1 -->
+                <div class="activity-feature-box" id="namma-activity">
+                    <div class="activity-header-bar">
+                        <div class="activity-title-group">
+                            <div class="activity-icon-badge"><i data-lucide="sparkles"></i></div>
+                            <div>
+                                <h3 style="font-size:1.2rem; color:var(--text-main); margin:0;">தலைப்பு 1 செயல்பாடு: தங்க அடையாள அட்டை (4-Corner Identity Card)</h3>
+                                <span style="font-size:0.85rem; color:var(--text-muted);">சுய அடையாளத்தையும் பாரம்பரிய வேரையும் உணர்த்தும் 10 நிமிட ஊடாடும் பயிற்சி</span>
+                            </div>
+                        </div>
+                        <div class="activity-meta-badge">நேரம்: 10 நிமிடம் • பொருட்கள்: தாள் & பேனா</div>
+                    </div>
+
+                    <div class="activity-steps-list">
+                        <div class="act-step">
+                            <div class="act-step-num">1</div>
+                            <div class="act-step-text"><strong>அட்டை வழங்குதல்:</strong> ஒவ்வொரு பங்கேற்பாளருக்கும் ஒரு சிறு வெள்ளைத்தாள் அல்லது அட்டையை வழங்கவும்.</div>
+                        </div>
+                        <div class="act-step">
+                            <div class="act-step-num">2</div>
+                            <div class="act-step-text"><strong>4 மூலைகளில் எழுதுதல்:</strong>
+                                <ul>
+                                    <li>இடது மேல் மூலை: <strong>பெயரின் தமிழ்ப் பொருள்</strong> (எ.கா: கார்த்திகேயன் = கார்த்திகைப் பெண்களால் வளர்க்கப்பட்டவன் / பெரும் ஒளி).</li>
+                                    <li>வலது மேல் மூலை: <strong>தாய்மொழி & தாய் கிராமம்</strong>.</li>
+                                    <li>இடது கீழ் மூலை: <strong>பிறந்த தமிழ் மாதம் / நட்சத்திரம்</strong>.</li>
+                                    <li>வலது கீழ் மூலை: <strong>பாரம்பரிய உடை அனுபவம் / திருவிழா நினைவுகள்</strong>.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="act-step">
+                            <div class="act-step-num">3</div>
+                            <div class="act-step-text"><strong>அருகிலுள்ளவருடன் பகிர்தல்:</strong> 3 நிமிடங்களில் பக்கத்தில் அமர்ந்துள்ள மற்றொரு நபரிடம் தங்கள் அடையாள அட்டையைக் காட்டி மகிழ்ச்சியோடு அறிமுகம் செய்துகொள்ளவும்.</div>
+                        </div>
+                    </div>
+
+                    <div class="activity-debrief">
+                        <strong><i data-lucide="check-circle-2" style="width:16px; height:16px;"></i> பயிற்றுநரின் நிறைவுரை (Aha! Debrief Message):</strong>
+                        <p>"நமது பெயர், நமது மொழி, நமது சொந்த ஊர் ஆகியவை வெறும் முகவரிகள் அல்ல; அவை ஆயிரக்கணக்கான ஆண்டு பெருமிதத்தின் குறியீடுகள். சுய அடையாளத்தை அறிந்தவனே சமுதாயத்தை நேசிப்பான்!"</p>
+                    </div>
+
+                    <!-- Timer Widget -->
+                    <div class="activity-timer-bar">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span style="font-size:0.85rem; color:var(--text-muted); font-weight:700;">செயல்பாட்டுக் கவுண்டவுன்:</span>
+                            <span class="timer-display" id="timer-namma">10:00</span>
+                        </div>
+                        <div class="timer-buttons">
+                            <button class="btn-act-timer" onclick="startTimer('namma', 600)">▶ தொடங்கு</button>
+                            <button class="btn-act-timer" onclick="pauseTimer('namma')">⏸ நிறுத்து</button>
+                            <button class="btn-act-timer" onclick="resetTimer('namma', 600)">🔄 மீட்டமை</button>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+
+            <!-- ========================================================= -->
+            <!-- SECTION 3: PILLAR 2 — NAMMA SAMI (POINTERS & ACTIVITY) -->
+            <!-- ========================================================= -->
+            <section class="manual-section" id="pillar-sami">
+                <div class="section-banner banner-sami">
+                    <div>
+                        <div class="banner-badge">தூண் 2 • மெய்ஞ்ஞான இறைத் தத்துவம்</div>
+                        <h2 class="banner-title">தலைப்பு 2: நம்ம சாமி — பயிற்றுநர் சுருக்கக் குறிப்புகள்</h2>
+                        <p class="banner-desc">சாமி என்ற சொல்லின் பொருள், கரதர்சனம், 3 வழிபாட்டு நிலைகள் மற்றும் ஆன்மீகக் கதைகள்.</p>
+                    </div>
+                    <div class="banner-icon-box">
+                        <i data-lucide="sparkles" style="width:32px; height:32px;"></i>
+                    </div>
+                </div>
+
+                <div class="trainer-say-box" style="border-left-color:#f43f5e; background:rgba(244,63,94,0.07);">
+                    <div class="trainer-say-label" style="color:#fda4af;"><i data-lucide="mic"></i> பயிற்றுநர் தொடக்க உரை</div>
+                    <p class="trainer-say-text">
+                        "இறைவன் எங்கோ தூரத்தில் உள்ளவன் அல்ல. 'சாமி' என்றால் 'உடையவர்'. இந்த பிரபஞ்சத்தை உடலாகக் கொண்டு ஆளும் தலைவன். நமது முன்னோர்கள் சாமியை மூன்று அழகான நிலைகளில் நமக்கு உணர்த்தியுள்ளனர் — குலதெய்வம், கிராம தெய்வம் மற்றும் இஷ்டதெய்வம்!"
+                    </p>
+                </div>
+
+                <div class="pointer-grid">
+                    <div class="pointer-card">
+                        <div class="pointer-header">
+                            <div class="pointer-num" style="color:#f43f5e; background:rgba(244,63,94,0.15);">2.1</div>
+                            <h4>சாமி என்றால் யார்? எங்குள்ளார்?</h4>
+                        </div>
+                        <p><strong>சாமி = உடையவர்</strong> (அனைத்து உயிர்களையும் தன் உடைமையாகக் கொண்டவர்). சாமி ஒன்றே; பல நாமங்களிலும் ரூபங்களிலும் உள்ளார். <em>"அங்கிங்கெனாதபடி எங்கும் பிரகாசமாய் விளங்கும் பரம்பொருள்"</em>.</p>
+                    </div>
+
+                    <div class="pointer-card">
+                        <div class="pointer-header">
+                            <div class="pointer-num" style="color:#f43f5e; background:rgba(244,63,94,0.15);">2.2</div>
+                            <h4>கரதர்சனம் ஸ்லோகம் — உழைப்பில் தெய்வம்</h4>
+                        </div>
+                        <p>காலையில் கண் விழிக்கும்போது உள்ளங்கையைப் பார்ப்பது: விரல் நுனியில் லட்சுமி (செல்வம்), உள்ளங்கையில் சரஸ்வதி (கல்வி), மணிக்கட்டில் கௌரி (ஆற்றல்). தெய்வீகம் நமது உழைப்பிலும் கரங்களிலும் உறைந்துள்ளது!</p>
+                    </div>
+
+                    <div class="pointer-card">
+                        <div class="pointer-header">
+                            <div class="pointer-num" style="color:#f43f5e; background:rgba(244,63,94,0.15);">2.3</div>
+                            <h4>பக்தியுடன் விவேகம் (யானை கதை)</h4>
+                        </div>
+                        <p>"எல்லாம் நாராயணன்" என மதம் பிடித்த யானையிடம் விலகாமல் நின்ற சிஷ்யனை யானை வீசியது. குரு சொன்னார்: "யானையில் நாராயணன் இருப்பது உண்மையே; ஆனால் 'விலகிப் போ' என்று எச்சரித்த பாகனிலும் நாராயணனே பேசினான்!" — பக்தியோடு பகுத்தறிவும் வேண்டும்.</p>
+                    </div>
+
+                    <div class="pointer-card">
+                        <div class="pointer-header">
+                            <div class="pointer-num" style="color:#f43f5e; background:rgba(244,63,94,0.15);">2.4</div>
+                            <h4>சாமியின் 3 வழிபாட்டு நிலைகள்</h4>
+                        </div>
+                        <p>
+                            • <strong>நிலை 1: குலதெய்வம்</strong> — வம்சாவழி ஆணிவேர், குடும்பப் பாதுகாப்பு.<br>
+                            • <strong>நிலை 2: கிராம சாமி</strong> — ஊர் எல்லைக் காவல், சமூக ஒற்றுமை, விவசாயச் செழிப்பு.<br>
+                            • <strong>நிலை 3: இஷ்டதெய்வம்</strong> — தனிமனித மன அமைதி தரும் விருப்ப தெய்வம்.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Kamban Shloka Box -->
+                <div class="verse-box">
+                    <button class="btn-copy-verse" onclick="copyVerse('kamban-text')"><i data-lucide="copy" style="width:12px; height:12px;"></i> நகலெடு</button>
+                    <div class="verse-text" id="kamban-text">
+"சாணினும் உளன்; ஓர் தன்மை அணுவினைச் சத கூறிட்ட
+கோணினும் உளன்; மா மேருக் குன்றினும் உளன்; இந் நின்ற
+தூணினும் உளன்; நீ சொன்ன சொல்லினும் உளன்; இப் போது
+காணுதி விரைவின்” என்றான்;
+                    </div>
+                    <div class="verse-meaning">
+                        <strong>கம்பராமாயணம் (இரணியன் வதைப்படலம்):</strong> இறைவன் தூணிலும் இருப்பான்; துரும்பிலும் இருப்பான்; நீ பேசிய சொல்லிலும் இருப்பான்! எங்கும் நிறைந்த பரம்பொருளின் இருப்பைப் போற்றும் உன்னதப் பாடல்.
+                    </div>
+                </div>
+
+                <!-- Activity for Topic 2 -->
+                <div class="activity-feature-box" id="sami-activity" style="border-color:rgba(244,63,94,0.35);">
+                    <div class="activity-header-bar">
+                        <div class="activity-title-group">
+                            <div class="activity-icon-badge" style="background:#f43f5e; color:#fff;"><i data-lucide="hand-metal"></i></div>
+                            <div>
+                                <h3 style="font-size:1.2rem; color:var(--text-main); margin:0;">தலைப்பு 2 செயல்பாடு: கரதர்சனம் & 3 நிலைகள் மரபு (3-Tier Divinity Tree)</h3>
+                                <span style="font-size:0.85rem; color:var(--text-muted);">உள்ளங்கையில் தெய்வீகத்தையும், 3 தெய்வ நிலைகளையும் கண்முன் உணரும் 10 நிமிடப் பயிற்சி</span>
+                            </div>
+                        </div>
+                        <div class="activity-meta-badge" style="background:rgba(244,63,94,0.15); color:#fda4af; border-color:rgba(244,63,94,0.3);">நேரம்: 10 நிமிடம் • பொருட்கள்: நாணயம் / வண்ணத் தாள்கள்</div>
+                    </div>
+
+                    <div class="activity-steps-list">
+                        <div class="act-step">
+                            <div class="act-step-num">1</div>
+                            <div class="act-step-text"><strong>கரதர்சனம் தியானம் (2 நிமிடம்):</strong> அனைத்துப் பங்கேற்பாளர்களையும் இரு கைகளையும் விரித்து உள்ளங்கையைப் பார்க்கச் சொல்லவும். <em>"கராக்ரே வசதே லக்ஷ்மீ..."</em> ஸ்லோகத்தை உச்சரித்து, தெய்வீக சக்தி நமது கரங்களிலும் உழைப்பிலும் உள்ளதை உணரச் செய்யவும்.</div>
+                        </div>
+                        <div class="act-step">
+                            <div class="act-step-num">2</div>
+                            <div class="act-step-text"><strong>3 வண்ணத் தாள் மரபு (5 நிமிடம்):</strong>
+                                <ul>
+                                    <li>மஞ்சள் சீட்டு = <strong>குலதெய்வம்</strong> (மரத்தின் வேர் போன்றது - குடும்ப வம்சாவழி).</li>
+                                    <li>நீலச் சீட்டு = <strong>கிராம சாமி</strong> (மரத்தின் தண்டு போன்றது - ஊர் மக்களைத் தாங்கும் சமூக அமைப்பு).</li>
+                                    <li>இளஞ்சிவப்புச் சீட்டு = <strong>இஷ்ட தெய்வம்</strong> (மரத்தின் மலர்/கனி - தனிமனித மன அமைதி).</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="act-step">
+                            <div class="act-step-num">3</div>
+                            <div class="act-step-text"><strong>குழுப் பகிர்வு (3 நிமிடம்):</strong> பங்கேற்பாளர்கள் தங்கள் குடும்பக் குலதெய்வக் கோவிலுக்கு ஆண்டுக்கு ஒருமுறை செல்லும் வழக்கத்தை அருகிலுள்ளவரிடம் பகிர்ந்து கொள்ளுதல்.</div>
+                        </div>
+                    </div>
+
+                    <div class="activity-debrief" style="border-left-color:#f43f5e; background:rgba(244,63,94,0.1);">
+                        <strong style="color:#fda4af;"><i data-lucide="check-circle-2" style="width:16px; height:16px;"></i> பயிற்றுநரின் நிறைவுரை (Aha! Debrief Message):</strong>
+                        <p>"வேர் (குலதெய்வம்) இல்லாமல் மரம் வாழாது; தண்டு (ஊர்க் கோவில்) இல்லாமல் கிளைகள் தாங்காது; மலர் (இஷ்ட தெய்வம்) நமக்கு இன்பம் தருகிறது. இம்மூன்றும் இணைந்ததே முழுமையான இந்து தர்ம இறை வழிபாடு!"</p>
+                    </div>
+
+                    <!-- Timer Widget -->
+                    <div class="activity-timer-bar">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span style="font-size:0.85rem; color:var(--text-muted); font-weight:700;">செயல்பாட்டுக் கவுண்டவுன்:</span>
+                            <span class="timer-display" id="timer-sami" style="color:#f43f5e;">10:00</span>
+                        </div>
+                        <div class="timer-buttons">
+                            <button class="btn-act-timer" onclick="startTimer('sami', 600)">▶ தொடங்கு</button>
+                            <button class="btn-act-timer" onclick="pauseTimer('sami')">⏸ நிறுத்து</button>
+                            <button class="btn-act-timer" onclick="resetTimer('sami', 600)">🔄 மீட்டமை</button>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+
+            <!-- ========================================================= -->
+            <!-- SECTION 4: PILLAR 3 — NAMMA KOVIL (POINTERS & ACTIVITY) -->
+            <!-- ========================================================= -->
+            <section class="manual-section" id="pillar-kovil">
+                <div class="section-banner banner-kovil">
+                    <div>
+                        <div class="banner-badge">தூண் 3 • ஆலய அறிவியல் & சமுதாய மையம்</div>
+                        <h2 class="banner-title">தலைப்பு 3: நம்ம கோவில் — பயிற்றுநர் சுருக்கக் குறிப்புகள்</h2>
+                        <p class="banner-desc">சொல்லிலக்கணம், கலியுக ஆராதனா வரம், திருமூலர் திருமந்திரம், மற்றும் 10 சமுதாயப் பெருமைகள்.</p>
+                    </div>
+                    <div class="banner-icon-box">
+                        <i data-lucide="landmark" style="width:32px; height:32px;"></i>
+                    </div>
+                </div>
+
+                <div class="trainer-say-box" style="border-left-color:#14b8a6; background:rgba(20,184,166,0.07);">
+                    <div class="trainer-say-label" style="color:#5eead4;"><i data-lucide="mic"></i> பயிற்றுநர் தொடக்க உரை</div>
+                    <p class="trainer-say-text">
+                        "கோவில் என்பது வெறும் வழிபாட்டுத் தலம் மட்டுமல்ல. நமது முன்னோர்கள் கோவிலை ஒரு நகரத்தின் இதயத் துடிப்பாகவே கட்டினார்கள். நீர் மேலாண்மை, தானியக் களஞ்சியம், 64 கலைகள், நீதி வழங்கும் மன்றம் மற்றும் இயற்கை பேரிடரில் தஞ்சம் தரும் புகலிடமாகத் திகழ்ந்ததே திருக்கோவில்!"
+                    </p>
+                </div>
+
+                <div class="pointer-grid">
+                    <div class="pointer-card">
+                        <div class="pointer-header">
+                            <div class="pointer-num" style="color:#14b8a6; background:rgba(20,184,166,0.15);">3.1</div>
+                            <h4>சொல்லிலக்கணப் பொருள்</h4>
+                        </div>
+                        <p>
+                            • <strong>கோவில் (கோ + இல்):</strong> கோ = இறைவன்/அரசன்; இல் = இல்லம் (இறைவனின் அரண்மனை).<br>
+                            • <strong>ஆலயம் (ஆ + லயம்):</strong> ஆ = ஆன்மா; லயம் = ஒடுங்குதல் (மனித ஆன்மா இறைவனிடம் லயித்து அமைதி பெறும் புலம்).
+                        </p>
+                    </div>
+
+                    <div class="pointer-card">
+                        <div class="pointer-header">
+                            <div class="pointer-num" style="color:#14b8a6; background:rgba(20,184,166,0.15);">3.2</div>
+                            <h4>கலியுக விக்ரக ஆராதனை</h4>
+                        </div>
+                        <p>முதல் 3 யுகங்களில் தவம், யாகம், யோகம் மூலம் வழிபடப்பட்டது. ஆனால் உருவ வழிபாடு (விக்ரக ஆராதனை) என்பது கலியுகத்திற்கே உரிய தனித்துவமான வரம். அலைபாயும் மனித மனதை ஒருமுகப்படுத்த உருவம் தேவைப்படுகிறது.</p>
+                    </div>
+
+                    <div class="pointer-card">
+                        <div class="pointer-header">
+                            <div class="pointer-num" style="color:#14b8a6; background:rgba(20,184,166,0.15);">3.3</div>
+                            <h4>ஐந்து வகை வழிபாட்டு வடிவங்கள்</h4>
+                        </div>
+                        <p>1. பட வழிபாடு • 2. கல் மற்றும் பளிங்கு சிலைகள் • 3. யந்திர வழிபாடு (ஸ்ரீசக்ரம்) • 4. விளக்கு & ஹோம அக்னி • 5. மண் & பஞ்சலோக உற்சவ மூர்த்திகள்.</p>
+                    </div>
+
+                    <div class="pointer-card">
+                        <div class="pointer-header">
+                            <div class="pointer-num" style="color:#14b8a6; background:rgba(20,184,166,0.15);">3.4</div>
+                            <h4>மூர்த்தி, தலம், தீர்த்தம்</h4>
+                        </div>
+                        <p>
+                            • <strong>மூர்த்தி:</strong> ஆகம முறைப்படி சக்தி ஊட்டப்பட்ட தெய்வீகத் திருமேனி.<br>
+                            • <strong>தலம்:</strong> பஞ்சபூதத் தலங்கள் & சித்தர்கள் தவம் செய்த பூமி.<br>
+                            • <strong>தீர்த்தம்:</strong> உடல் நச்சு நீக்கும் புனித நதிகள் & கோவில் குளங்கள்.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Thirumoolar Shloka Box -->
+                <div class="verse-box">
+                    <button class="btn-copy-verse" onclick="copyVerse('thirumoolar-text')"><i data-lucide="copy" style="width:12px; height:12px;"></i> நகலெடு</button>
+                    <div class="verse-text" id="thirumoolar-text">
+"உள்ளம் பெருங்கோயில் ஊனுடம்பு ஆலயம்
+வள்ளற் பிரானார்க்கு வாய் கோபுர வாசல்
+தெள்ளத் தெளிந்தார்க்குச் சீவன் சிவலிங்கம்
+கள்ளப் புலனைந்தும் காளா மணிவிளக்கே"
+                    </div>
+                    <div class="verse-meaning">
+                        <strong>திருமூலர் (திருமந்திரம்):</strong> நமது உள்ளமே பெருங்கோவில்; இந்த உடம்பே ஆலயம்; வாய் கோபுர வாசல்; ஜீவனே சிவலிங்கம்; ஐம்புலன்களே நல்விளக்குகள்! மனித உடலையே திருக்கோவிலாகப் போற்றும் உயர்ந்த தத்துவம்.
+                    </div>
+                </div>
+
+                <div class="subheading"><i data-lucide="check-check" style="color:var(--teal-accent);"></i> கோவிலின் 10 சமுதாயப் பெருமைகள் (பயிற்றுநரின் விரல் நுனிப் பட்டியல்)</div>
+                <div style="overflow-x:auto;">
+                    <table class="custom-table">
+                        <tbody>
+                            <tr>
+                                <td style="font-weight:700; color:var(--teal-accent);">1. நகர நிர்மாணம்</td>
+                                <td>ஊரின் மையத்தில் கருவறை அமைத்து, அதைச் சுற்றி சமச்சீரான மாட வீதிகளை அமைக்கும் நகர்ப்புறத் திட்டமிடல்.</td>
+                                <td style="font-weight:700; color:var(--teal-accent);">6. 64 கலைகளின் அரங்கம்</td>
+                                <td>இயல், இசை, நாடகம், நாட்டியம், சிற்பக்கலை மற்றும் பெரியபுராணம் போன்ற இலக்கியங்கள் அரங்கேறிய தளம்.</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:700; color:var(--teal-accent);">2. தூய்மை & வடிகால்</td>
+                                <td>மழைநீர் தேங்காத வடிகால் வசதியோடு அமைக்கப்பட்ட அகலமான மாட வீதிகள்.</td>
+                                <td style="font-weight:700; color:var(--teal-accent);">7. சமூக நல்லிணக்கம்</td>
+                                <td>அனைத்து சமுதாய மக்களுக்கும் தனித்தனி மரியாதையும் பொறுப்புகளும் வழங்கப்பட்டு ஒற்றுமையுடன் நடக்கும் விழாக்கள்.</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:700; color:var(--teal-accent);">3. கோபுரக் கலசங்கள்</td>
+                                <td>மின்னல் தாக்காமல் காக்கும் இடிதாங்கிகள் (Lightning Arresters) & பஞ்சம் வந்தால் விதைக்க தானியக் களஞ்சியம்.</td>
+                                <td style="font-weight:700; color:var(--teal-accent);">8. உள்ளூர்ப் பொருளாதாரம்</td>
+                                <td>பூக்கள், பால், எண்ணெய், கைவினைஞர்கள், சிற்பிகள் எனப் பல்லாயிரக்கணக்கானோருக்கு வாழ்வாதாரம் தரும் களம்.</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:700; color:var(--teal-accent);">4. நீர் மேலாண்மை</td>
+                                <td>ஊரின் நிலத்தடி நீர்மட்டத்தை எப்போதும் பாதுகாக்கும் மாபெரும் திருக்குளங்கள் மற்றும் நீர்ச் சங்கிலி.</td>
+                                <td style="font-weight:700; color:var(--teal-accent);">9. சமத்துவத் தேர் வடம்</td>
+                                <td>ஏழை, பணக்காரன், சாதி, மத பேதமின்றி ஊர் மக்கள் அனைவரும் ஒன்றாகக் கரம் பற்றி வடம் இழுக்கும் சமத்துவ நெறி.</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:700; color:var(--teal-accent);">5. கல்வெட்டு ஆவணம்</td>
+                                <td>மன்னர்களின் ஆணைகள், நிலக்கொடைகள், வரிச் சலுகைகள் மற்றும் வரலாற்றுப் பதிவுகளை அழியாமல் காக்கும் ஆவணக் காப்பகம்.</td>
+                                <td style="font-weight:700; color:var(--teal-accent);">10. தியாக வரலாறு</td>
+                                <td>படையெடுப்புகளிலிருந்து கோவில்களைக் காக்க முன்னோர்கள் தன்னுயிரை ஈந்த வரலாறு; ஒழுக்கத்தையும் நல்வாழ்வையும் தரும் பண்பாட்டு வேர்.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Activity for Topic 3 -->
+                <div class="activity-feature-box" id="kovil-activity" style="border-color:rgba(20,184,166,0.35);">
+                    <div class="activity-header-bar">
+                        <div class="activity-title-group">
+                            <div class="activity-icon-badge" style="background:#14b8a6; color:#fff;"><i data-lucide="columns"></i></div>
+                            <div>
+                                <h3 style="font-size:1.2rem; color:var(--text-main); margin:0;">தலைப்பு 3 செயல்பாடு: 10 தூண்கள் தாங்கும் சமுதாயக் கூரை (Community Roof Model)</h3>
+                                <span style="font-size:0.85rem; color:var(--text-muted);">கோவிலின் 10 சமுதாயப் பணிகளை விளையாட்டு முறையில் 10 நிமிடங்களில் உணரும் செயல்பாடு</span>
+                            </div>
+                        </div>
+                        <div class="activity-meta-badge" style="background:rgba(20,184,166,0.15); color:#5eead4; border-color:rgba(20,184,166,0.3);">நேரம்: 10 நிமிடம் • பொருட்கள்: அட்டைத்தாள் / புத்தகம்</div>
+                    </div>
+
+                    <div class="activity-steps-list">
+                        <div class="act-step">
+                            <div class="act-step-num">1</div>
+                            <div class="act-step-text"><strong>10 பேர் வட்டம்:</strong> 10 பங்கேற்பாளர்களை ஒரு வட்டமாக நிற்க வைத்து, அவர்களது கைகளில் ஒரு பெரிய அட்டைத்தாளை (சமுதாயக் கூரை) ஒவ்வொருவரும் ஒற்றை விரலால் தாங்கிப் பிடிக்கச் சொல்லவும்.</div>
+                        </div>
+                        <div class="act-step">
+                            <div class="act-step-num">2</div>
+                            <div class="act-step-text"><strong>தூண்களுக்குப் பெயர் சூட்டுதல்:</strong> 10 பேருக்கும் 10 பணிகள் பெயரிடப்படும் (1. நீர் மேலாண்மை, 2. தானியக் களஞ்சியம், 3. கல்வி/கலைகள், 4. உள்ளூர்ப் பொருளாதாரம், 5. ஒற்றுமை...).</div>
+                        </div>
+                        <div class="act-step">
+                            <div class="act-step-num">3</div>
+                            <div class="act-step-text"><strong>தூண் விலகுதல் பரிசோதனை:</strong> பயிற்றுநர் "குளம் தூர்ந்துவிட்டது!", "திருவிழா நின்றுவிட்டது!" என்று கூறும்போது, அந்தந்த நபர் கையை விலக்கிக் கொள்ள வேண்டும். 3 பேர் விலகியதும் அட்டைத்தாள் ஒருபுறமாகச் சரிந்து கீழே விழும்.</div>
+                        </div>
+                    </div>
+
+                    <div class="activity-debrief" style="border-left-color:#14b8a6; background:rgba(20,184,166,0.1);">
+                        <strong style="color:#5eead4;"><i data-lucide="check-circle-2" style="width:16px; height:16px;"></i> பயிற்றுநரின் நிறைவுரை (Aha! Debrief Message):</strong>
+                        <p>"பார்த்தீர்களா? கோவில் என்பது ஏதோ ஒரு சடங்கு அல்ல. ஒரு ஊரின் குளமும், பொருளாதாரமும், ஒற்றுமையும் கெட்டுப்போனால் ஒட்டுமொத்த சமுதாயக் கூரையே சரிந்துவிடும். கோவிலைப் பாதுகாப்பதே சமுதாயத்தைப் பாதுகாப்பதாகும்!"</p>
+                    </div>
+
+                    <!-- Timer Widget -->
+                    <div class="activity-timer-bar">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span style="font-size:0.85rem; color:var(--text-muted); font-weight:700;">செயல்பாட்டுக் கவுண்டவுன்:</span>
+                            <span class="timer-display" id="timer-kovil" style="color:#14b8a6;">10:00</span>
+                        </div>
+                        <div class="timer-buttons">
+                            <button class="btn-act-timer" onclick="startTimer('kovil', 600)">▶ தொடங்கு</button>
+                            <button class="btn-act-timer" onclick="pauseTimer('kovil')">⏸ நிறுத்து</button>
+                            <button class="btn-act-timer" onclick="resetTimer('kovil', 600)">🔄 மீட்டமை</button>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+
+            <!-- ========================================================= -->
+            <!-- SECTION 5: SURVEY DRILL & CALLER PROTOCOLS -->
+            <!-- ========================================================= -->
+            <section class="manual-section" id="survey-drill">
+                <div class="section-banner banner-survey">
+                    <div>
+                        <div class="banner-badge">பகுதி 5 • கள ஆய்வு மாதிரிப் பயிற்சி</div>
+                        <h2 class="banner-title">கள ஆய்வு & அழைப்பாளர் மாதிரிப் பயிற்சி (Mock Calling Drill)</h2>
+                        <p class="banner-desc">3 முதன்மைக் கேள்விகள், A/B/C தர மதிப்பீடு மற்றும் மாதிரி உரையாடல் ஸ்கிரிப்ட் (20 நிமிடம்).</p>
+                    </div>
+                    <div class="banner-icon-box">
+                        <i data-lucide="phone-call" style="width:32px; height:32px;"></i>
+                    </div>
+                </div>
+
+                <div class="subheading"><i data-lucide="help-circle" style="color:#10b981;"></i> 3 முதன்மைக் கேள்விகளும் மதிப்பெண் முறையும்</div>
+                
+                <div class="pointer-grid">
+                    <div class="pointer-card" style="border-top:4px solid #f59e0b;">
+                        <div class="pointer-header">
+                            <div class="pointer-num">Q1</div>
+                            <h4>உங்கள் பெயரின் பொருள் தெரியுமா?</h4>
+                        </div>
+                        <p>நமது பெயர் முதல் அடையாளம். முன்னோர்கள் இறைவனின் திருநாமங்களையும், தூய தமிழ்ச் சொற்களையும் சூட்டினர். பெயரின் பொருளை அறிவது சுயமரியாதையையும் கம்பீரத்தையும் தரும்.</p>
+                    </div>
+
+                    <div class="pointer-card" style="border-top:4px solid #3b82f6;">
+                        <div class="pointer-header">
+                            <div class="pointer-num" style="background:rgba(59,130,246,0.15); color:#3b82f6;">Q2</div>
+                            <h4>உங்கள் பரம்பரை / பூர்வீகம் தெரியுமா?</h4>
+                        </div>
+                        <p>நமது வம்சாவழி, சொந்த கிராமம், முன்னோர்களின் நற்குணங்களை அறிவது குடும்பப் பிணைப்பையும் வாழ்வியல் ஒழுக்கத்தையும் அடுத்த தலைமுறைக்குக் கடத்துகிறது.</p>
+                    </div>
+
+                    <div class="pointer-card" style="border-top:4px solid #10b981;">
+                        <div class="pointer-header">
+                            <div class="pointer-num" style="background:rgba(16,185,129,0.15); color:#10b981;">Q3</div>
+                            <h4>உங்கள் கோத்திரம் தெரியுமா?</h4>
+                        </div>
+                        <p>கோத்திரம் என்பது நாம் உதித்த ரிஷி பரம்பரை அடையாளம். இது ஒரே குடும்ப வழித்தோன்றல்களின் புனிதத் தொடர்பையும், மரபணுத் தெளிவையும் உணர்த்துகிறது.</p>
+                    </div>
+                </div>
+
+                <div class="trainer-say-box" style="border-left-color:#10b981; background:rgba(16,185,129,0.07);">
+                    <div class="trainer-say-label" style="color:#6ee7b7;"><i data-lucide="clipboard-check"></i> தர மதிப்பீட்டு விதிமுறை (Scoring & Grading Rubric)</div>
+                    <p class="trainer-say-text">
+                        ஒவ்வொரு கேள்விக்கும்: <strong>முழு அறிவு = 2 புள்ளிகள் | ஓரளவு அறிவு = 1 புள்ளி | தெரியவில்லை = 0 புள்ளி</strong>.<br>
+                        • <strong>🟢 Grade A (5 முதல் 6 புள்ளிகள்):</strong> பண்பாட்டு ஆர்வமும் தெளிவான பாரம்பரிய அறிவும் கொண்ட வழிகாட்டி.<br>
+                        • <strong>🔵 Grade B (3 முதல் 4 புள்ளிகள்):</strong> விழிப்புணர்வு உடையவர்; கூடுதல் ஊக்கம் தேவைப்படுவோர்.<br>
+                        • <strong>🟠 Grade C (0 முதல் 2 புள்ளிகள்):</strong> பாரம்பரிய அறிவு போதாதவர்; கனிவான வழிகாட்டல் தேவைப்படுவோர்.
+                    </p>
+                </div>
+
+                <div class="subheading"><i data-lucide="message-square" style="color:#6366f1;"></i> மாதிரித் தொலைபேசி உரையாடல் (Mock Telephone Script)</div>
+                <div class="mock-call-box">
+                    <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:12px;">
+                        பயிற்றுநர் வகுப்பறையில் இருவரை மேடைக்கு அழைத்து, ஒருவர் அழைப்பாளராகவும், மற்றொருவர் பொதுமக்களாகவும் பாவித்து இந்த உரையாடலை நடத்த வேண்டும்:
+                    </p>
+
+                    <div class="chat-exchange">
+                        <div class="chat-bubble">
+                            <div class="caller-avatar">அ</div>
+                            <div class="bubble-body">
+                                <div class="bubble-speaker">அழைப்பாளர் (Caller):</div>
+                                "வணக்கம் ஐயா/அம்மா! நான் 'நம்ம சாமி நம்ம கோவில்' அமைப்பிலிருந்து பேசுகிறேன். தங்கள் பெயர் திரு. செந்தில்நாதன் அவர்களா? இரண்டு நிமிடங்கள் பேசலாமா?"
+                            </div>
+                        </div>
+
+                        <div class="chat-bubble">
+                            <div class="public-avatar">பொ</div>
+                            <div class="bubble-body">
+                                <div class="bubble-speaker">உறுப்பினர் (Citizen):</div>
+                                "வணக்கம்ங்க... சொல்லுங்க, என்ன விஷயம்?"
+                            </div>
+                        </div>
+
+                        <div class="chat-bubble">
+                            <div class="caller-avatar">அ</div>
+                            <div class="bubble-body">
+                                <div class="bubble-speaker">அழைப்பாளர் (Caller):</div>
+                                "ஐயா, தங்களது பெயர் 'செந்தில்நாதன்' என்பது மிகவும் மங்களகரமானது. செந்தில் என்றால் திருச்செந்தூரில் அருளும் வெற்றி முருகன், நாதன் என்றால் தலைவர் என்று பொருள்! ஐயா, தங்கள் பெயரின் பொருள் தங்களுக்கு முன்பே தெரியுமா?"
+                            </div>
+                        </div>
+
+                        <div class="chat-bubble">
+                            <div class="public-avatar">பொ</div>
+                            <div class="bubble-body">
+                                <div class="bubble-speaker">உறுப்பினர் (Citizen):</div>
+                                "ஆமாங்க! எங்க தாத்தா வச்ச பேரு, முருகன் பேருன்னு தெரியும்." [மதிப்பெண்: 2 புள்ளிகள்]
+                            </div>
+                        </div>
+
+                        <div class="chat-bubble">
+                            <div class="caller-avatar">அ</div>
+                            <div class="bubble-body">
+                                <div class="bubble-speaker">அழைப்பாளர் (Caller):</div>
+                                "மகிழ்ச்சி ஐயா! அதேபோல தங்களது பூர்வீக கிராமம் மற்றும் பரம்பரை குலதெய்வம் பற்றி விவரங்கள் தெரியுமா?"
+                            </div>
+                        </div>
+
+                        <div class="chat-bubble">
+                            <div class="public-avatar">பொ</div>
+                            <div class="bubble-body">
+                                <div class="bubble-speaker">உறுப்பினர் (Citizen):</div>
+                                "எங்க பூர்வீகம் மதுரை பக்கம் ஐயா. குலதெய்வம் கருப்பசாமி கோவில். ஆனா போயி ரொம்ப நாள் ஆச்சு." [மதிப்பெண்: 1 புள்ளி]
+                            </div>
+                        </div>
+
+                        <div class="chat-bubble">
+                            <div class="caller-avatar">அ</div>
+                            <div class="bubble-body">
+                                <div class="bubble-speaker">அழைப்பாளர் (Caller):</div>
+                                "அருமை ஐயா! குலதெய்வக் கோவிலுக்கு வருடம் ஒரு முறையாவது குடும்பத்தோடு சென்று பொங்கலிட்டு வணங்குவது நம் குடும்பத்திற்கும் பிள்ளைகளுக்கும் பெரும் பாதுகாப்பையும் வம்ச விருத்தியையும் தரும். வாய்ப்புள்ள போது உடனே சென்று தரிசனம் செய்யுங்கள். தங்களது கோத்திரம் தெரியுமா ஐயா?"
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="trainer-say-box" style="border-left-color:#6366f1; background:rgba(99,102,241,0.06);">
+                    <div class="trainer-say-label" style="color:#a5b4fc;"><i data-lucide="shield-check"></i> அழைப்பாளர்களுக்கான 5 பொன்விதிகள்</div>
+                    <p class="trainer-say-text">
+                        1. <strong>கனிவான தொடக்கம்:</strong> எப்போதும் "வணக்கம்" கூறி முகமலர்ச்சியோடு பேசத் தொடங்கவும்.<br>
+                        2. <strong>பெயரின் பெருமை கூறுதல்:</strong> எதிர்முனையில் இருப்பவரின் பெயருக்குரிய நல்ல பொருளைக் கூறி மகிழ்ச்சியை ஊட்டவும்.<br>
+                        3. <strong>தர்க்கம் செய்யாமை:</strong> பதில் தெரியவில்லை என்றால் அவர்களைக் குறை கூறாமல், அன்பு கலந்த வழிகாட்டல் வழங்கவும்.<br>
+                        4. <strong>நேரத்தை மதித்தல்:</strong> அவசரத்தில் இருந்தால் மறுபடியும் அழைப்பதாகக் கூறி அமைதியாக விடைபெறவும்.<br>
+                        5. <strong>நன்றியோடு நிறைவு:</strong> "நமது பண்பாட்டைப் பாதுகாப்போம், நன்றி வணக்கம்!" என்று சொல்லி அழைப்பை முடிக்கவும்.
+                    </p>
+                </div>
+            </section>
+
+
+            <!-- ========================================================= -->
+            <!-- SECTION 6: TRAINER CHEATSHEET & FAQ -->
+            <!-- ========================================================= -->
+            <section class="manual-section" id="cheatsheet">
+                <div class="section-banner banner-cheatsheet">
+                    <div>
+                        <div class="banner-badge">பகுதி 6 • நினைவூட்டல் & தெளிவுரைகள்</div>
+                        <h2 class="banner-title">பயிற்றுநர் நினைவூட்டல் அட்டை & FAQ (Cheat Sheet)</h2>
+                        <p class="banner-desc">ஒரே பார்வையில் 3 தலைப்புகளின் ஒப்பீடு, பயிற்றுநர்களுக்கான 'செய்ய வேண்டியவை - தவிர்க்க வேண்டியவை'.</p>
+                    </div>
+                    <div class="banner-icon-box">
+                        <i data-lucide="zap" style="width:32px; height:32px;"></i>
+                    </div>
+                </div>
+
+                <div class="cheat-grid">
+                    <div class="cheat-card" style="border-top:4px solid #f59e0b;">
+                        <h5><i data-lucide="users"></i> தூண் 1: நம்ம (சுய அடையாளம்)</h5>
+                        <ul>
+                            <li><strong>தாய்மொழி:</strong> ஆழ்ந்த சிந்தனையின் திறவுகோல்.</li>
+                            <li><strong>வணக்கம்:</strong> எல்லாரிலும் இறைவன் (ஈசாவாஸ்யம்).</li>
+                            <li><strong>உடை:</strong> பருத்தி வேட்டி, சேலை கண்ணியம்.</li>
+                            <li><strong>வானியல்:</strong> சூரியமானம் + சந்திரமானம் பிறந்தநாள்.</li>
+                            <li><strong>குடும்பம்:</strong> 6 தர்ம கர்மங்கள் & விருந்தோம்பல்.</li>
+                            <li><strong>உறவுகள்:</strong> மரபணுப் பாதுகாப்பு அறிவியல்.</li>
+                            <li><strong>பஞ்சாங்கம்:</strong> திதி, வாரம், நட்சத்திரம், யோகம், கரணம்.</li>
+                        </ul>
+                    </div>
+
+                    <div class="cheat-card" style="border-top:4px solid #f43f5e;">
+                        <h5><i data-lucide="sparkles"></i> தூண் 2: நம்ம சாமி (மெய்ஞ்ஞானம்)</h5>
+                        <ul>
+                            <li><strong>பொருள்:</strong> சாமி = பிரபஞ்சத்தை உடையவர்.</li>
+                            <li><strong>இருப்பு:</strong> அங்கிங்கெனாதபடி எங்கும் பிரகாசம்.</li>
+                            <li><strong>கரதர்சனம்:</strong> லக்ஷ்மி, சரஸ்வதி, கௌரி உழைப்பில்.</li>
+                            <li><strong>விவேகம்:</strong> பாகன் சொன்ன நாராயணன் (யானை கதை).</li>
+                            <li><strong>குலதெய்வம்:</strong> வம்சாவழி ஆணிவேர் பாதுகாப்பு.</li>
+                            <li><strong>கிராம சாமி:</strong> ஊர் எல்லை, விவசாயம், ஒற்றுமை.</li>
+                            <li><strong>இஷ்டதெய்வம்:</strong> தனிமனித அமைதித் தோழன்.</li>
+                        </ul>
+                    </div>
+
+                    <div class="cheat-card" style="border-top:4px solid #14b8a6;">
+                        <h5><i data-lucide="landmark"></i> தூண் 3: நம்ம கோவில் (அறிவியல்)</h5>
+                        <ul>
+                            <li><strong>கோவில்:</strong> இறைவனின் இல்லம் (அரண்மனை).</li>
+                            <li><strong>ஆலயம்:</strong> ஆன்மா லயமாகும் அமைதிப் புலம்.</li>
+                            <li><strong>கலியுக வரம்:</strong> விக்ரக ஆராதனை மன ஒருமைப்பாடு.</li>
+                            <li><strong>திருமூலர்:</strong> உள்ளம் பெருங்கோயில் ஊனுடம்பு ஆலயம்.</li>
+                            <li><strong>முக்கூட்டு:</strong> மூர்த்தி, தலம், தீர்த்தம்.</li>
+                            <li><strong>ஆகமம்:</strong> மந்திரம் - யந்திரம் - தந்திரம்.</li>
+                            <li><strong>10 நன்மைகள்:</strong> நீர், களஞ்சியம், 64 கலை, சமத்துவம்.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="subheading" style="margin-top:32px;"><i data-lucide="help-circle" style="color:var(--saffron-primary);"></i> பயிற்றுநர்களுக்கான அடிக்கடி கேட்கப்படும் கேள்விகள் (FAQs)</div>
+                
+                <div class="pointer-grid">
+                    <div class="pointer-card">
+                        <h4 style="color:var(--saffron-primary);">கேள்வி: கோவிலுக்குப் போகாமல் வீட்டிலேயே கும்பிடலாமே, கோவில் ஏன் அவசியம்?</h4>
+                        <p><strong>பயிற்றுநர் பதில்:</strong> "வீட்டில் விளக்கு ஏற்றிப் படிப்பது நல்லது; ஆனால் பள்ளிக்குச் சென்றால் நூலகம், ஆசிரியர், விளையாட்டு மைதானம், கூட்டு ஒழுக்கம் கிடைக்கிறது அல்லவா? அதுபோல தனிமனித ஆன்மீகத்திற்கு வீடு உதவும்; சமுதாய ஒற்றுமை, தீர்த்த நீராடல், கலைகள், நீர் மேலாண்மை மற்றும் கூட்டுப் பிரார்த்தனைக்குக் கோவிலே பொது அமைப்பாகும்!"</p>
+                    </div>
+
+                    <div class="pointer-card">
+                        <h4 style="color:var(--saffron-primary);">கேள்வி: பல சாமிகள் இருக்கிறார்களே, இந்து மதத்தில் கடவுள் ஒன்றா பலவா?</h4>
+                        <p><strong>பயிற்றுநர் பதில்:</strong> "கடவுள் ஒருவரே. ஆனால் தாய், தந்தை, ஆசிரியை, நண்பன் என ஒருவரையே பல உறவுகளில் அழைப்பது போல, ஒரே இறைவனை அவரது கருணை, ஆற்றல், ஞானத்திற்கு ஏற்ப பல வடிவங்களில் வழிபடுகிறோம். உருவங்கள் பலவானாலும் உணரும் பரம்பொருள் ஒன்றே!"</p>
+                    </div>
+                </div>
+
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div style="font-size:1.1rem; font-weight:800; color:var(--text-main); display:flex; align-items:center; justify-content:center; gap:8px;">
+                <i data-lucide="flame" style="color:var(--saffron-primary);"></i> நம்ம சாமி நம்ம கோவில் இயக்கப் பயிற்றுநர் கையேடு
+            </div>
+            <p style="color:var(--text-muted); font-size:0.88rem;">
+                வெளியீடு: அறம் அறக்கட்டளை • NSNK Trainer Instruction Manual Release v2.0 • 2026
+            </p>
+            <div style="display:flex; justify-content:center; gap:16px; margin-top:8px; flex-wrap:wrap;">
+                <a href="NSNK-ProgramBriefing.html" style="color:var(--saffron-primary); text-decoration:none; font-size:0.85rem; font-weight:700;">திட்ட விளக்க முதன்மைப் பக்கம்</a>
+                <span style="color:var(--text-dim);">•</span>
+                <a href="NSNK-WorkshopActivities.html" style="color:var(--saffron-primary); text-decoration:none; font-size:0.85rem; font-weight:700;">குழுச் செயல்பாடுகள் கையேடு</a>
+                <span style="color:var(--text-dim);">•</span>
+                <a href="Training-Program-Agenda.jpeg" target="_blank" style="color:var(--saffron-primary); text-decoration:none; font-size:0.85rem; font-weight:700;">அட்டவணைப் படம்</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // Lucide Icons Initialization
+        lucide.createIcons();
+
+        // Reading Progress Indicator
+        window.onscroll = function() {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("read-progress").style.width = scrolled + "%";
+        };
+
+        // Theme Toggle (Default -> Temple -> Light -> Default)
+        const themes = ['default', 'temple', 'light'];
+        let currentThemeIdx = 0;
+        function cycleTheme() {
+            currentThemeIdx = (currentThemeIdx + 1) % themes.length;
+            const theme = themes[currentThemeIdx];
+            if (theme === 'default') {
+                document.body.removeAttribute('data-theme');
+            } else {
+                document.body.setAttribute('data-theme', theme);
+            }
+        }
+
+        // Font Size Adjuster
+        let baseFontSize = 16;
+        function changeFontSize(delta) {
+            baseFontSize = Math.min(22, Math.max(13, baseFontSize + delta));
+            document.documentElement.style.fontSize = baseFontSize + 'px';
+        }
+
+        // Copy Shloka / Verse
+        function copyVerse(elementId) {
+            const text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('ஸ்லோகம் / பாடல் வெற்றிகரமாக நகலெடுக்கப்பட்டது!');
+            });
+        }
+
+        // Activity Timers (Countdown)
+        const timerIntervals = {};
+        const timerRemaining = {};
+
+        function formatTime(secs) {
+            const m = Math.floor(secs / 60).toString().padStart(2, '0');
+            const s = (secs % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        function startTimer(key, totalSecs) {
+            if (!timerRemaining[key]) {
+                timerRemaining[key] = totalSecs;
+            }
+            if (timerIntervals[key]) return; // already running
+
+            timerIntervals[key] = setInterval(() => {
+                if (timerRemaining[key] > 0) {
+                    timerRemaining[key]--;
+                    document.getElementById(`timer-${key}`).innerText = formatTime(timerRemaining[key]);
+                } else {
+                    clearInterval(timerIntervals[key]);
+                    delete timerIntervals[key];
+                    alert(`⏰ ${key.toUpperCase()} செயல்பாட்டுக்கான நேரம் முடிந்தது!`);
+                }
+            }, 1000);
+        }
+
+        function pauseTimer(key) {
+            if (timerIntervals[key]) {
+                clearInterval(timerIntervals[key]);
+                delete timerIntervals[key];
+            }
+        }
+
+        function resetTimer(key, totalSecs) {
+            pauseTimer(key);
+            timerRemaining[key] = totalSecs;
+            document.getElementById(`timer-${key}`).innerText = formatTime(totalSecs);
+        }
+    </script>
+</body>
+</html>
