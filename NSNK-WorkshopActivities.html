@@ -313,11 +313,62 @@
         /* Activity Card Grid */
         .activity-grid {
             display: grid;
-            grid-template-columns: 1fr;
-            max-width: 960px;
-            margin: 0 auto;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr));
             gap: 24px;
         }
+        .activity-grid.single-activity {
+            max-width: 960px;
+            margin: 0 auto;
+            grid-template-columns: 1fr;
+        }
+
+        /* 7 Generations Lineage Styles */
+        .lineage-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 8px;
+            margin: 14px 0 16px 0;
+        }
+        .lineage-chip {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            border-radius: 8px;
+            padding: 8px 6px;
+            text-align: center;
+            font-size: 0.82rem;
+            transition: all 0.2s;
+        }
+        .lineage-chip:hover {
+            border-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.16);
+            transform: translateY(-2px);
+        }
+        .lineage-chip-self {
+            background: rgba(245, 158, 11, 0.2);
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 1px #f59e0b;
+        }
+        .lineage-num {
+            display: inline-block;
+            font-size: 0.7rem;
+            color: var(--saffron-primary);
+            font-weight: 800;
+            margin-bottom: 2px;
+        }
+        .lineage-name {
+            font-weight: 700;
+            color: var(--text-main);
+            display: block;
+            line-height: 1.25;
+            font-size: 0.84rem;
+        }
+        .lineage-desc {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
+        }
+
         .activity-card {
             background: var(--bg-surface);
             border: 2px solid var(--border-color);
@@ -614,17 +665,17 @@
             </div>
             <h1 class="hero-title">பயிற்சிப் பட்டறை ஊடாடும் குழுச் செயல்பாடுகள்</h1>
             <p class="hero-subtitle">
-                3 முதன்மைத் தலைப்புகளுக்கும் தலா 10 நிமிடங்களில் பண்பாட்டு, மெய்ஞ்ஞான மற்றும் அறிவியல் தத்துவங்களை நேரில் உணர வைக்கும் 3 பிரத்யேகச் செயல்முறைப் பயிற்சிகள்.
+                நம்ம, நம்ம சாமி, நம்ம கோவில் ஆகிய 3 தலைப்புகளுக்கும் பண்பாட்டு, மெய்ஞ்ஞான மற்றும் அறிவியல் தத்துவங்களை நேரில் உணர வைக்கும் 4 பிரத்யேகச் செயல்முறைப் பயிற்சிகள்.
             </p>
             <div class="quick-stats-bar">
                 <div class="stat-chip" style="color:var(--saffron-primary);">
-                    <i data-lucide="clock" style="width:18px; height:18px;"></i> 10 நிமிடங்கள் / தலைப்பு
+                    <i data-lucide="clock" style="width:18px; height:18px;"></i> 10 நிமிடங்கள் / பயிற்சி
                 </div>
                 <div class="stat-chip" style="color:#f43f5e;">
                     <i data-lucide="layers" style="width:18px; height:18px;"></i> 3 முதன்மைத் தலைப்புகள்
                 </div>
                 <div class="stat-chip" style="color:#10b981;">
-                    <i data-lucide="sparkles" style="width:18px; height:18px;"></i> 3 பிரத்யேகச் செயல்பாடுகள்
+                    <i data-lucide="sparkles" style="width:18px; height:18px;"></i> 4 பிரத்யேகச் செயல்பாடுகள்
                 </div>
                 <div class="stat-chip" style="color:#6366f1;">
                     <i data-lucide="users" style="width:18px; height:18px;"></i> 100% பங்கேற்பாளர் ஈடுபாடு
@@ -653,20 +704,20 @@
                 <div class="topic-header-banner topic-banner-namma">
                     <div class="topic-header-info">
                         <h2>தலைப்பு 1: நம்ம (NAMMA) — செயல்பாடுகள்</h2>
-                        <p>சுய அடையாளம் • தாய்மொழி • பெயரின் பொருள் • கூட்டுக்குடும்பம் • 6 தர்மங்கள் • பரம்பரை & கோத்திரம்</p>
+                        <p>சுய அடையாளம் • தாய்மொழி • பெயரின் பொருள் • கூட்டுக்குடும்பம் • 6 தர்மங்கள் • பரம்பரை & கோத்திரம் • 7 தலைமுறை மரபு</p>
                     </div>
                     <div class="topic-duration-badge">
-                        <i data-lucide="clock" style="width:18px; height:18px;"></i> 10 நிமிடங்கள்
+                        <i data-lucide="clock" style="width:18px; height:18px;"></i> தலா 10 நிமிடம் (2 செயல்பாடுகள்)
                     </div>
                 </div>
 
                 <div class="activity-grid">
 
-                    <!-- Activity 1: தங்க அடையாள அட்டை -->
+                    <!-- Activity 1A: தங்க அடையாள அட்டை -->
                     <div class="activity-card" style="border-top: 4px solid #f59e0b;">
                         <div>
                             <div class="activity-badge-strip">
-                                <span class="act-badge badge-namma">செயல்பாடு 1</span>
+                                <span class="act-badge badge-namma">செயல்பாடு 1A</span>
                                 <span class="act-time"><i data-lucide="timer" style="width:14px; height:14px;"></i> 10 நிமிடம்</span>
                             </div>
                             <h3>தங்க அடையாள அட்டை (4-Corner Identity)</h3>
@@ -713,6 +764,96 @@
                         </div>
                     </div>
 
+                    <!-- Activity 1B: 7 தலைமுறை மரபுப் பட்டியல் -->
+                    <div class="activity-card" style="border-top: 4px solid #f59e0b;">
+                        <div>
+                            <div class="activity-badge-strip">
+                                <span class="act-badge badge-namma">செயல்பாடு 1B</span>
+                                <span class="act-time"><i data-lucide="timer" style="width:14px; height:14px;"></i> 10 நிமிடம்</span>
+                            </div>
+                            <h3>7 தலைமுறை மரபுப் பட்டியல் (7-Generation Lineage Chart)</h3>
+                            <div class="activity-tagline">
+                                <i data-lucide="tree-pine" style="width:16px; height:16px;"></i> பரன் முதல் நாம் வரை — 7 தலைமுறை முன்னோர்களின் பெயர்களை எழுதி வேரறிதல்
+                            </div>
+
+                            <div class="materials-box">
+                                <div class="materials-title"><i data-lucide="box" style="width:14px; height:14px;"></i> தேவையான பொருட்கள்:</div>
+                                <div class="materials-items">ஆளுக்கு ஒரு 7 தலைமுறை மரபுப் படிவத் தாள் (அல்லது A4 தாள்) + எழுதுகோல் / பேனா</div>
+                            </div>
+
+                            <!-- 7 Generations Reference Box -->
+                            <div class="lineage-grid">
+                                <div class="lineage-chip">
+                                    <span class="lineage-num">7-ம் தலைமுறை</span>
+                                    <span class="lineage-name">பரன் — பரை</span>
+                                    <span class="lineage-desc">பரம்பரை மூலம்</span>
+                                </div>
+                                <div class="lineage-chip">
+                                    <span class="lineage-num">6-ம் தலைமுறை</span>
+                                    <span class="lineage-name">சேயோன் — சேயோள்</span>
+                                    <span class="lineage-desc">உயர் முன்னோர்கள்</span>
+                                </div>
+                                <div class="lineage-chip">
+                                    <span class="lineage-num">5-ம் தலைமுறை</span>
+                                    <span class="lineage-name">ஓட்டன் — ஓட்டி</span>
+                                    <span class="lineage-desc">எள்ளுத் தாத்தா/பாட்டி</span>
+                                </div>
+                                <div class="lineage-chip">
+                                    <span class="lineage-num">4-ம் தலைமுறை</span>
+                                    <span class="lineage-name">பூட்டன் — பூட்டி</span>
+                                    <span class="lineage-desc">கொள்ளுத் தாத்தா/பாட்டி</span>
+                                </div>
+                                <div class="lineage-chip">
+                                    <span class="lineage-num">3-ம் தலைமுறை</span>
+                                    <span class="lineage-name">பாட்டன் — பாட்டி</span>
+                                    <span class="lineage-desc">தாத்தா &amp; பாட்டி</span>
+                                </div>
+                                <div class="lineage-chip">
+                                    <span class="lineage-num">2-ம் தலைமுறை</span>
+                                    <span class="lineage-name">தந்தை — தாய்</span>
+                                    <span class="lineage-desc">பெற்றோர்கள்</span>
+                                </div>
+                                <div class="lineage-chip lineage-chip-self">
+                                    <span class="lineage-num" style="color:var(--saffron-primary);">1-ம் தலைமுறை</span>
+                                    <span class="lineage-name" style="color:#f59e0b;">நாம்</span>
+                                    <span class="lineage-desc" style="font-weight:700; color:var(--text-main);">சுய அடையாளம்</span>
+                                </div>
+                            </div>
+
+                            <div class="steps-container">
+                                <div class="step-item">
+                                    <div class="step-num">1</div>
+                                    <div class="step-text"><strong>படிவம் வழங்குதல் &amp; மரபு விளக்கம் (3 நிமி):</strong> பங்கேற்பாளர்கள் அனைவருக்கும் 7 தலைமுறைப் படிவம் வழங்கப்படுகிறது. பயிற்றுநர் பரன்-பரை முதல் நாம் வரை உள்ள 7 தலைமுறைப் பெயர்களைக் கூறி, 'பரன் + பரை' என்ற 7-வது தலைமுறை முன்னோர்களின் பெயரிலிருந்தே 'பரம்பரை' என்ற தமிழ் சொல் பிறந்தது என்ற வரலாற்று ஆழத்தை விளக்குவார்.</div>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-num">2</div>
+                                    <div class="step-text"><strong>முன்னோர்களின் பெயர்களை எழுதுதல் (4 நிமி):</strong> ஒவ்வொருவரும் தாளில் உள்ள 7 நிலைகளிலும் தங்களுக்குத் தெரிந்த முன்னோர்களின் உண்மையான பெயர்களை எழுதுவர் (நாம் &#10140; பெற்றோர் &#10140; தாத்தா-பாட்டி &#10140; பூட்டன்-பூட்டி &#10140; ஓட்டன்-ஓட்டி). தெரியாத நிலைகளை வீட்டில் உள்ள மூத்தோரிடம் கேட்டு நிரப்ப வட்டமிட்டு குறித்துக்கொள்வர்.</div>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-num">3</div>
+                                    <div class="step-text"><strong>ஜோடிப் பகிர்வு &amp; பரம்பரை உறுதிமொழி (3 நிமி):</strong> அருகிலுள்ள நபரிடம் தங்கள் 7 தலைமுறைப் பட்டியலைக் காட்டி அறிமுகப்படுத்துதல். "நான் தனி மனிதன் அல்ல; 7 தலைமுறை முன்னோர்களின் ஒழுக்கம், உழைப்பு, அறத்தின் கூட்டு வடிவம்" என்ற பெருமிதத்தைப் பெறுதல்.</div>
+                                </div>
+                            </div>
+
+                            <div class="debrief-box">
+                                <div class="debrief-title"><i data-lucide="lightbulb" style="width:16px; height:16px;"></i> பயிற்றுநர் நிறைவுரை (Aha! Moment):</div>
+                                <div class="debrief-text">
+                                    "தமிழில் 'பரம்பரை' என்ற சொல்லே 'பரன் + பரை' என்ற 7-வது தலைமுறை முன்னோர்களிடமிருந்துதான் பிறந்தது! ஓட்டன், பூட்டன், பாட்டன் என நமது 7 தலைமுறை முன்னோர்களின் பெயர்களையும் தியாகத்தையும் அறிவதே உண்மையான சுயமரியாதை; வேரை மறந்த மரம் நிலைக்காது!"
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Timer Widget -->
+                        <div class="timer-widget">
+                            <span class="timer-display" id="timer-2">10:00</span>
+                            <div class="timer-controls">
+                                <button class="btn-timer" onclick="startTimer(2, 600)"><i data-lucide="play" style="width:12px; height:12px;"></i> Start</button>
+                                <button class="btn-timer" onclick="pauseTimer(2)"><i data-lucide="pause" style="width:12px; height:12px;"></i> Pause</button>
+                                <button class="btn-timer" onclick="resetTimer(2, 600)"><i data-lucide="rotate-ccw" style="width:12px; height:12px;"></i> Reset</button>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </section>
 
@@ -731,7 +872,7 @@
                     </div>
                 </div>
 
-                <div class="activity-grid">
+                <div class="activity-grid single-activity">
 
                     <!-- Activity 2: 3 வண்ண ஒட்டுத்தாள் மரபு -->
                     <div class="activity-card" style="border-top: 4px solid #f43f5e;">
@@ -775,11 +916,11 @@
 
                         <!-- Timer Widget -->
                         <div class="timer-widget">
-                            <span class="timer-display" id="timer-2" style="color:#f43f5e;">10:00</span>
+                            <span class="timer-display" id="timer-3" style="color:#f43f5e;">10:00</span>
                             <div class="timer-controls">
-                                <button class="btn-timer" onclick="startTimer(2, 600)"><i data-lucide="play" style="width:12px; height:12px;"></i> Start</button>
-                                <button class="btn-timer" onclick="pauseTimer(2)"><i data-lucide="pause" style="width:12px; height:12px;"></i> Pause</button>
-                                <button class="btn-timer" onclick="resetTimer(2, 600)"><i data-lucide="rotate-ccw" style="width:12px; height:12px;"></i> Reset</button>
+                                <button class="btn-timer" onclick="startTimer(3, 600)"><i data-lucide="play" style="width:12px; height:12px;"></i> Start</button>
+                                <button class="btn-timer" onclick="pauseTimer(3)"><i data-lucide="pause" style="width:12px; height:12px;"></i> Pause</button>
+                                <button class="btn-timer" onclick="resetTimer(3, 600)"><i data-lucide="rotate-ccw" style="width:12px; height:12px;"></i> Reset</button>
                             </div>
                         </div>
                     </div>
@@ -802,7 +943,7 @@
                     </div>
                 </div>
 
-                <div class="activity-grid">
+                <div class="activity-grid single-activity">
 
                     <!-- Activity 3: 10 தூண்கள் தாங்கும் சமுதாயக் கூரை -->
                     <div class="activity-card" style="border-top: 4px solid #14b8a6;">
@@ -846,11 +987,11 @@
 
                         <!-- Timer Widget -->
                         <div class="timer-widget">
-                            <span class="timer-display" id="timer-3" style="color:#14b8a6;">10:00</span>
+                            <span class="timer-display" id="timer-4" style="color:#14b8a6;">10:00</span>
                             <div class="timer-controls">
-                                <button class="btn-timer" onclick="startTimer(3, 600)"><i data-lucide="play" style="width:12px; height:12px;"></i> Start</button>
-                                <button class="btn-timer" onclick="pauseTimer(3)"><i data-lucide="pause" style="width:12px; height:12px;"></i> Pause</button>
-                                <button class="btn-timer" onclick="resetTimer(3, 600)"><i data-lucide="rotate-ccw" style="width:12px; height:12px;"></i> Reset</button>
+                                <button class="btn-timer" onclick="startTimer(4, 600)"><i data-lucide="play" style="width:12px; height:12px;"></i> Start</button>
+                                <button class="btn-timer" onclick="pauseTimer(4)"><i data-lucide="pause" style="width:12px; height:12px;"></i> Pause</button>
+                                <button class="btn-timer" onclick="resetTimer(4, 600)"><i data-lucide="rotate-ccw" style="width:12px; height:12px;"></i> Reset</button>
                             </div>
                         </div>
                     </div>
@@ -878,26 +1019,30 @@
                 <div class="checklist-grid">
                     <label class="check-item">
                         <input type="checkbox" id="chk-1">
-                        <span>📄 வெற்று A4 தாள்கள் / அடையாள அட்டைகள் (செயல்பாடு 1)</span>
+                        <span>📄 வெற்று A4 தாள்கள் / 4-மூலை அடையாள அட்டைகள் (செயல்பாடு 1A)</span>
                     </label>
                     <label class="check-item">
                         <input type="checkbox" id="chk-2">
-                        <span>✍️ எழுதுகோல் / பேனாக்கள் & மார்க்கர்கள் (செயல்பாடு 1 & 3)</span>
+                        <span>📜 7 தலைமுறை மரபுப் படிவத் தாள்கள் (செயல்பாடு 1B)</span>
                     </label>
                     <label class="check-item">
                         <input type="checkbox" id="chk-3">
-                        <span>📝 3 வண்ண Sticky Notes (பழுப்பு, பச்சை, மஞ்சள்) (செயல்பாடு 2)</span>
+                        <span>✍️ எழுதுகோல் / பேனாக்கள் & மார்க்கர்கள் (செயல்பாடுகள் 1A, 1B & 3)</span>
                     </label>
                     <label class="check-item">
                         <input type="checkbox" id="chk-4">
-                        <span>🥤 காகிதக் குவளைகள் (10 Paper Cups) (செயல்பாடு 3)</span>
+                        <span>📝 3 வண்ண Sticky Notes (பழுப்பு, பச்சை, மஞ்சள்) (செயல்பாடு 2)</span>
                     </label>
                     <label class="check-item">
                         <input type="checkbox" id="chk-5">
-                        <span>📦 கெட்டியான அட்டைப் பலகை (Cardboard sheet) (செயல்பாடு 3)</span>
+                        <span>🥤 காகிதக் குவளைகள் (10 Paper Cups) (செயல்பாடு 3)</span>
                     </label>
                     <label class="check-item">
                         <input type="checkbox" id="chk-6">
+                        <span>📦 கெட்டியான அட்டைப் பலகை (Cardboard sheet) (செயல்பாடு 3)</span>
+                    </label>
+                    <label class="check-item">
+                        <input type="checkbox" id="chk-7">
                         <span>⏱️ 10 நிமிட நேரக் கண்காணிப்பு டைமர்</span>
                     </label>
                 </div>
@@ -978,7 +1123,7 @@
         }
 
         function resetChecklist() {
-            for (let i = 1; i <= 6; i++) {
+            for (let i = 1; i <= 7; i++) {
                 const el = document.getElementById(`chk-${i}`);
                 if (el) el.checked = false;
             }
