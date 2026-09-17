@@ -369,6 +369,70 @@
             margin-top: 2px;
         }
 
+        /* 3-Paper Self-Audit Styles */
+        .audit-paper-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 14px;
+            margin: 16px 0;
+        }
+        .audit-paper-card {
+            background: var(--bg-surface);
+            border: 2px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+        }
+        .audit-paper-card:hover {
+            transform: translateY(-2px);
+        }
+        .audit-paper-card.paper-kula {
+            border-color: rgba(217, 119, 6, 0.45);
+            background: rgba(217, 119, 6, 0.06);
+        }
+        .audit-paper-card.paper-grama {
+            border-color: rgba(16, 185, 129, 0.45);
+            background: rgba(16, 185, 129, 0.06);
+        }
+        .audit-paper-card.paper-ishta {
+            border-color: rgba(234, 179, 8, 0.55);
+            background: rgba(234, 179, 8, 0.08);
+        }
+        .audit-paper-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .audit-paper-title {
+            font-weight: 800;
+            font-size: 0.92rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .audit-q-text {
+            font-size: 0.84rem;
+            color: var(--text-main);
+            margin: 6px 0 10px 0;
+            line-height: 1.45;
+        }
+        .audit-tick-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
         .activity-card {
             background: var(--bg-surface);
             border: 2px solid var(--border-color);
@@ -874,42 +938,105 @@
 
                 <div class="activity-grid single-activity">
 
-                    <!-- Activity 2: 3 வண்ண ஒட்டுத்தாள் மரபு -->
+                    <!-- Activity 2: 3 வண்ணத் தாள் வழிபாடு & தற்சோதனை -->
                     <div class="activity-card" style="border-top: 4px solid #f43f5e;">
                         <div>
                             <div class="activity-badge-strip">
                                 <span class="act-badge badge-sami">செயல்பாடு 2</span>
                                 <span class="act-time"><i data-lucide="timer" style="width:14px; height:14px;"></i> 10 நிமிடம்</span>
                             </div>
-                            <h3>3 வண்ண ஒட்டுத்தாள் மரபு (3-Tier Divinity Tree)</h3>
+                            <h3>3 வண்ணத் தாள் வழிபாடு &amp; தற்சோதனை (3-Tier Divinity &amp; Self-Audit)</h3>
                             <div class="activity-tagline">
-                                <i data-lucide="git-branch" style="width:16px; height:16px;"></i> குலதெய்வம் = வேர், கிராம தெய்வம் = வேலி, இஷ்ட தெய்வம் = கனி
+                                <i data-lucide="check-check" style="width:16px; height:16px;"></i> குலதெய்வம் (ஆண்டுக்கு 1) • கிராம தெய்வம் (15 நாளுக்கு 1) • இஷ்ட தெய்வம் (தினசரி) — ஆன்மீகத் தற்சோதனை
                             </div>
 
                             <div class="materials-box">
                                 <div class="materials-title"><i data-lucide="box" style="width:14px; height:14px;"></i> தேவையான பொருட்கள்:</div>
-                                <div class="materials-items">3 வண்ண ஒட்டுத்தாள்கள் (Sticky Notes: பழுப்பு, பச்சை, மஞ்சள்) + பேனா</div>
+                                <div class="materials-items">ஆளுக்கு 3 வண்ணத் தாள்கள் (Sticky Notes: பழுப்பு, பச்சை, மஞ்சள் அல்லது 3 சிறு தாள்கள்) + பேனா</div>
+                            </div>
+
+                            <!-- 3-Paper Self-Audit Visual Cards -->
+                            <div class="audit-paper-grid">
+                                <div class="audit-paper-card paper-kula">
+                                    <div class="audit-paper-header">
+                                        <div class="audit-paper-title" style="color:#b45309;">
+                                            <i data-lucide="file-text" style="width:16px; height:16px;"></i> 1-வது தாள் (பழுப்பு / வேர்)
+                                        </div>
+                                        <span class="audit-tick-badge">கேள்வி 1</span>
+                                    </div>
+                                    <strong style="color:var(--text-main); font-size:0.9rem;">குலதெய்வம் (குடும்ப வேர்)</strong>
+                                    <div class="audit-q-text">
+                                        <em>"ஆண்டிற்கு ஒருமுறையாவது உங்கள் குலதெய்வக் கோவிலுக்கு நேரில் சென்று வழிபாடு செய்திருக்கிறீர்களா?"</em>
+                                    </div>
+                                    <div>
+                                        <span class="audit-tick-badge" style="border-color:#b45309; color:#b45309; background:rgba(245,158,11,0.1);">
+                                            <i data-lucide="check" style="width:14px; height:14px;"></i> ஆம் என்றால் தாளில் ✔ டிக் செய்யவும்
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="audit-paper-card paper-grama">
+                                    <div class="audit-paper-header">
+                                        <div class="audit-paper-title" style="color:#059669;">
+                                            <i data-lucide="file-text" style="width:16px; height:16px;"></i> 2-வது தாள் (பச்சை / வேலி)
+                                        </div>
+                                        <span class="audit-tick-badge">கேள்வி 2</span>
+                                    </div>
+                                    <strong style="color:var(--text-main); font-size:0.9rem;">கிராம / காவல் தெய்வம் (பாதுகாப்பு)</strong>
+                                    <div class="audit-q-text">
+                                        <em>"குறைந்தது 15 நாட்களுக்கு ஒருமுறையாவது கிராம / எல்லைக் காவல் தெய்வத்தை வழிபடுகிறீர்களா?"</em>
+                                    </div>
+                                    <div>
+                                        <span class="audit-tick-badge" style="border-color:#059669; color:#059669; background:rgba(16,185,129,0.1);">
+                                            <i data-lucide="check" style="width:14px; height:14px;"></i> ஆம் என்றால் தாளில் ✔ டிக் செய்யவும்
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="audit-paper-card paper-ishta">
+                                    <div class="audit-paper-header">
+                                        <div class="audit-paper-title" style="color:#d97706;">
+                                            <i data-lucide="file-text" style="width:16px; height:16px;"></i> 3-வது தாள் (மஞ்சள் / கனி)
+                                        </div>
+                                        <span class="audit-tick-badge">கேள்வி 3</span>
+                                    </div>
+                                    <strong style="color:var(--text-main); font-size:0.9rem;">இஷ்ட தெய்வம் (ஞானக்கனி)</strong>
+                                    <div class="audit-q-text">
+                                        <em>"தினசரி ஒருமுறையாவது உங்கள் மனதிற்குப் பிடித்த இஷ்ட தெய்வத்தை நினைத்து வணங்குகிறீர்களா?"</em>
+                                    </div>
+                                    <div>
+                                        <span class="audit-tick-badge" style="border-color:#d97706; color:#d97706; background:rgba(234,179,8,0.1);">
+                                            <i data-lucide="check" style="width:14px; height:14px;"></i> ஆம் என்றால் தாளில் ✔ டிக் செய்யவும்
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="steps-container">
                                 <div class="step-item">
                                     <div class="step-num">1</div>
-                                    <div class="step-text"><strong>பழுப்புத் தாள் (வேர்):</strong> தங்கள் குலதெய்வத்தின் பெயரை எழுதி மரத்தின் வேர் பகுதியில் ஒட்டுதல் (குலதெய்வம் மறக்கக் கூடாது).</div>
+                                    <div class="step-text"><strong>3 தாள்களில் தெய்வங்களை எழுதுதல் (3 நிமி):</strong> ஒவ்வொரு பங்கேற்பாளருக்கும் 3 வண்ணத் தாள்கள் வழங்கப்படும்: (1) 1-வது தாளில் தங்கள் குடும்பக் <strong>குலதெய்வத்தின் பெயர்</strong> (வேர்); (2) 2-வது தாளில் தங்கள் ஊர்க் <strong>கிராமக் காவல் தெய்வத்தின் பெயர்</strong> (வேலி); (3) 3-வது தாளில் தங்களுக்குப் பிடித்த <strong>இஷ்ட தெய்வத்தின் பெயர்</strong> (கனி) என எழுத வேண்டும்.</div>
                                 </div>
                                 <div class="step-item">
                                     <div class="step-num">2</div>
-                                    <div class="step-text"><strong>பச்சைத் தாள் (வேலி):</strong> கிராமக் காவல் தெய்வத்தின் பெயரை எழுதி மரத்தின் நடுவே ஒட்டுதல் (ஊரின் பாதுகாப்பு வேலி).</div>
+                                    <div class="step-text"><strong>பயிற்றுநரின் 3 வினாக்களும் தற்சோதனை டிக் (✔) குறியிடுதலும் (4 நிமி):</strong> பயிற்றுநர் வரிசையாக 3 கேள்விகளைக் கேட்பார்; பங்கேற்பாளர்கள் நேர்மையாகத் தற்சோதனை செய்து அந்தந்தத் தாளில் டிக் இட வேண்டும்:
+                                        <ul style="margin:6px 0 0 16px; font-size:0.88rem; line-height:1.6;">
+                                            <li><strong>கேள்வி 1 (குலதெய்வம் - தாள் 1):</strong> வருடத்திற்கு ஒருமுறையாவது குலதெய்வக் கோவிலுக்கு நேரில் சென்றிருக்கிறீர்களா? ➔ ஆம் என்றால் 1-வது தாளில் டிக் (✔) செய்யவும்!</li>
+                                            <li><strong>கேள்வி 2 (கிராம தெய்வம் - தாள் 2):</strong> 15 நாட்களுக்கு ஒருமுறையாவது கிராம / காவல் தெய்வக் கோவிலுக்குச் சென்று வழிபடுகிறீர்களா? ➔ ஆம் என்றால் 2-வது தாளில் டிக் (✔) செய்யவும்!</li>
+                                            <li><strong>கேள்வி 3 (இஷ்ட தெய்வம் - தாள் 3):</strong> தினமும் ஒருமுறையாவது உங்கள் இஷ்ட தெய்வத்தை மனதார நினைத்து வணங்குகிறீர்களா? ➔ ஆம் என்றால் 3-வது தாளில் டிக் (✔) செய்யவும்!</li>
+                                        </ul>
+                                    </div>
                                 </div>
                                 <div class="step-item">
                                     <div class="step-num">3</div>
-                                    <div class="step-text"><strong>மஞ்சள் தாள் (கனி):</strong> இஷ்ட தெய்வத்தின் பெயரை எழுதி உச்சியில் ஒட்டுதல் (ஞானக்கனி).</div>
+                                    <div class="step-text"><strong>முக்கியப் படிப்பினை &amp; ஆன்மீகப் பரிணாம உறுதிமொழி (Takeaway) (3 நிமி):</strong> நாம் ஆன்மீக ரீதியாகவும் மன ரீதியாகவும் அடுத்த கட்டத்திற்குப் பரிணாம வளர்ச்சி அடைய (To evolve ourself), இந்த மூன்று வழிபாட்டு ஒழுக்கங்களையும் தவறாமல் பின்பற்ற வேண்டும். <em>"எந்தத் தாளில் டிக் (✔) விழவில்லையோ, அதை நினைத்து வருந்தாமல், உடனடியாக அதை முறைப்படுத்தி 'டிக்' ஆக மாற்றுவதே நமது ஆன்மீக வளர்ச்சி!" (If no tick, work to make it a tick!)</em></div>
                                 </div>
                             </div>
 
                             <div class="debrief-box" style="border-left-color: #f43f5e; background: rgba(244, 63, 94, 0.08);">
                                 <div class="debrief-title" style="color: #f43f5e;"><i data-lucide="lightbulb" style="width:16px; height:16px;"></i> பயிற்றுநர் நிறைவுரை (Aha! Moment):</div>
                                 <div class="debrief-text">
-                                    "கிளைகளும் பழங்களும் (இஷ்ட தெய்வம்) எத்தனை வேண்டுமானாலும் இருக்கலாம்; ஆனால் வேரை (குலதெய்வத்தை) ஒருபோதும் வெட்டிவிடக் கூடாது!"
+                                    "குலதெய்வத்தை ஆண்டிற்கு ஒருமுறை தரிசிப்பது வேருக்கு நீரூற்றுவது; கிராம தெய்வத்தை 15 நாட்களுக்கு ஒருமுறை வணங்குவது சமுதாயப் பாதுகாப்பு வேலியைப் பலப்படுத்துவது; இஷ்ட தெய்வத்தை தினமும் நினைப்பது ஞானக்கனியைச் சுவைப்பது! இம்மூன்றையும் தவறாமல் பின்பற்றி நம்மை நாமே அடுத்த நிலைக்கு உயர்த்துவோம் (Evolve)!"
                                 </div>
                             </div>
                         </div>
