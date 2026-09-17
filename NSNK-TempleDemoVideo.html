@@ -1,0 +1,1837 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10 தூண்கள் தாங்கும் சமுதாயக் கூரை — செயல்முறை விளக்கம் வீடியோ (Demonstration Video)</title>
+    <meta name="description" content="நம்ம சாமி நம்ம கோவில் — 10 தூண்கள் தாங்கும் சமுதாயக் கூரை (3-Tier Temple Model) பயிற்சிப் பட்டறை செயல்முறை விளக்கம் வீடியோ மற்றும் நேரடி படப்பிடிப்பு வழிகாட்டி.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Mukta+Malar:wght@400;500;600;700;800&family=Noto+Sans+Tamil:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --bg-base: #090d16;
+            --bg-surface: #101626;
+            --bg-card: #161f33;
+            --bg-card-hover: #1e2a45;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --border-focus: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            
+            --saffron-primary: #f59e0b;
+            --saffron-hover: #d97706;
+            --saffron-glow: rgba(245, 158, 11, 0.25);
+            
+            --teal-primary: #14b8a6;
+            --teal-glow: rgba(20, 184, 166, 0.25);
+            --indigo-primary: #6366f1;
+            --rose-primary: #f43f5e;
+            
+            --font-heading: 'Outfit', 'Cinzel', 'Noto Sans Tamil', sans-serif;
+            --font-tamil: 'Noto Sans Tamil', 'Mukta Malar', sans-serif;
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --shadow-lg: 0 12px 36px rgba(0,0,0,0.45);
+        }
+
+        body.light-theme {
+            --bg-base: #f8fafc;
+            --bg-surface: #ffffff;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f1f5f9;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --text-dim: #64748b;
+            --shadow-lg: 0 12px 36px rgba(0,0,0,0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-tamil);
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            transition: background-color 0.3s, color 0.3s;
+            padding-bottom: 80px;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(16, 22, 38, 0.92);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 14px 0;
+            transition: all 0.3s;
+        }
+        body.light-theme .navbar {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            box-shadow: 0 4px 14px var(--saffron-glow);
+        }
+
+        .brand-text h1 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            line-height: 1.2;
+            color: var(--text-main);
+        }
+
+        .brand-text p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--text-muted);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+        }
+        .btn-nav:hover {
+            color: var(--text-main);
+            border-color: var(--saffron-primary);
+        }
+
+        .btn-theme-toggle {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 8px;
+            color: var(--text-main);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Hero Banner */
+        .video-hero {
+            padding: 32px 0 20px 0;
+            text-align: center;
+        }
+
+        .video-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 16px;
+            border-radius: 9999px;
+            background: rgba(20, 184, 166, 0.15);
+            border: 1px solid rgba(20, 184, 166, 0.35);
+            color: #2dd4bf;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .video-title {
+            font-size: 2.1rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ffffff 30%, #5eead4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        body.light-theme .video-title {
+            background: linear-gradient(135deg, #0f172a 30%, #0d9488 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .video-subtitle {
+            font-size: 1rem;
+            color: var(--text-muted);
+            max-width: 820px;
+            margin: 0 auto;
+        }
+
+        /* Player Section */
+        .theater-wrapper {
+            background: #000;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.65);
+            border: 1px solid rgba(255,255,255,0.12);
+            position: relative;
+            margin: 24px 0 32px 0;
+        }
+
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            background: #05070c;
+            aspect-ratio: 16 / 9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #demoCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* Player Controls Overlay Bar */
+        .player-bar {
+            background: linear-gradient(to top, rgba(10, 14, 24, 0.98), rgba(16, 22, 38, 0.95));
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 14px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Progress Bar & Timeline */
+        .timeline-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .timeline-slider-wrap {
+            position: relative;
+            flex: 1;
+            height: 8px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .timeline-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #14b8a6, #f59e0b);
+            border-radius: 4px;
+            transition: width 0.05s linear;
+        }
+
+        .timeline-handle {
+            position: absolute;
+            top: 50%;
+            left: 0%;
+            transform: translate(-50%, -50%);
+            width: 16px;
+            height: 16px;
+            background: #fff;
+            border: 2px solid #f59e0b;
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(245,158,11,0.6);
+            pointer-events: none;
+        }
+
+        .time-display {
+            font-size: 0.8rem;
+            font-family: monospace;
+            color: #94a3b8;
+            min-width: 90px;
+            text-align: right;
+        }
+
+        /* Controls Button Row */
+        .controls-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .controls-left, .controls-center, .controls-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-ctrl {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: #f8fafc;
+            border-radius: var(--radius-sm);
+            padding: 8px 14px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-ctrl:hover {
+            background: rgba(255,255,255,0.16);
+            border-color: #5eead4;
+        }
+
+        .btn-play-master {
+            background: linear-gradient(135deg, #14b8a6, #0d9488);
+            color: #fff;
+            border: none;
+            padding: 9px 18px;
+            font-weight: 700;
+            box-shadow: 0 4px 14px var(--teal-glow);
+        }
+        .btn-play-master:hover {
+            background: linear-gradient(135deg, #2dd4bf, #14b8a6);
+            transform: translateY(-1px);
+        }
+
+        .chapter-chips {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .chip-step {
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .chip-step.active, .chip-step:hover {
+            background: rgba(20, 184, 166, 0.25);
+            border-color: #14b8a6;
+            color: #5eead4;
+        }
+
+        .btn-export-video {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #fff;
+            border: none;
+            padding: 8px 14px;
+            font-weight: 700;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px var(--saffron-glow);
+            transition: all 0.2s;
+        }
+        .btn-export-video:hover {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            transform: translateY(-1px);
+        }
+
+        /* Video Steps Overview Cards */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 36px 0;
+        }
+
+        .step-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            transition: all 0.25s;
+            cursor: pointer;
+            position: relative;
+        }
+        .step-card:hover {
+            transform: translateY(-3px);
+            border-color: #5eead4;
+            box-shadow: var(--shadow-lg);
+        }
+        .step-card.current-active {
+            border-color: #14b8a6;
+            background: rgba(20, 184, 166, 0.08);
+        }
+
+        .step-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .step-badge {
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: rgba(20, 184, 166, 0.15);
+            color: #2dd4bf;
+        }
+
+        .step-card h4 {
+            font-size: 1.05rem;
+            color: var(--text-main);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .step-card p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Script & Storyboard Section */
+        .storyboard-section {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            margin-top: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .storyboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            margin-top: 16px;
+        }
+
+        .storyboard-table th, .storyboard-table td {
+            padding: 14px 16px;
+            border: 1px solid var(--border-color);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .storyboard-table th {
+            background: rgba(255,255,255,0.04);
+            color: #5eead4;
+            font-weight: 700;
+        }
+
+        .shot-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: rgba(245, 158, 11, 0.18);
+            color: #f59e0b;
+            font-weight: 700;
+            font-size: 0.78rem;
+        }
+
+        /* Pledge Box in Video Page */
+        .pledge-card-box {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(20, 184, 166, 0.08));
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            margin-top: 24px;
+        }
+
+        .pledge-text {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: #fef08a;
+            white-space: pre-line;
+            font-weight: 500;
+        }
+
+        /* Notification Toast */
+        #toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #14b8a6;
+            color: #042f2e;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            display: none;
+            z-index: 9999;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        @media (max-width: 768px) {
+            .video-title { font-size: 1.5rem; }
+            .player-bar { padding: 10px; }
+            .chapter-chips { display: none; }
+            .storyboard-section { padding: 20px 14px; }
+            .storyboard-table th, .storyboard-table td { padding: 8px 10px; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navbar -->
+    <header class="navbar">
+        <div class="container nav-content">
+            <a href="NSNK-WorkshopActivities.html" class="nav-brand">
+                <div class="brand-logo">
+                    <i data-lucide="video" style="width:24px; height:24px;"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>நம்ம சாமி நம்ம கோவில்</h1>
+                    <p>செயல்முறை விளக்கம் வீடியோ அரங்கம் (Demonstration Video)</p>
+                </div>
+            </a>
+
+            <div class="nav-actions">
+                <a href="NSNK-WorkshopActivities.html#namma-kovil" class="btn-nav">
+                    <i data-lucide="arrow-left" style="width:15px; height:15px;"></i> செயல்பாடுகள் பக்கம்
+                </a>
+                <a href="NSNK-TrainerManual.html#kovil-activity" class="btn-nav">
+                    <i data-lucide="book-open" style="width:15px; height:15px;"></i> பயிற்றுநர் கையேடு
+                </a>
+                <button class="btn-theme-toggle" id="themeToggle" title="வெளிச்சம் / இருள் பின்னணி">
+                    <i data-lucide="sun" id="themeIcon" style="width:18px; height:18px;"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Hero Header -->
+        <section class="video-hero">
+            <div class="video-badge">
+                <i data-lucide="sparkles" style="width:14px; height:14px;"></i>
+                தலைப்பு 3: நம்ம கோவில் — நேரடி செய்முறை விளக்கம்
+            </div>
+            <h2 class="video-title">10 தூண்கள் தாங்கும் சமுதாயக் கூரை (3-Tier Temple Model)</h2>
+            <p class="video-subtitle">
+                10 காகிதக் குவளைகள் &amp; 2 கூரை பலகைகள் கொண்டு ஆதிகாலக் கோவிலின் 9 சமுதாயத் தூண்களை உணர்த்தி, வரலாற்றுச் சரிவையும், மீண்டும் கட்டியெழுப்பும் புனித உறுதிமொழியையும் விளக்கும் அனிமேஷன் செய்முறை காணொளி.
+            </p>
+        </section>
+
+        <!-- Video Theater & HTML5 Canvas Player -->
+        <div class="theater-wrapper">
+            <div class="canvas-container" id="playerCanvasContainer">
+                <canvas id="demoCanvas" width="1280" height="720"></canvas>
+            </div>
+
+            <!-- Player Bar -->
+            <div class="player-bar">
+                <!-- Timeline Slider -->
+                <div class="timeline-container">
+                    <div class="timeline-slider-wrap" id="timelineSlider" title="விரும்பிய பகுதிக்குச் செல்ல கிளிக் செய்யவும்">
+                        <div class="timeline-progress" id="timelineProgress"></div>
+                        <div class="timeline-handle" id="timelineHandle"></div>
+                    </div>
+                    <div class="time-display" id="timeDisplay">00:00 / 01:40</div>
+                </div>
+
+                <!-- Controls Buttons -->
+                <div class="controls-row">
+                    <div class="controls-left">
+                        <button class="btn-ctrl btn-play-master" id="btnPlayPause">
+                            <i data-lucide="play" id="playIcon" style="width:18px; height:18px;"></i>
+                            <span id="playText">இயக்கு (Play)</span>
+                        </button>
+                        <button class="btn-ctrl" id="btnReplay" title="மீண்டும் தொடங்கு">
+                            <i data-lucide="rotate-ccw" style="width:16px; height:16px;"></i>
+                        </button>
+                        <button class="btn-ctrl" id="btnVoiceToggle" title="குரல் வழிகாட்டல் ஆன்/ஆஃப்">
+                            <i data-lucide="volume-2" id="voiceIcon" style="width:16px; height:16px;"></i>
+                            <span id="voiceText">குரல் (Voice On)</span>
+                        </button>
+                    </div>
+
+                    <!-- Step Jump Chips -->
+                    <div class="controls-center chapter-chips">
+                        <button class="chip-step active" onclick="jumpToStep(1)">படி 1: குவளைகள் எழுதுதல்</button>
+                        <button class="chip-step" onclick="jumpToStep(2)">படி 2: 3-அடுக்கு கட்டுமானம்</button>
+                        <button class="chip-step" onclick="jumpToStep(3)">படி 3: அகற்றுதல் &amp; சரிவு</button>
+                        <button class="chip-step" onclick="jumpToStep(4)">படி 4: பிரதக்ஷிணம் &amp; உறுதிமொழி</button>
+                    </div>
+
+                    <div class="controls-right">
+                        <select id="speedSelect" class="btn-ctrl" style="cursor:pointer; background:rgba(255,255,255,0.08);">
+                            <option value="0.75">0.75x</option>
+                            <option value="1.0" selected>1.0x வேகம்</option>
+                            <option value="1.25">1.25x</option>
+                            <option value="1.5">1.5x</option>
+                        </select>
+                        <button class="btn-export-video" id="btnExportVideo" title="இந்த காணொளியை வீடியோ கோப்பாகப் பதிவிறக்குங்கள்">
+                            <i data-lucide="download" style="width:16px; height:16px;"></i>
+                            <span>வீடியோ பதிவிறக்கு (.webm)</span>
+                        </button>
+                        <button class="btn-ctrl" id="btnFullscreen" title="முழுத்திரை (Fullscreen)">
+                            <i data-lucide="maximize" style="width:16px; height:16px;"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4 Step Interactive Overview Cards -->
+        <section>
+            <div class="section-title" style="margin-bottom: 16px;">
+                <i data-lucide="list-checks" style="width:22px; height:22px; color:#14b8a6;"></i>
+                காணொளியின் 4 முக்கியக் கட்டங்கள் (Key Video Chapters)
+            </div>
+
+            <div class="steps-grid">
+                <!-- Step 1 -->
+                <div class="step-card current-active" id="cardStep1" onclick="jumpToStep(1)">
+                    <div class="step-card-header">
+                        <span class="step-badge">படி 1 (0:00 - 0:25)</span>
+                        <i data-lucide="edit-3" style="width:18px; height:18px; color:#2dd4bf;"></i>
+                    </div>
+                    <h4>10 குவளைகளில் எழுதுதல்</h4>
+                    <p>10 பேரிடம் குவளைகளைக் கொடுத்து அடிப்பகுதியில் எழுதுதல்: அடித்தளம் (ஆகமம், அர்ச்சகர், சமுதாய ஒருங்கிணைப்பு, சத்சங்கம், பஞ்சபூதம் பாதுகாப்பு); நடுத்தளம் (கல்வி, மருத்துவம், கலை, பொருளாதாரம்); உச்சி (கோவில்).</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="step-card" id="cardStep2" onclick="jumpToStep(2)">
+                    <div class="step-card-header">
+                        <span class="step-badge">படி 2 (0:25 - 0:55)</span>
+                        <i data-lucide="layers" style="width:18px; height:18px; color:#2dd4bf;"></i>
+                    </div>
+                    <h4>3 அடுக்குக் கோவில் மாதிரி அமைத்தல்</h4>
+                    <p>மேசையில் 5 அடித்தளக் குவளைகள் ➔ 1-ஆம் கூரை பலகை ➔ 4 நடுத்தளக் குவளைகள் ➔ 2-ஆம் கூரை பலகை ➔ உச்சியில் 'கோவில்' குவளை. வெளியில் தெரிவது உச்சி மட்டுமே; தாங்குவது 9 தூண்கள்!</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="step-card" id="cardStep3" onclick="jumpToStep(3)">
+                    <div class="step-card-header">
+                        <span class="step-badge">படி 3 (0:55 - 1:20)</span>
+                        <i data-lucide="alert-triangle" style="width:18px; height:18px; color:#f59e0b;"></i>
+                    </div>
+                    <h4>தன்னிச்சையாக அகற்றுதல் &amp; சரிவு</h4>
+                    <p>அடித்தளத்தில் 4 குவளைகள் நீக்கப்பட்டு மையத்தில் 1 மட்டும் நிற்கும்; நடுத்தளத்தில் 3 நீக்கப்பட்டு மையத்தில் 1 நிற்கும். ஆபத்தான பலவீன சமநிலை! "வரலாற்றில் இழந்த தூண்களை மீண்டும் நாம் கட்டியெழுப்ப வேண்டும்!"</p>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="step-card" id="cardStep4" onclick="jumpToStep(4)">
+                    <div class="step-card-header">
+                        <span class="step-badge">படி 4 (1:20 - 1:40)</span>
+                        <i data-lucide="hand-heart" style="width:18px; height:18px; color:#f43f5e;"></i>
+                    </div>
+                    <h4>பிரதக்ஷிணம் &amp; புனித உறுதிமொழி</h4>
+                    <p>அனைவரும் 3 அடுக்குக் கோவில் மாதிரியை ஒரு முறை வலம் வருதல் (Pradakshina); பின்னர் கரம் கூப்பி/ஏந்தி நின்று அருள்நிறை அறம்வளர்த்தநாயகி, சுவாமிகள் முன் சமூக அறப்பணி உறுதிமொழி ஏற்பு.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sacred Pledge Text Reference -->
+        <section class="pledge-card-box">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                <div style="font-weight:800; color:#f59e0b; display:flex; align-items:center; gap:8px;">
+                    <i data-lucide="flame" style="width:18px; height:18px;"></i>
+                    படி 4-ல் பயிற்றுநர் &amp; பங்கேற்பாளர்கள் ஏற்கும் புனித உறுதிமொழி
+                </div>
+                <button class="btn-ctrl" onclick="copyPledge()" style="font-size:0.8rem; padding:4px 10px;">
+                    <i data-lucide="copy" style="width:13px; height:13px;"></i> நகலெடு
+                </button>
+            </div>
+            <div class="pledge-text" id="pledgeFullText">"வணக்கம்! அருள்நிறை அறம்வளர்த்தநாயகியின் பேரருளாலும், வழிபாட்டிற்குரிய சுவாமி தயானந்த சரஸ்வதி அவர்களின் ஆசிகளாலும், சுவாமி சக்ஷாத்கிருதானந்தா அவர்களின் வழிகாட்டுதலில் அறம்வளர்த்தநாயகி சேவை மையத்தின் கீழ் அறத்தை வளர்க்கும் பெரும்பணியை நான் ஆற்றிவருகிறேன்.
+
+அறத்தை வளர்க்கும் இறை பணியின் பகுதியாக நமது திட்டமான நம்ம சாமி நம்ம கோவிலில் இணைந்து தேவையான ஊழியர்களுக்கு பயிற்சி அளிக்கும் சிறப்பு பணியை ஆற்றுவேன் என அறம்வளர்த்தநாயகியின் முன் நான் உறுதி ஏற்கிறேன்.
+
+இந்த பெரும் பணியின் வெற்றிக்கு தேவையான அறிவையும், ஆற்றலையும், வழங்கி அருள்புரிய அறம்வளர்த்தநாயகியின் திருவடிகளை பணிந்து வேண்டுகிறேன்."</div>
+        </section>
+
+        <!-- Smartphone Video Production Guide / Storyboard -->
+        <section class="storyboard-section">
+            <div class="section-header">
+                <div>
+                    <h3 class="section-title">
+                        <i data-lucide="clapperboard" style="width:24px; height:24px; color:#f59e0b;"></i>
+                        நேரடி படப்பிடிப்பு வழிகாட்டி (Real-World Smartphone Video Shooting Guide)
+                    </h3>
+                    <p style="font-size:0.88rem; color:var(--text-muted); margin-top:4px;">
+                        பயிற்றுநர்கள் தங்கள் ஸ்மார்ட்போன் மற்றும் உண்மையான காகிதக் குவளைகளைக் கொண்டு நேரடி வீடியோ பதிவு செய்வதற்கான காட்சிக் கட்டமைப்பு (Shot-by-Shot Storyboard).
+                    </p>
+                </div>
+                <span class="shot-badge" style="padding:6px 12px; font-size:0.85rem;">மொத்த நேரம்: ~3 முதல் 4 நிமிடங்கள்</span>
+            </div>
+
+            <table class="storyboard-table">
+                <thead>
+                    <tr>
+                        <th style="width:15%;">காட்சி &amp; கோணம்</th>
+                        <th style="width:25%;">காட்சி விளக்கம் (Visual Action)</th>
+                        <th style="width:40%;">பயிற்றுநர் குரல் / வசனம் (Audio / Dialogue)</th>
+                        <th style="width:20%;">முக்கிய வழிகாட்டல்</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <span class="shot-badge">Shot 1</span><br>
+                            <strong>வைட் ஆங்கிள் (Wide Shot)</strong><br>
+                            <small style="color:var(--text-dim);">மேஜை + 10 பங்கேற்பாளர்கள்</small>
+                        </td>
+                        <td>
+                            பயிற்றுநர் மேஜைக்கு அருகில் நிற்கிறார். 10 பேர் வட்டமாக நிற்கின்றனர். மேசையில் 10 வெற்று காகிதக் குவளைகள் மற்றும் 2 அட்டைப் பலகைகள் வைக்கப்பட்டுள்ளன.
+                        </td>
+                        <td>
+                            "வணக்கம்! இன்று நமது முன்னோர்கள் கட்டிய கோவிலின் ஆழமான தத்துவத்தை ஒரு எளிய குழுச் செயல்பாடு வழியாகப் பார்க்கப் போகிறோம்."
+                        </td>
+                        <td>நன்கு வெளிச்சமுள்ள அறையில் கேமராவை ட்ரைபாடில் நிலையாக வைக்கவும்.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="shot-badge">Shot 2</span><br>
+                            <strong>க்ளோஸ்-அப் (Close-up)</strong><br>
+                            <small style="color:var(--text-dim);">குவளைகளின் அடியில் எழுதுதல்</small>
+                        </td>
+                        <td>
+                            பங்கேற்பாளர்கள் குவளையின் அடிப்பகுதியில் மார்க்கர் கொண்டு 10 பெயர்களை எழுதுவதை கேமரா நெருக்கமாகப் படம் பிடிக்கிறது.
+                        </td>
+                        <td>
+                            "முதல் 5 பேர் அடித்தளத் தூண்கள் — ஆகமம், அர்ச்சகர், சமுதாய ஒருங்கிணைப்பு, சத்சங்கம், பஞ்சபூதம்... அடுத்த 4 பேர் கல்வி, மருத்துவம், கலை, பொருளாதாரம்... 10-வது நபர் 'கோவில்'!"
+                        </td>
+                        <td>எழுத்துக்கள் தெளிவாகத் தெரியும்படி குவளையின் அடிப்பகுதியை கேமரா நோக்கித் திருப்பிக் காட்டவும்.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="shot-badge">Shot 3</span><br>
+                            <strong>மிட் ஷாட் (Mid Shot)</strong><br>
+                            <small style="color:var(--text-dim);">3 அடுக்குக் கட்டுமானம்</small>
+                        </td>
+                        <td>
+                            5 குவளைகள் மேசையில் வைக்கப்படுகின்றன ➔ அட்டை பலகை ➔ 4 குவளைகள் ➔ தட்டு பலகை ➔ உச்சியில் கோவில் குவளை வைக்கப்படுகிறது. 3 அடுக்குக் கோபுரம் கம்பீரமாக நிற்கிறது.
+                        </td>
+                        <td>
+                            "பாருங்கள்! வெளியில் பார்ப்பவர்களுக்கு உச்சியில் இருக்கும் கோவில் மட்டுமே தெரிகிறது. ஆனால் அதன் கீழ் 9 தூண்களும்தான் பலமாகத் தாங்கி நிற்கின்றன!"
+                        </td>
+                        <td>அடுக்குகள் சரியாமல் நேர்த்தியாக வைப்பதை பக்கவாட்டுக் கோணத்தில் காட்டவும்.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="shot-badge">Shot 4</span><br>
+                            <strong>டிராமா க்ளோஸ்-அப் (High Tension)</strong><br>
+                            <small style="color:var(--text-dim);">குவளைகள் ஒவ்வொன்றாக அகற்றுதல்</small>
+                        </td>
+                        <td>
+                            பங்கேற்பாளர்கள் தன்னிச்சையாக வந்து குவளைகளை அகற்றுகின்றனர். கீழே 4 நீக்கப்பட்டு 1 மையக் குவளையும், நடுவில் 3 நீக்கப்பட்டு 1 மையக் குவளையும் மட்டுமே நிற்கின்றன. கோபுரம் தள்ளாடுகிறது!
+                        </td>
+                        <td>
+                            "வரலாற்றில் கல்வி, மருத்துவம், கலை கோவில்களிடமிருந்து பறிக்கப்பட்டபோது நம் கோவில்கள் இப்படித்தான் ஒற்றைத் தூணில் பலவீனமாக நிற்கின்றன. நாம் இவற்றை மீண்டும் கட்டமைக்க வேண்டும்!"
+                        </td>
+                        <td>கோபுரம் தள்ளாடும் நடுக்கத்தை கேமராவில் அழுத்தமாகக் காட்டவும். கை அசைவு மெதுவாக இருக்க வேண்டும்.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="shot-badge">Shot 5</span><br>
+                            <strong>பனோரமா &amp; உறுதிமொழி</strong><br>
+                            <small style="color:var(--text-dim);">பிரதக்ஷிணம் &amp; கை உயர்த்துதல்</small>
+                        </td>
+                        <td>
+                            அனைவரும் மேசையை ஒரு முறை வலம் வந்து, கோவில் மாதிரியை நோக்கிக் கரம் கூப்பி அல்லது உயர்த்தி உறுதிமொழி வாசிக்கின்றனர்.
+                        </td>
+                        <td>
+                            "அருள்நிறை அறம்வளர்த்தநாயகியின் பேரருளாலும்... நமது திட்டமான நம்ம சாமி நம்ம கோவிலில் இணைந்து பயிற்சி அளிக்கும் சிறப்பு பணியை ஆற்றுவேன் என உறுதி ஏற்கிறேன்!"
+                        </td>
+                        <td>அனைவரின் முக பாவமும் பக்தியும் தீவிரமும் பிரதிபலிக்கும் வகையில் ஸ்லோ-பேன் செய்யவும்.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <div id="toast">அறிவிப்பு</div>
+
+    <script>
+        // Icons Initialization
+        lucide.createIcons();
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+            const isLight = document.body.classList.contains('light-theme');
+            themeIcon.setAttribute('data-lucide', isLight ? 'moon' : 'sun');
+            lucide.createIcons();
+        });
+
+        // -------------------------------------------------------------
+        // ANIMATION & VIDEO SIMULATION ENGINE (HTML5 Canvas 1280x720)
+        // -------------------------------------------------------------
+        const canvas = document.getElementById('demoCanvas');
+        const ctx = canvas.getContext('2d');
+        const W = canvas.width;
+        const H = canvas.height;
+
+        // Total Duration: 100 seconds (1:40 min)
+        const TOTAL_DURATION = 100;
+        let currentTime = 0;
+        let isPlaying = false;
+        let playbackSpeed = 1.0;
+        let voiceEnabled = true;
+        let lastTimestamp = null;
+        let animationFrameId = null;
+
+        // Cup Data Definitions
+        const BASE_CUPS = [
+            { id: 1, name: "1. ஆகமம்", role: "base" },
+            { id: 2, name: "2. அர்ச்சகர்", role: "base" },
+            { id: 3, name: "3. சமுதாய ஒருங்கிணைப்பு", role: "base" },
+            { id: 4, name: "4. சத்சங்கம்", role: "base" },
+            { id: 5, name: "5. பஞ்சபூதம் பாதுகாப்பு", role: "base" }
+        ];
+
+        const MIDDLE_CUPS = [
+            { id: 6, name: "6. கல்வி", role: "middle" },
+            { id: 7, name: "7. மருத்துவம்", role: "middle" },
+            { id: 8, name: "8. கலை", role: "middle" },
+            { id: 9, name: "9. பொருளாதாரம்", role: "middle" }
+        ];
+
+        const TOP_CUP = { id: 10, name: "10. கோவில்", role: "top" };
+
+        // Subtitles Script per time slice
+        const SUBTITLES = [
+            { start: 0, end: 5, text: "படி 1: 10 வெற்று காகிதக் குவளைகளை 10 பங்கேற்பாளர்களிடம் வழங்குதல்." },
+            { start: 5, end: 12, text: "குவளையின் அடிப்பகுதியில் அடித்தளத்தின் 5 சொற்களை எழுதுகின்றனர் (ஆகமம், அர்ச்சகர், சமுதாய ஒருங்கிணைப்பு...)." },
+            { start: 12, end: 18, text: "அடுத்து நடுத்தளத்தின் 4 சொற்களை எழுதுகின்றனர் (கல்வி, மருத்துவம், கலை, பொருளாதாரம்)." },
+            { start: 18, end: 25, text: "10-வது நபர் 'கோவில்' என்ற உச்சிச் சொல்லைக் குவளையின் அடியில் எழுதுகிறார்." },
+            
+            { start: 25, end: 32, text: "படி 2: அடித்தளத்தின் 5 குவளைகள் மேசையில் சீரான இடைவெளியில் வைக்கப்படுகின்றன." },
+            { start: 32, end: 39, text: "முதல் அட்டைப் பலகை (Roof 1) வைக்கப்படுகிறது — 'கோவிலின் முதல் கூரை உருவானது!'" },
+            { start: 39, end: 46, text: "4 நடுத்தளக் குவளைகள் (கல்வி, மருத்துவம், கலை, பொருளாதாரம்) முதல் கூரையின் மேல் வைக்கப்படுகின்றன." },
+            { start: 46, end: 52, text: "2-ஆம் கூரை பலகை (Roof 2) வைக்கப்பட்டு, உச்சியில் 'கோவில்' குவளை சிகரமாக நிறுவப்படுகிறது!" },
+            { start: 52, end: 58, text: "💡 விளக்கம்: வெளியில் தெரிவது 'கோவில்' சிகரம் மட்டுமே; ஆனால் தாங்கி நிற்பது 9 சமுதாயத் தூண்கள்!" },
+            
+            { start: 58, end: 68, text: "படி 3: தன்னிச்சையாக அகற்றுதல் — அடித்தளத்தில் 4 குவளைகள் நீக்கப்பட்டு மையத்தில் 1 மட்டுமே நிற்கிறது!" },
+            { start: 68, end: 78, text: "நடுத்தளத்தில் 3 குவளைகள் நீக்கப்பட்டு மையத்தில் 1 மட்டுமே நிற்கிறது — கோவில் மிக ஆபத்தாகத் தள்ளாடுகிறது!" },
+            { start: 78, end: 85, text: "📜 வரலாற்று உண்மை: நமது கோவில்களின் கல்வி, மருத்துவத் தூண்கள் பறிக்கப்பட்டு இன்று சமநிலையின்றி நிற்கின்றன. நாம் மீண்டும் கட்டியெழுப்ப வேண்டும்!" },
+            
+            { start: 85, end: 92, text: "படி 4: அரங்கில் உள்ள அனைவரும் 3 அடுக்குக் கோவில் மாதிரியை பக்திபூர்வமாக ஒரு முறை வலம் வருகின்றனர் (பிரதக்ஷிணம்)." },
+            { start: 92, end: 100, text: "அனைவரும் கரம் கூப்பி/ஏந்தி அருள்நிறை அறம்வளர்த்தநாயகி முன் புனித அறப்பணி உறுதிமொழி ஏற்கின்றனர்!" }
+        ];
+
+        // Speech synthesis queue
+        let currentUtterance = null;
+        let lastSpokenIndex = -1;
+
+        function speakSubtitles(text) {
+            if (!voiceEnabled || !('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'ta-IN';
+            utter.rate = playbackSpeed;
+            // look for Tamil voice
+            const voices = window.speechSynthesis.getVoices();
+            const taVoice = voices.find(v => v.lang.includes('ta') || v.lang.includes('Tamil'));
+            if (taVoice) utter.voice = taVoice;
+            window.speechSynthesis.speak(utter);
+            currentUtterance = utter;
+        }
+
+        // -------------------------------------------------------------
+        // DRAWING ROUTINES
+        // -------------------------------------------------------------
+        function drawBackground() {
+            // Dark elegant workshop stage gradient
+            const bgGrad = ctx.createRadialGradient(W/2, H*0.4, 100, W/2, H*0.4, W*0.8);
+            bgGrad.addColorStop(0, '#151d30');
+            bgGrad.addColorStop(0.6, '#0b101c');
+            bgGrad.addColorStop(1, '#05070d');
+            ctx.fillStyle = bgGrad;
+            ctx.fillRect(0, 0, W, H);
+
+            // Subtle background grid
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.03)";
+            ctx.lineWidth = 1;
+            for(let x = 0; x < W; x += 60) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+            }
+
+            // Spotlight overhead
+            const spotGrad = ctx.createRadialGradient(W/2, 120, 10, W/2, 120, 480);
+            spotGrad.addColorStop(0, 'rgba(245, 158, 11, 0.12)');
+            spotGrad.addColorStop(0.5, 'rgba(20, 184, 166, 0.05)');
+            spotGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            ctx.fillStyle = spotGrad;
+            ctx.fillRect(0, 0, W, H);
+
+            // Large Rich Wooden Table
+            const tableY = 510;
+            const tableH = 150;
+            
+            // Table top perspective ellipse
+            ctx.fillStyle = '#1e140d';
+            ctx.beginPath();
+            ctx.ellipse(W/2, tableY, 520, 70, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Table top surface gradient
+            const woodGrad = ctx.createLinearGradient(W/2 - 500, tableY - 60, W/2 + 500, tableY + 60);
+            woodGrad.addColorStop(0, '#2c1e14');
+            woodGrad.addColorStop(0.5, '#452b1b');
+            woodGrad.addColorStop(1, '#2c1e14');
+            ctx.fillStyle = woodGrad;
+            ctx.beginPath();
+            ctx.ellipse(W/2, tableY, 510, 65, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#6b472e';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // Table bevel border
+            ctx.fillStyle = '#1c130c';
+            ctx.beginPath();
+            ctx.rect(W/2 - 500, tableY, 1000, 24);
+            ctx.fill();
+
+            // Table shadow onto floor
+            const shadowGrad = ctx.createRadialGradient(W/2, tableY + 90, 80, W/2, tableY + 90, 460);
+            shadowGrad.addColorStop(0, 'rgba(0,0,0,0.7)');
+            shadowGrad.addColorStop(1, 'transparent');
+            ctx.fillStyle = shadowGrad;
+            ctx.beginPath();
+            ctx.ellipse(W/2, tableY + 90, 460, 40, 0, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Draw Paper Cup Helper
+        function drawPaperCup(x, y, label, role, wobbleAngle = 0, opacity = 1.0, scale = 1.0) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.scale(scale, scale);
+            ctx.rotate(wobbleAngle);
+            ctx.globalAlpha = opacity;
+
+            // Colors based on role
+            let cupGrad, rimColor, textColor, glowColor;
+            if (role === 'base') {
+                cupGrad = ctx.createLinearGradient(-26, -55, 26, 5);
+                cupGrad.addColorStop(0, '#0f766e');
+                cupGrad.addColorStop(0.5, '#14b8a6');
+                cupGrad.addColorStop(1, '#0d9488');
+                rimColor = '#5eead4';
+                textColor = '#ffffff';
+                glowColor = 'rgba(20, 184, 166, 0.4)';
+            } else if (role === 'middle') {
+                cupGrad = ctx.createLinearGradient(-24, -50, 24, 5);
+                cupGrad.addColorStop(0, '#4338ca');
+                cupGrad.addColorStop(0.5, '#6366f1');
+                cupGrad.addColorStop(1, '#4f46e5');
+                rimColor = '#a5b4fc';
+                textColor = '#ffffff';
+                glowColor = 'rgba(99, 102, 241, 0.4)';
+            } else { // top
+                cupGrad = ctx.createLinearGradient(-26, -60, 26, 5);
+                cupGrad.addColorStop(0, '#b45309');
+                cupGrad.addColorStop(0.5, '#f59e0b');
+                cupGrad.addColorStop(1, '#d97706');
+                rimColor = '#fef08a';
+                textColor = '#ffffff';
+                glowColor = 'rgba(245, 158, 11, 0.6)';
+            }
+
+            // Shadow beneath cup
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+            ctx.beginPath();
+            ctx.ellipse(0, 5, 26, 7, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Cup Body (Trapezoid)
+            const topW = 28;
+            const botW = 20;
+            const cupH = 58;
+
+            ctx.beginPath();
+            ctx.moveTo(-topW, -cupH);
+            ctx.lineTo(topW, -cupH);
+            ctx.lineTo(botW, 0);
+            ctx.lineTo(-botW, 0);
+            ctx.closePath();
+            ctx.fillStyle = cupGrad;
+            ctx.fill();
+            ctx.strokeStyle = rimColor;
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            // Bottom Rim (Where label is written)
+            ctx.fillStyle = '#0f172a';
+            ctx.beginPath();
+            ctx.ellipse(0, 0, botW, 6, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = rimColor;
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            // Top Rim
+            ctx.fillStyle = 'rgba(255,255,255,0.2)';
+            ctx.beginPath();
+            ctx.ellipse(0, -cupH, topW, 7, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = rimColor;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Text Label Badge
+            ctx.fillStyle = 'rgba(0,0,0,0.85)';
+            ctx.fillRect(-65, -34, 130, 22);
+            ctx.strokeStyle = rimColor;
+            ctx.lineWidth = 1;
+            ctx.strokeRect(-65, -34, 130, 22);
+
+            ctx.font = 'bold 11px "Noto Sans Tamil", sans-serif';
+            ctx.fillStyle = textColor;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(label, 0, -23);
+
+            // Special Crown Kalasam for Top Cup
+            if (role === 'top') {
+                ctx.fillStyle = '#fde047';
+                ctx.beginPath();
+                ctx.moveTo(0, -cupH - 18);
+                ctx.lineTo(8, -cupH - 4);
+                ctx.lineTo(-8, -cupH - 4);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(0, -cupH - 22, 5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.restore();
+        }
+
+        // Draw Cardboard Sheet / Roof Divider
+        function drawCardboardRoof(x, y, width, thickness, label, wobble = 0) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(wobble);
+
+            // Drop shadow
+            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.beginPath();
+            ctx.roundRect(-width/2, 6, width, thickness, 4);
+            ctx.fill();
+
+            // Cardboard Base Slab
+            const cardGrad = ctx.createLinearGradient(-width/2, 0, width/2, thickness);
+            cardGrad.addColorStop(0, '#ca8a04');
+            cardGrad.addColorStop(0.5, '#eab308');
+            cardGrad.addColorStop(1, '#a16207');
+            ctx.fillStyle = cardGrad;
+            ctx.beginPath();
+            ctx.roundRect(-width/2, 0, width, thickness, 4);
+            ctx.fill();
+
+            // Edge highlight
+            ctx.strokeStyle = '#fef08a';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Label on the edge
+            ctx.font = 'bold 12px "Noto Sans Tamil", sans-serif';
+            ctx.fillStyle = '#422006';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(label, 0, thickness / 2);
+
+            ctx.restore();
+        }
+
+        // -------------------------------------------------------------
+        // SCENE RENDERING BASED ON TIME
+        // -------------------------------------------------------------
+        function renderScene(t) {
+            drawBackground();
+
+            // Header Banner in Video Canvas
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.7)';
+            ctx.fillRect(W/2 - 340, 20, 680, 42);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(W/2 - 340, 20, 680, 42);
+
+            ctx.font = 'bold 16px "Noto Sans Tamil", sans-serif';
+            ctx.fillStyle = '#5eead4';
+            ctx.textAlign = 'center';
+            ctx.fillText("10 தூண்கள் தாங்கும் சமுதாயக் கூரை (3-Tier Temple Model)", W/2, 46);
+
+            // SCENE 1: Writing on Cups (0 <= t < 25)
+            if (t < 25) {
+                renderScene1(t);
+            }
+            // SCENE 2: Constructing 3-Tier Model (25 <= t < 58)
+            else if (t < 58) {
+                renderScene2(t);
+            }
+            // SCENE 3: Random Removal & Precarious Balance (58 <= t < 85)
+            else if (t < 85) {
+                renderScene3(t);
+            }
+            // SCENE 4: Pradakshina & Sacred Pledge (85 <= t <= 100)
+            else {
+                renderScene4(t);
+            }
+
+            // Render Synchronized Subtitle Overlay
+            drawSubtitles(t);
+        }
+
+        // Scene 1: Preparation & Inscription
+        function renderScene1(t) {
+            ctx.font = 'bold 20px "Noto Sans Tamil", sans-serif';
+            ctx.fillStyle = '#f59e0b';
+            ctx.textAlign = 'center';
+            ctx.fillText("படி 1: 10 குவளைகளில் பெயர்களை எழுதுதல்", W/2, 95);
+
+            // Tray on the table
+            ctx.fillStyle = 'rgba(30, 41, 59, 0.8)';
+            ctx.beginPath();
+            ctx.roundRect(W/2 - 460, 160, 920, 310, 16);
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Progressively reveal cups and text
+            // Row 1: Base 5 (revealed 0 to 12s)
+            const baseStartX = W/2 - 360;
+            const baseGap = 180;
+            BASE_CUPS.forEach((cup, idx) => {
+                const cupTime = idx * 2.2;
+                if (t >= cupTime) {
+                    const writeAnim = Math.min(1.0, (t - cupTime) / 1.0);
+                    const y = 240;
+                    const x = baseStartX + idx * baseGap;
+                    drawPaperCup(x, y, cup.name, cup.role, 0, writeAnim, 1.0);
+
+                    // Writing pen animation
+                    if (t >= cupTime && t < cupTime + 1.2) {
+                        drawPen(x + 30, y - 25);
+                    }
+                }
+            });
+
+            // Row 2: Middle 4 (revealed 12 to 18s)
+            const midStartX = W/2 - 270;
+            const midGap = 180;
+            MIDDLE_CUPS.forEach((cup, idx) => {
+                const cupTime = 12 + idx * 1.5;
+                if (t >= cupTime) {
+                    const writeAnim = Math.min(1.0, (t - cupTime) / 1.0);
+                    const y = 340;
+                    const x = midStartX + idx * midGap;
+                    drawPaperCup(x, y, cup.name, cup.role, 0, writeAnim, 1.0);
+
+                    if (t >= cupTime && t < cupTime + 1.0) {
+                        drawPen(x + 30, y - 25);
+                    }
+                }
+            });
+
+            // Crown 1: Kovil (revealed 18 to 25s)
+            if (t >= 18) {
+                const topAnim = Math.min(1.0, (t - 18) / 1.0);
+                const x = W/2;
+                const y = 435;
+                drawPaperCup(x, y, TOP_CUP.name, TOP_CUP.role, 0, topAnim, 1.1);
+
+                if (t >= 18 && t < 20) {
+                    drawPen(x + 35, y - 25);
+                }
+            }
+        }
+
+        function drawPen(x, y) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(-0.6);
+            ctx.fillStyle = '#ef4444';
+            ctx.fillRect(0, -30, 8, 30);
+            ctx.fillStyle = '#1e293b';
+            ctx.beginPath();
+            ctx.moveTo(0, 0); ctx.lineTo(8, 0); ctx.lineTo(4, 8); ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        }
+
+        // Scene 2: 3-Tier Assembly
+        function renderScene2(t) {
+            ctx.font = 'bold 20px "Noto Sans Tamil", sans-serif';
+            ctx.fillStyle = '#2dd4bf';
+            ctx.textAlign = 'center';
+            ctx.fillText("படி 2: 3 அடுக்குக் கோவில் மாதிரி அமைத்தல்", W/2, 95);
+
+            const tableLevelY = 480;
+
+            // 1. Base 5 Cups
+            const basePos = [-280, -140, 0, 140, 280];
+            BASE_CUPS.forEach((cup, idx) => {
+                const dropStart = 25 + idx * 1.2;
+                let dropY = tableLevelY;
+                let alpha = 1.0;
+                if (t < dropStart) {
+                    alpha = 0;
+                } else if (t < dropStart + 0.8) {
+                    const progress = (t - dropStart) / 0.8;
+                    dropY = tableLevelY - (1 - progress) * 120;
+                    alpha = progress;
+                }
+                if (alpha > 0) {
+                    drawPaperCup(W/2 + basePos[idx], dropY, cup.name, 'base', 0, alpha, 0.95);
+                }
+            });
+
+            // 2. Roof 1 (First Cardboard)
+            const roof1TargetY = tableLevelY - 60;
+            if (t >= 32) {
+                let roof1Y = roof1TargetY;
+                if (t < 34.5) {
+                    const p = (t - 32) / 2.5;
+                    roof1Y = roof1TargetY - (1 - p) * 160;
+                }
+                drawCardboardRoof(W/2, roof1Y, 680, 14, "1-ஆம் கூரை பலகை (Roof 1)");
+            }
+
+            // 3. Middle 4 Cups
+            const midLevelY = roof1TargetY;
+            const midPos = [-200, -65, 65, 200];
+            if (t >= 39) {
+                MIDDLE_CUPS.forEach((cup, idx) => {
+                    const dropStart = 39 + idx * 1.5;
+                    let dropY = midLevelY;
+                    let alpha = 1.0;
+                    if (t < dropStart) {
+                        alpha = 0;
+                    } else if (t < dropStart + 0.8) {
+                        const progress = (t - dropStart) / 0.8;
+                        dropY = midLevelY - (1 - progress) * 100;
+                        alpha = progress;
+                    }
+                    if (alpha > 0) {
+                        drawPaperCup(W/2 + midPos[idx], dropY, cup.name, 'middle', 0, alpha, 0.92);
+                    }
+                });
+            }
+
+            // 4. Roof 2 (Second Cardboard / Plate)
+            const roof2TargetY = midLevelY - 60;
+            if (t >= 46) {
+                let roof2Y = roof2TargetY;
+                if (t < 48) {
+                    const p = (t - 46) / 2;
+                    roof2Y = roof2TargetY - (1 - p) * 120;
+                }
+                drawCardboardRoof(W/2, roof2Y, 480, 12, "2-ஆம் கூரை பலகை (Roof 2)");
+            }
+
+            // 5. Crown Kovil Cup
+            const topTargetY = roof2TargetY;
+            if (t >= 49) {
+                let topY = topTargetY;
+                if (t < 51.5) {
+                    const p = (t - 49) / 2.5;
+                    topY = topTargetY - (1 - p) * 140;
+                }
+                drawPaperCup(W/2, topY, TOP_CUP.name, 'top', 0, 1.0, 1.05);
+
+                // Golden Glow aura around Kovil
+                const auraGrad = ctx.createRadialGradient(W/2, topY - 30, 10, W/2, topY - 30, 90);
+                auraGrad.addColorStop(0, 'rgba(245, 158, 11, 0.45)');
+                auraGrad.addColorStop(1, 'transparent');
+                ctx.fillStyle = auraGrad;
+                ctx.beginPath();
+                ctx.arc(W/2, topY - 30, 90, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Highlight Banner at end of step 2
+            if (t >= 52) {
+                ctx.fillStyle = 'rgba(245, 158, 11, 0.95)';
+                ctx.fillRect(W/2 - 380, 120, 760, 48);
+                ctx.strokeStyle = '#fef08a';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(W/2 - 380, 120, 760, 48);
+
+                ctx.font = 'bold 15px "Noto Sans Tamil", sans-serif';
+                ctx.fillStyle = '#0f172a';
+                ctx.textAlign = 'center';
+                ctx.fillText("💡 வெளியில் தெரிவது உச்சி 'கோவில்' மட்டுமே; தாங்கி நிற்பது 9 தூண்கள்!", W/2, 150);
+            }
+        }
+
+        // Scene 3: Random Removal & Precarious Wobble
+        function renderScene3(t) {
+            ctx.font = 'bold 20px "Noto Sans Tamil", sans-serif';
+            ctx.fillStyle = '#f59e0b';
+            ctx.textAlign = 'center';
+            ctx.fillText("படி 3: தன்னிச்சையாக அகற்றுதல் & கோவில் சமநிலை சரிவு", W/2, 95);
+
+            const tableLevelY = 480;
+            const roof1TargetY = tableLevelY - 60;
+            const roof2TargetY = roof1TargetY - 60;
+
+            // Wobble physics calculation
+            let wobble = 0;
+            if (t >= 65) {
+                const intensity = (t < 78) ? 0.045 : 0.025;
+                wobble = Math.sin((t - 65) * 5) * intensity;
+            }
+
+            // BASE CUPS: 4 removed, 1 center remains (id 3: சமுதாய ஒருங்கிணைப்பு)
+            const basePos = [-280, -140, 0, 140, 280];
+            BASE_CUPS.forEach((cup, idx) => {
+                if (idx === 2) {
+                    // Center cup stays permanently
+                    drawPaperCup(W/2, tableLevelY, cup.name, 'base', 0, 1.0, 0.95);
+                } else {
+                    const removeTime = 58 + idx * 2.2;
+                    if (t < removeTime) {
+                        drawPaperCup(W/2 + basePos[idx], tableLevelY, cup.name, 'base', 0, 1.0, 0.95);
+                    } else if (t < removeTime + 1.2) {
+                        const progress = (t - removeTime) / 1.2;
+                        const slideX = (idx < 2 ? -1 : 1) * progress * 240;
+                        drawPaperCup(W/2 + basePos[idx] + slideX, tableLevelY, cup.name, 'base', progress * 0.4, 1 - progress, 0.95);
+                    }
+                }
+            });
+
+            // Roof 1 on top of single center cup
+            drawCardboardRoof(W/2, roof1TargetY, 680, 14, "1-ஆம் கூரை பலகை", wobble);
+
+            // MIDDLE CUPS: 3 removed, 1 center remains (idx 1: 7. மருத்துவம்)
+            const midPos = [-200, -65, 65, 200];
+            MIDDLE_CUPS.forEach((cup, idx) => {
+                if (idx === 1) {
+                    drawPaperCup(W/2, roof1TargetY, cup.name, 'middle', wobble, 1.0, 0.92);
+                } else {
+                    const removeTime = 68 + idx * 2.4;
+                    if (t < removeTime) {
+                        drawPaperCup(W/2 + midPos[idx], roof1TargetY, cup.name, 'middle', wobble, 1.0, 0.92);
+                    } else if (t < removeTime + 1.2) {
+                        const progress = (t - removeTime) / 1.2;
+                        const slideX = (idx < 1 ? -1 : 1) * progress * 220;
+                        drawPaperCup(W/2 + midPos[idx] + slideX, roof1TargetY, cup.name, 'middle', wobble + progress * 0.4, 1 - progress, 0.92);
+                    }
+                }
+            });
+
+            // Roof 2 on top of single middle cup
+            drawCardboardRoof(W/2, roof2TargetY, 480, 12, "2-ஆம் கூரை பலகை", wobble * 1.5);
+
+            // Crown Kovil cup teetering on single cups!
+            drawPaperCup(W/2, roof2TargetY, TOP_CUP.name, 'top', wobble * 1.8, 1.0, 1.05);
+
+            // Warning Banner for precarious balance
+            if (t >= 70) {
+                ctx.fillStyle = 'rgba(239, 68, 68, 0.9)';
+                ctx.fillRect(W/2 - 380, 120, 760, 46);
+                ctx.strokeStyle = '#fca5a5';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(W/2 - 380, 120, 760, 46);
+
+                ctx.font = 'bold 14px "Noto Sans Tamil", sans-serif';
+                ctx.fillStyle = '#ffffff';
+                ctx.textAlign = 'center';
+                ctx.fillText("⚠️ ஆபத்தான நிலை: தளம் ஒன்றுக்கு 1 மையக் குவளை மட்டுமே தாங்கி நிற்கிறது!", W/2, 148);
+            }
+
+            // Historical Revelation Callout
+            if (t >= 78) {
+                ctx.fillStyle = 'rgba(13, 148, 136, 0.95)';
+                ctx.fillRect(W/2 - 440, 172, 880, 48);
+                ctx.strokeStyle = '#5eead4';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(W/2 - 440, 172, 880, 48);
+
+                ctx.font = 'bold 14px "Noto Sans Tamil", sans-serif';
+                ctx.fillStyle = '#ffffff';
+                ctx.textAlign = 'center';
+                ctx.fillText("📜 வரலாற்று விளக்கம்: இழந்த தூண்களை நாம் சமுதாயமாக மீண்டும் கட்டியெழுப்ப வேண்டும்!", W/2, 201);
+            }
+        }
+
+        // Scene 4: Pradakshina & Sacred Pledge
+        function renderScene4(t) {
+            ctx.font = 'bold 20px "Noto Sans Tamil", sans-serif';
+            ctx.fillStyle = '#f43f5e';
+            ctx.textAlign = 'center';
+            ctx.fillText("படி 4: கோவில் பிரதக்ஷிணம் & புனித உறுதிமொழி", W/2, 95);
+
+            const tableLevelY = 480;
+            const roof1TargetY = tableLevelY - 60;
+            const roof2TargetY = roof1TargetY - 60;
+
+            // Sturdy temple in center
+            BASE_CUPS.forEach((cup, idx) => {
+                const basePos = [-280, -140, 0, 140, 280];
+                drawPaperCup(W/2 + basePos[idx], tableLevelY, cup.name, 'base', 0, 1.0, 0.95);
+            });
+            drawCardboardRoof(W/2, roof1TargetY, 680, 14, "1-ஆம் கூரை பலகை", 0);
+
+            MIDDLE_CUPS.forEach((cup, idx) => {
+                const midPos = [-200, -65, 65, 200];
+                drawPaperCup(W/2 + midPos[idx], roof1TargetY, cup.name, 'middle', 0, 1.0, 0.92);
+            });
+            drawCardboardRoof(W/2, roof2TargetY, 480, 12, "2-ஆம் கூரை பலகை", 0);
+            drawPaperCup(W/2, roof2TargetY, TOP_CUP.name, 'top', 0, 1.0, 1.05);
+
+            // Pradakshina Walking Avatars around the table
+            const numPeople = 8;
+            for (let i = 0; i < numPeople; i++) {
+                let angle;
+                if (t < 92) {
+                    const walkProgress = (t - 85) * 0.8;
+                    angle = (i / numPeople) * Math.PI * 2 + walkProgress;
+                } else {
+                    angle = (i / numPeople) * Math.PI * 2;
+                }
+
+                const px = W/2 + Math.cos(angle) * 440;
+                const py = tableLevelY + Math.sin(angle) * 85 - 15;
+
+                drawParticipantAvatar(px, py, t >= 92);
+            }
+
+            // Radiant Sacred Pledge Box floating above (92 to 100s)
+            if (t >= 92) {
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+                ctx.fillRect(W/2 - 460, 120, 920, 160);
+                ctx.strokeStyle = '#f59e0b';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(W/2 - 460, 120, 920, 160);
+
+                ctx.font = 'bold 15px "Noto Sans Tamil", sans-serif';
+                ctx.fillStyle = '#f59e0b';
+                ctx.textAlign = 'center';
+                ctx.fillText("🙏 புனித அறப்பணி உறுதிமொழி (Sacred Pledge)", W/2, 146);
+
+                ctx.font = '13px "Noto Sans Tamil", sans-serif';
+                ctx.fillStyle = '#fef08a';
+                ctx.fillText('"வணக்கம்! அருள்நிறை அறம்வளர்த்தநாயகியின் பேரருளாலும், சுவாமி தயானந்த சரஸ்வதி அவர்களின் ஆசிகளாலும்,', W/2, 175);
+                ctx.fillText('சுவாமி சக்ஷாத்கிருதானந்தா அவர்களின் வழிகாட்டுதலில் நம்ம சாமி நம்ம கோவில் திட்டத்தில் இணைந்து', W/2, 202);
+                ctx.fillText('ஊழியர்களுக்கு பயிற்சி அளிக்கும் சிறப்பு பணியை ஆற்றுவேன் என அறம்வளர்த்தநாயகியின் முன் உறுதி ஏற்கிறேன்."', W/2, 230);
+                ctx.fillText('— திருவடிகளை பணிந்து வேண்டுகிறேன்.', W/2, 256);
+            }
+        }
+
+        // Draw Participant Avatar
+        function drawParticipantAvatar(x, y, handsRaised) {
+            ctx.save();
+            ctx.translate(x, y);
+
+            // Head
+            ctx.fillStyle = '#fbbf24';
+            ctx.beginPath();
+            ctx.arc(0, -32, 10, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Torso
+            ctx.fillStyle = '#0284c7';
+            ctx.beginPath();
+            ctx.roundRect(-10, -20, 20, 28, 4);
+            ctx.fill();
+
+            // Hands
+            if (handsRaised) {
+                ctx.strokeStyle = '#fbbf24';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(-9, -15);
+                ctx.lineTo(-16, -38);
+                ctx.moveTo(9, -15);
+                ctx.lineTo(16, -38);
+                ctx.stroke();
+
+                ctx.fillStyle = '#fde047';
+                ctx.beginPath();
+                ctx.arc(-16, -38, 3, 0, Math.PI * 2);
+                ctx.arc(16, -38, 3, 0, Math.PI * 2);
+                ctx.fill();
+            } else {
+                ctx.strokeStyle = '#fbbf24';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(-9, -15);
+                ctx.lineTo(-14, 0);
+                ctx.moveTo(9, -15);
+                ctx.lineTo(14, 0);
+                ctx.stroke();
+            }
+
+            ctx.restore();
+        }
+
+        // Subtitles Overlay Bar on Canvas
+        function drawSubtitles(t) {
+            const currentSub = SUBTITLES.find(s => t >= s.start && t < s.end);
+            if (!currentSub) return;
+
+            const subIndex = SUBTITLES.indexOf(currentSub);
+            if (subIndex !== lastSpokenIndex) {
+                lastSpokenIndex = subIndex;
+                if (isPlaying) speakSubtitles(currentSub.text);
+            }
+
+            ctx.save();
+            ctx.font = 'bold 16px "Noto Sans Tamil", sans-serif';
+            const textMetrics = ctx.measureText(currentSub.text);
+            const pillWidth = Math.min(W - 80, textMetrics.width + 48);
+            const pillHeight = 44;
+            const pillX = W/2 - pillWidth/2;
+            const pillY = H - 75;
+
+            ctx.fillStyle = 'rgba(10, 15, 26, 0.92)';
+            ctx.beginPath();
+            ctx.roundRect(pillX, pillY, pillWidth, pillHeight, 22);
+            ctx.fill();
+            ctx.strokeStyle = '#5eead4';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            ctx.fillStyle = '#f8fafc';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(currentSub.text, W/2, pillY + pillHeight/2);
+            ctx.restore();
+        }
+
+        // -------------------------------------------------------------
+        // ANIMATION LOOP & CONTROLS
+        // -------------------------------------------------------------
+        function tick(timestamp) {
+            if (!lastTimestamp) lastTimestamp = timestamp;
+            const deltaSec = (timestamp - lastTimestamp) / 1000;
+            lastTimestamp = timestamp;
+
+            if (isPlaying) {
+                currentTime += deltaSec * playbackSpeed;
+                if (currentTime >= TOTAL_DURATION) {
+                    currentTime = TOTAL_DURATION;
+                    pauseVideo();
+                }
+            }
+
+            renderScene(currentTime);
+            updateTimelineUI();
+
+            if (isPlaying) {
+                animationFrameId = requestAnimationFrame(tick);
+            }
+        }
+
+        function playVideo() {
+            if (currentTime >= TOTAL_DURATION) currentTime = 0;
+            isPlaying = true;
+            lastTimestamp = null;
+            document.getElementById('playText').textContent = "நிறுத்து (Pause)";
+            document.getElementById('playIcon').setAttribute('data-lucide', 'pause');
+            lucide.createIcons();
+            animationFrameId = requestAnimationFrame(tick);
+        }
+
+        function pauseVideo() {
+            isPlaying = false;
+            document.getElementById('playText').textContent = "இயக்கு (Play)";
+            document.getElementById('playIcon').setAttribute('data-lucide', 'play');
+            lucide.createIcons();
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        }
+
+        function togglePlayPause() {
+            if (isPlaying) pauseVideo();
+            else playVideo();
+        }
+
+        function jumpToTime(targetTime) {
+            currentTime = Math.max(0, Math.min(TOTAL_DURATION, targetTime));
+            lastSpokenIndex = -1;
+            renderScene(currentTime);
+            updateTimelineUI();
+            if (isPlaying) {
+                lastTimestamp = null;
+            }
+        }
+
+        function jumpToStep(stepNum) {
+            let target = 0;
+            if (stepNum === 1) target = 0;
+            else if (stepNum === 2) target = 25;
+            else if (stepNum === 3) target = 58;
+            else if (stepNum === 4) target = 85;
+
+            jumpToTime(target);
+            updateActiveCard(stepNum);
+            if (!isPlaying) playVideo();
+        }
+
+        function updateActiveCard(stepNum) {
+            for (let i = 1; i <= 4; i++) {
+                const card = document.getElementById('cardStep' + i);
+                if (card) {
+                    if (i === stepNum) card.classList.add('current-active');
+                    else card.classList.remove('current-active');
+                }
+            }
+        }
+
+        function formatTime(seconds) {
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+        }
+
+        function updateTimelineUI() {
+            const pct = (currentTime / TOTAL_DURATION) * 100;
+            document.getElementById('timelineProgress').style.width = pct + '%';
+            document.getElementById('timelineHandle').style.left = pct + '%';
+            document.getElementById('timeDisplay').textContent = 
+                formatTime(currentTime) + ' / ' + formatTime(TOTAL_DURATION);
+
+            let currentStep = 1;
+            if (currentTime >= 85) currentStep = 4;
+            else if (currentTime >= 58) currentStep = 3;
+            else if (currentTime >= 25) currentStep = 2;
+            updateActiveCard(currentStep);
+
+            const chips = document.querySelectorAll('.chip-step');
+            chips.forEach((c, idx) => {
+                if (idx + 1 === currentStep) c.classList.add('active');
+                else c.classList.remove('active');
+            });
+        }
+
+        // Timeline click
+        const timelineSlider = document.getElementById('timelineSlider');
+        timelineSlider.addEventListener('click', (e) => {
+            const rect = timelineSlider.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+            jumpToTime(ratio * TOTAL_DURATION);
+        });
+
+        // Event Listeners
+        document.getElementById('btnPlayPause').addEventListener('click', togglePlayPause);
+        document.getElementById('btnReplay').addEventListener('click', () => {
+            jumpToTime(0);
+            playVideo();
+        });
+
+        // Voice Toggle
+        const btnVoiceToggle = document.getElementById('btnVoiceToggle');
+        const voiceIcon = document.getElementById('voiceIcon');
+        const voiceText = document.getElementById('voiceText');
+        btnVoiceToggle.addEventListener('click', () => {
+            voiceEnabled = !voiceEnabled;
+            if (!voiceEnabled && 'speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+            voiceIcon.setAttribute('data-lucide', voiceEnabled ? 'volume-2' : 'volume-x');
+            voiceText.textContent = voiceEnabled ? "குரல் (Voice On)" : "குரல் ஆஃப் (Mute)";
+            lucide.createIcons();
+            showToast(voiceEnabled ? "குரல் வழிகாட்டல் இயக்கப்பட்டது" : "குரல் வழிகாட்டல் முடக்கப்பட்டது");
+        });
+
+        // Speed Select
+        const speedSelect = document.getElementById('speedSelect');
+        speedSelect.addEventListener('change', (e) => {
+            playbackSpeed = parseFloat(e.target.value);
+            showToast(`இயக்க வேகம்: ${playbackSpeed}x`);
+        });
+
+        // Fullscreen
+        const btnFullscreen = document.getElementById('btnFullscreen');
+        btnFullscreen.addEventListener('click', () => {
+            const container = document.getElementById('playerCanvasContainer');
+            if (!document.fullscreenElement) {
+                container.requestFullscreen().catch(err => {
+                    alert(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        });
+
+        // -------------------------------------------------------------
+        // EXPORT VIDEO USING MEDIARECORDER (Client-Side .webm video download)
+        // -------------------------------------------------------------
+        const btnExportVideo = document.getElementById('btnExportVideo');
+        let mediaRecorder = null;
+        let recordedChunks = [];
+        let isRecording = false;
+
+        btnExportVideo.addEventListener('click', () => {
+            if (isRecording) {
+                stopRecording();
+                return;
+            }
+            startRecording();
+        });
+
+        function startRecording() {
+            if (!('MediaRecorder' in window)) {
+                alert("உங்கள் உலாவி MediaRecorder வீடியோ பதிவை ஆதரிக்கவில்லை. தயவுசெய்து Google Chrome அல்லது Microsoft Edge பயன்படுத்தவும்.");
+                return;
+            }
+
+            try {
+                const stream = canvas.captureStream(30);
+                recordedChunks = [];
+                mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9' });
+
+                mediaRecorder.ondataavailable = (e) => {
+                    if (e.data.size > 0) recordedChunks.push(e.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = 'NSNK-10-Thoonkal-Temple-Model-Demo.webm';
+                    document.body.appendChild(a);
+                    a.click();
+                    setTimeout(() => {
+                        document.body.removeChild(a);
+                        window.URL.revokeObjectURL(url);
+                    }, 100);
+                    showToast("வீடியோ கோப்பு வெற்றிகரமாகப் பதிவிறக்கப்பட்டது!");
+                };
+
+                mediaRecorder.start();
+                isRecording = true;
+                btnExportVideo.innerHTML = '<i data-lucide="square" style="width:16px; height:16px;"></i> <span>பதிவை நிறுத்து (Stop)</span>';
+                btnExportVideo.style.background = '#ef4444';
+                lucide.createIcons();
+
+                jumpToTime(0);
+                playbackSpeed = 1.5;
+                speedSelect.value = "1.5";
+                playVideo();
+
+                showToast("வீடியோ பதிவு தொடங்கப்பட்டது (வேகமாகப் பதிவு செய்யப்படுகிறது)...");
+
+                const checkInterval = setInterval(() => {
+                    if (currentTime >= TOTAL_DURATION || !isRecording) {
+                        clearInterval(checkInterval);
+                        if (isRecording) stopRecording();
+                    }
+                }, 500);
+
+            } catch (err) {
+                console.error("Recording error:", err);
+                alert("வீடியோ பதிவு செய்வதில் பிழை ஏற்பட்டது: " + err.message);
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+            }
+            isRecording = false;
+            playbackSpeed = 1.0;
+            speedSelect.value = "1.0";
+            pauseVideo();
+            btnExportVideo.innerHTML = '<i data-lucide="download" style="width:16px; height:16px;"></i> <span>வீடியோ பதிவிறக்கு (.webm)</span>';
+            btnExportVideo.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
+            lucide.createIcons();
+        }
+
+        // Toast Helper
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+
+        // Copy Pledge Text
+        function copyPledge() {
+            const txt = document.getElementById('pledgeFullText').innerText;
+            navigator.clipboard.writeText(txt).then(() => {
+                showToast("புனித உறுதிமொழி உரை நகலெடுக்கப்பட்டது!");
+            });
+        }
+
+        // Initial Draw
+        renderScene(0);
+        updateTimelineUI();
+    </script>
+</body>
+</html>
