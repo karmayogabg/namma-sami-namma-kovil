@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="dashboard.css">
     
     <style>
-        /* Compact Clean Reports Styles */
+        /* Ultra-Clean Reports Styles */
         :root {
             --panel-bg: rgba(15, 23, 42, 0.75);
             --panel-border: rgba(139, 92, 246, 0.35);
@@ -35,20 +35,6 @@
             --table-head-bg: #e2e8f0;
         }
 
-        /* Loading */
-        .loading-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(7, 9, 19, 0.85);
-            backdrop-filter: blur(8px);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-        }
-        [data-theme="light"] .loading-overlay { background: rgba(241, 245, 249, 0.9); }
         .spin { animation: spin 1s linear infinite; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
@@ -57,8 +43,8 @@
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
             border-radius: var(--radius-md);
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 18px 20px;
+            margin-bottom: 18px;
             box-shadow: var(--shadow-soft);
             backdrop-filter: blur(12px);
         }
@@ -67,7 +53,7 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 14px;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         .filter-group {
@@ -124,6 +110,16 @@
             align-items: center;
             gap: 8px;
             box-shadow: 0 4px 12px var(--accent-primary-glow);
+            transition: transform 0.2s;
+        }
+
+        .btn-apply:hover:not(:disabled) {
+            transform: translateY(-1px);
+        }
+
+        .btn-apply:disabled {
+            opacity: 0.6;
+            cursor: wait;
         }
 
         .btn-reset {
@@ -148,7 +144,7 @@
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
             padding: 12px 18px;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -180,6 +176,11 @@
             align-items: center;
             gap: 8px;
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+            transition: transform 0.2s;
+        }
+
+        .btn-export:hover:not(:disabled) {
+            transform: translateY(-1px);
         }
 
         /* Responsive Views: Desktop Table & Mobile Cards */
@@ -420,14 +421,6 @@
 </head>
 <body>
 
-    <!-- Loading Indicator -->
-    <div id="loading-state" class="loading-overlay">
-        <i data-lucide="loader-2" class="spin" style="width:40px; height:40px; color:var(--accent-primary);"></i>
-        <div id="loading-text" style="font-size:1rem; font-weight:700; color:var(--text-main);">
-            தரவு ஏற்றப்படுகிறது... Loading Records...
-        </div>
-    </div>
-
     <!-- Header Navbar -->
     <header class="navbar">
         <div class="container navbar-inner">
@@ -470,7 +463,20 @@
                         1. மண்டலம் (Region):
                     </label>
                     <select id="filter-region" class="filter-select" onchange="onRegionChange()">
-                        <option value="">-- அனைத்து மண்டலங்களும் (All Regions) --</option>
+                        <option value="">-- மண்டலத்தை தேர்வு செய்க (Select Region) --</option>
+                        <option value="1. கன்னியாகுமரி">1. கன்னியாகுமரி</option>
+                        <option value="2. மதுரை">2. மதுரை</option>
+                        <option value="3. ராமேஸ்வரம்">3. ராமேஸ்வரம்</option>
+                        <option value="4. கோயம்பத்தூர்">4. கோயம்பத்தூர்</option>
+                        <option value="5. ஈரோடு">5. ஈரோடு</option>
+                        <option value="6. சேலம்">6. சேலம்</option>
+                        <option value="7. திருச்சிராப்பள்ளி">7. திருச்சிராப்பள்ளி</option>
+                        <option value="8. தஞ்சாவூர்">8. தஞ்சாவூர்</option>
+                        <option value="9. விழுப்புரம்">9. விழுப்புரம்</option>
+                        <option value="10. வேலூர்">10. வேலூர்</option>
+                        <option value="11. காஞ்சிபுரம்">11. காஞ்சிபுரம்</option>
+                        <option value="12. சென்னை">12. சென்னை</option>
+                        <option value="__ALL__">🌐 அனைத்து மண்டலங்களும் (All Regions)</option>
                     </select>
                 </div>
 
@@ -514,23 +520,28 @@
         <section id="results-section">
             <div class="action-toolbar">
                 <div id="stat-match-count" class="count-badge">
-                    0 பதிவுகள் / Records
+                    வடிகட்டலை தேர்வு செய்யவும் (Select Filters)
                 </div>
                 
-                <button id="btn-export-xls" class="btn-export" onclick="exportToXLS()" title="Download Excel Sheet">
+                <button id="btn-export-xls" class="btn-export" onclick="exportToXLS()" title="Download Excel Sheet" disabled style="opacity:0.4; cursor:not-allowed;">
                     <i data-lucide="file-spreadsheet" style="width:18px; height:18px;"></i>
                     <span>XLS வடிவில் பதிவிறக்கு (Export to XLS) 📊</span>
                 </button>
             </div>
 
-            <!-- Empty State -->
-            <div id="empty-state" style="display:none; text-align:center; padding:40px 20px; background:var(--panel-bg); border-radius:var(--radius-md); margin-bottom:16px;">
-                <i data-lucide="inbox" style="width:40px; height:40px; color:var(--text-muted); margin-bottom:10px;"></i>
-                <div style="font-size:1rem; color:var(--text-main); font-weight:700;">பதிவுகள் எதுவும் கிடைக்கவில்லை (No Records Found)</div>
+            <!-- Empty State / Instructions -->
+            <div id="empty-state" style="text-align:center; padding:40px 20px; background:var(--panel-bg); border-radius:var(--radius-md); margin-bottom:16px;">
+                <i data-lucide="filter" style="width:36px; height:36px; color:var(--accent-primary); margin-bottom:10px;"></i>
+                <div style="font-size:1rem; color:var(--text-main); font-weight:700;">
+                    மண்டலத்தை தேர்வு செய்து "வடிகட்டு" பொத்தானை அழுத்தவும்
+                </div>
+                <div style="font-size:0.84rem; color:var(--text-muted); margin-top:4px;">
+                    Select Region, District, and Pincode above to view data & export to XLS
+                </div>
             </div>
 
             <!-- Data Content Area -->
-            <div id="data-content-area">
+            <div id="data-content-area" style="display:none;">
                 <!-- Desktop Table View -->
                 <div id="table-view-container" class="desktop-table-box">
                     <table class="data-table">
