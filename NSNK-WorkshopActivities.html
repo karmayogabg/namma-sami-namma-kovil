@@ -801,35 +801,105 @@
             margin-top: 50px;
             box-shadow: var(--shadow-md);
         }
-        .checklist-grid {
+        .activity-checklist-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 18px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 24px;
+        }
+        .act-checklist-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            transition: all 0.2s ease;
+        }
+        .act-checklist-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+        .act-checklist-card.card-namma {
+            border-top: 4px solid #f59e0b;
+        }
+        .act-checklist-card.card-sami {
+            border-top: 4px solid #f43f5e;
+        }
+        .act-checklist-card.card-kovil {
+            border-top: 4px solid #14b8a6;
+        }
+        .act-checklist-card.card-general {
+            border-top: 4px solid #6366f1;
+        }
+        .act-chk-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .act-chk-badge {
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
+        }
+        .badge-general {
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            border: 1px solid rgba(99, 102, 241, 0.4);
+        }
+        .act-chk-header h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 0;
+            line-height: 1.35;
+        }
+        .act-chk-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
         .check-item {
             display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.03);
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 12px;
+            background: var(--bg-surface);
             border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.15s;
         }
         .check-item:hover {
             border-color: var(--saffron-primary);
+            background: rgba(245, 158, 11, 0.04);
         }
         .check-item input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
+            width: 17px;
+            height: 17px;
             accent-color: var(--saffron-primary);
             cursor: pointer;
+            margin-top: 2px;
+            flex-shrink: 0;
         }
         .check-item span {
-            font-size: 0.95rem;
+            font-size: 0.88rem;
             font-weight: 600;
+            color: var(--text-main);
+            line-height: 1.45;
+        }
+        body.light-theme .act-checklist-card {
+            background: #ffffff;
+        }
+        body.light-theme .check-item {
+            background: #f8fafc;
         }
 
         /* Footer */
@@ -1317,12 +1387,12 @@
                                     <div class="step-text">
                                         <strong>படி 2: 3 அடுக்குக் கோவில் மாதிரி அமைத்தல் (Constructing 3-Tier Temple) (3 நிமி):</strong>
                                         <ul style="margin:4px 0 0 16px; font-size:0.86rem; line-height:1.6;">
-                                            <li>முதல் 5 நபர்கள் மேடைக்கு வந்து தங்கள் 5 குவளைகளையும் மேசையில் சம இடைவெளியில் வைக்க, மற்றொரு நபர் முதல் அட்டைப் பலகையை (Roof 1) மேல் வைப்பார் — <em>"கோவிலின் முதல் கூரை உருவானது!"</em></li>
-                                            <li>அடுத்த 4 நபர்கள் அட்டைப் பலகையின் மேல் தங்கள் குவளைகளை வைக்க, மற்றொரு நபர் இரண்டாவது அட்டைப் பலகை / தட்டை (Roof 2) மேல் வைப்பார்.</li>
-                                            <li>இறுதியாக 10-வது நபர் 'கோவில்' என்று எழுதப்பட்ட குவளையை உச்சி சிகரமாக வைப்பார்.</li>
+                                            <li>முதல் 5 நபர்களை அழைத்து அவர்களின் 5 குவளைகளை மேசையில் வைக்கச் சொல்லவும்; மற்றொரு நபரை அழைத்து அதன் மேல் முதல் அட்டைப் பலகையை (Cardboard sheet) வைக்கச் சொல்லவும் — <em>"கோவிலின் முதல் கூரை உருவானது!"</em> என்று கூறவும்.</li>
+                                            <li>அடுத்த 4 நபர்களை அழைத்து அட்டைப் பலகையின் மேல் தங்கள் குவளைகளை வைக்கச் சொல்லவும்; மற்றொரு நபரை அழைத்து அதன் மேல் தட்டு / பலகையை (Plate/Cardboard Roof 2) வைக்கச் சொல்லவும்.</li>
+                                            <li>இறுதியாக 10-வது நபர் 'கோவில்' (Temple) என்று எழுதப்பட்ட குவளையை உச்சி சிகரமாக வைக்கச் சொல்லவும்.</li>
                                         </ul>
                                         <div style="margin-top:6px; font-size:0.86rem; color:#fef08a; background:rgba(245,158,11,0.12); padding:8px 12px; border-radius:6px; border-left:3px solid #f59e0b;">
-                                            <strong>💡 பயிற்றுநர் விளக்கம்:</strong> "வெளியிலிருந்து பார்ப்பவர்களுக்கு உச்சியில் இருக்கும் 'கோவில்' என்ற உருவம் மட்டுமே கண்களுக்குத் தெரிகிறது; ஆனால் அதன் கீழே இருக்கும் 9 தூண்கள்தான் ஒட்டுமொத்தக் கோவிலையும் கம்பீரமாகத் தாங்கி நிற்கின்றன!"
+                                            <strong>💡 பயிற்றுநர் விளக்கம்:</strong> "கோவிலுக்குத் தேவையான 9 தூண்கள் இவைதான் என்பதை விளக்குங்கள். ஆனால் வெளியில் இருந்து பார்ப்பவர்களுக்கு உச்சியில் இருக்கும் 'கோவில்' என்ற உச்சிக்குவளையின் புறக் கட்டமைப்பு மட்டுமே தெரிகிறது (Just structure of the Temple top cup); அதன் கீழ் இந்த 9 தூண்களும்தான் பலமாகத் தாங்கி நிற்கின்றன!"
                                         </div>
                                     </div>
                                 </div>
@@ -1330,14 +1400,19 @@
                                 <div class="step-item">
                                     <div class="step-num">3</div>
                                     <div class="step-text">
-                                        <strong>படி 3: சரிவின் சோதனை &amp; வரலாற்று விழிப்புணர்வு (Deconstruction &amp; Awakening) (2 நிமி):</strong>
+                                        <strong>படி 3: தன்னிச்சையாக அகற்றுதல் &amp; கோவில் சமநிலை சரிவுச் சோதனை (Random Deconstruction &amp; Need to Rebuild) (2 நிமி):</strong>
                                         <ul style="margin:4px 0 0 16px; font-size:0.86rem; line-height:1.6;">
-                                            <li>பங்கேற்பாளர்களை ஒருவர் பின் ஒருவராக அழைத்து, கோவில் கோபுரம் சாயாமல் மிகக் கவனமாக குவளைகளை ஒவ்வொன்றாக அகற்றச் சொல்லவும்.</li>
-                                            <li>அடித்தளத்தில் 4 குவளைகள் அகற்றப்பட்டு 1 குவளையாகக் குறைகிறது; நடுத்தளத்தில் 3 குவளைகள் அகற்றப்பட்டு 1 குவளையாகக் குறைகிறது.</li>
-                                            <li>இப்போது 3 அடுக்குக் கோவில் அமைப்பு, தளம் ஒன்றுக்கு ஒற்றைக் குவளையின் மீது மிக ஆபத்தான நிலையில் தள்ளாடிக் கொண்டு நிற்கிறது!</li>
+                                            <li>பங்கேற்பாளர்களை வரிசைப்படி அல்லாமல் <strong>தன்னிச்சையாக (Randomly) ஒருவர் பின் ஒருவராக அழைக்கவும்</strong>. கோவில் கோபுரம் கீழே விழுந்துவிடாமல் கவனமாக ஒவ்வொரு குவளையாக அகற்றச் சொல்லவும் (Temple should not fall).</li>
+                                            <li>தொடர்ந்து அகற்றும்போது:
+                                                <ul style="margin:4px 0 0 14px;">
+                                                    <li>அடித்தளத்தில் 4 குவளைகள் அகற்றப்படும் ➔ இப்போது அடித்தளத்தில் <strong>மையத்தில் 1 குவளை மட்டுமே நிற்கும்</strong>.</li>
+                                                    <li>நடுத்தளத்தில் 3 குவளைகள் அகற்றப்படும் ➔ இப்போது நடுத்தளத்திலும் <strong>மையத்தில் 1 குவளை மட்டுமே நிற்கும்</strong>.</li>
+                                                    <li>இப்போது இந்த 3 அடுக்குக் கோவில் மாதிரி, அடித்தள மையத்தில் 1 குவளை மற்றும் நடுத்தள மையத்தில் 1 குவளை என தளம் ஒன்றுக்கு <strong>மையத்தில் ஒற்றைக் குவளையின் மீது (Stand with one cup each in the center)</strong> மிக ஆபத்தான நிலையில் தள்ளாடிக் கொண்டு நிற்கும்!</li>
+                                                </ul>
+                                            </li>
                                         </ul>
                                         <div style="margin-top:6px; font-size:0.86rem; color:#5eead4; background:rgba(20,184,166,0.12); padding:8px 12px; border-radius:6px; border-left:3px solid #14b8a6;">
-                                            <strong>📜 வரலாற்று உண்மை:</strong> "ஆதிகாலத்தில் கோவில்கள் இந்த அனைத்துச் சமுதாயப் பெருமைகளையும் தாங்கி நின்றன. ஆனால் காலப்போக்கில் கல்வி, மருத்துவம், கலை, பொருளாதாரம் அனைத்தும் கோவில்களிடமிருந்து பறிக்கப்பட்டு, கோவில்கள் வெறும் வழிபாட்டு இடமாக பலவீனப்படுத்தப்பட்டுவிட்டன. இப்போது நமது பணி — இழந்த தூண்களை மீண்டும் ஒன்றிணைத்துக் கோவிலையும் சமுதாயத்தையும் மறுசீரமைப்பதே (Rebuild)!"
+                                            <strong>📜 பயிற்றுநர் வரலாற்று விளக்கம் (Awakening &amp; Need to Rebuild):</strong> "நம் வரலாற்றில் இதுதான் நடந்தது என்று விளக்குங்கள்: ஆதிகாலக் கோவில்கள் இவை அனைத்தையும் கொண்டிருந்தன; ஆனால் காலப்போக்கில் கல்வி, மருத்துவம், கலை, பொருளாதாரம் போன்றவை கோவில்களிடமிருந்து பறிக்கப்பட்டு அகற்றப்பட்டன. அதனால் இன்று நமது கோவில்கள் சமநிலையின்றி மையத்தில் மிக பலவீனமாக நிற்கின்றன. இப்போது நமது முதன்மைப் பணி — இழந்த அனைத்தையும் மீட்டெடுத்து, மீண்டும் அந்தத் தூண்களை நிறுவி கோவிலை மறுசீரமைப்பதே (Now we need to rebuild all this) ஆகும்!"
                                         </div>
                                     </div>
                                 </div>
@@ -1345,10 +1420,10 @@
                                 <div class="step-item">
                                     <div class="step-num">4</div>
                                     <div class="step-text">
-                                        <strong>படி 4: கோவில் வலம் &amp; புனித உறுதிமொழி (Pradakshina &amp; Sacred Pledge) (3 நிமி):</strong>
+                                        <strong>படி 4: கோவில் பிரதக்ஷிணம் &amp; புனித உறுதிமொழி (Go around Temple &amp; Pledge with Hands Raised) (3 நிமி):</strong>
                                         <ul style="margin:4px 0 0 16px; font-size:0.86rem; line-height:1.6;">
-                                            <li><strong>வலம் வருதல் (Pradakshina):</strong> பயிற்சி அரங்கில் உள்ள அனைவரும் எழுந்து நின்று, மேசையில் உள்ள இந்த 3 அடுக்குக் கோவில் மாதிரியை பக்தி சிரத்தையுடன் <strong>ஒரு முறை வலம் வர வேண்டும் (Pradakshina)</strong>.</li>
-                                            <li><strong>உறுதிமொழி ஏற்குதல்:</strong> பின்னர் அனைவரும் கோவில் மாதிரியை நோக்கி இரு கைகளையும் ஏந்தி/வணங்கி நிற்க வேண்டும். பயிற்றுநர் உறுதிமொழியை வாசிக்க, அனைவரும் அதைத் திருப்பிச் சொல்லி மனப்பூர்வமாக உறுதி ஏற்க வேண்டும்.</li>
+                                            <li><strong>கோவிலை வலம் வருதல்:</strong> அரங்கில் உள்ள அனைவரையும் மேடைக்கு வரவழைத்து, மேசையிலுள்ள இந்த 3 அடுக்குக் கோவில் மாதிரியை <strong>ஒரு முறை சுற்றி வலம் வரச் சொல்லவும் (Go around the temple for one time)</strong>.</li>
+                                            <li><strong>கரம் ஏந்தி உறுதிமொழி ஏற்குதல்:</strong> பின்னர் அனைவரும் கோவில் மாதிரியை நோக்கி இரு கைகளையும் ஏந்தி நின்று (Stand with hands raised towards the temple like taking a pledge), பயிற்றுநர் அல்லது ஒருவர் வாசிக்க, மற்றவர்கள் ஒவ்வொரு வரியாகத் திருப்பிச் சொல்லி மனப்பூர்வமாக உறுதிமொழி ஏற்க வேண்டும் (Ask one to read and others to repeat the pledge).</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -1360,10 +1435,10 @@
                                     <i data-lucide="copy" style="width:13px; height:13px;"></i> நகலெடு
                                 </button>
                                 <div class="pledge-instructions">
-                                    <span><i data-lucide="hand-heart" style="width:16px; height:16px; display:inline; vertical-align:middle;"></i> அனைவரும் கரம் கூப்பி / ஏந்தி ஒருமித்த குரலில் உறுதிமொழி கூறுதல்:</span>
+                                    <span><i data-lucide="hand-heart" style="width:16px; height:16px; display:inline; vertical-align:middle;"></i> அனைவரும் கரம் ஏந்தி / கூப்பி ஒருமித்த குரலில் உறுதிமொழி கூறுதல்:</span>
                                 </div>
                                 <div class="pledge-text" id="pledge-content">
-"வணக்கம்! அருள்நிறை அறம்வளர்த்தநாயகியின் பேரருளாலும், வழிபாட்டிற்குரிய சுவாமி தயானந்த சரஸ்வதி அவர்களின் ஆசிகளாலும், சுவாமி சாக்ஷாத்கிருதானந்தா அவர்களின் வழிகாட்டுதலில் அறம்வளர்த்தநாயகி சேவை மையத்தின் கீழ் அறத்தை வளர்க்கும் பெரும்பணியை நான் ஆற்றிவருகிறேன்.
+"வணக்கம்! அருள்நிறை அறம்வளர்த்தநாயகியின் பேரருளாலும், வழிபாட்டிற்குரிய சுவாமி தயானந்த சரஸ்வதி அவர்களின் ஆசிகளாலும், சுவாமி சக்ஷாத்கிருதானந்தா அவர்களின் வழிகாட்டுதலில் அறம்வளர்த்தநாயகி சேவை மையத்தின் கீழ் அறத்தை வளர்க்கும் பெரும்பணியை நான் ஆற்றிவருகிறேன்.
 
 அறத்தை வளர்க்கும் இறை பணியின் பகுதியாக நமது திட்டமான நம்ம சாமி நம்ம கோவிலில் இணைந்து தேவையான ஊழியர்களுக்கு பயிற்சி அளிக்கும் சிறப்பு பணியை ஆற்றுவேன் என அறம்வளர்த்தநாயகியின் முன் நான் உறுதி ஏற்கிறேன்.
 
@@ -1395,50 +1470,129 @@
 
 
             <!-- ========================================================= -->
-            <!-- MATERIALS CHECKLIST -->
+            <!-- MATERIALS CHECKLIST (CLASSIFIED PER ACTIVITY) -->
             <!-- ========================================================= -->
             <section class="checklist-section" id="materials">
                 <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
                     <div>
                         <h2 style="font-family:var(--font-heading); font-size:1.5rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">
-                            📋 பயிற்சிப் பட்டறைப் பொருட்கள் சரிபார்ப்புப் பட்டியல் (Facilitator Checklist)
+                            📋 செயல்பாடுகள் வாரியான பொருட்கள் சரிபார்ப்புப் பட்டியல் (Activity-wise Facilitator Checklist)
                         </h2>
-                        <p style="color:var(--text-muted); font-size:0.92rem;">பட்டறை தொடங்குவதற்கு முன் தேவையான எளிய பொருட்களைச் சரிபார்க்கவும்:</p>
+                        <p style="color:var(--text-muted); font-size:0.92rem;">பயிற்சிப் பட்டறையின் ஒவ்வொரு செயல்பாட்டிற்கும் தேவையான பொருட்களை வகைப்படுத்தி சரிபார்க்கவும்:</p>
                     </div>
                     <button class="btn-nav" onclick="resetChecklist()" style="font-size:0.82rem;">
-                        <i data-lucide="rotate-ccw" style="width:14px; height:14px;"></i> Clear Checklist
+                        <i data-lucide="rotate-ccw" style="width:14px; height:14px;"></i> அனைத்து டிக் மீட்டமை (Clear All)
                     </button>
                 </div>
 
-                <div class="checklist-grid">
-                    <label class="check-item">
-                        <input type="checkbox" id="chk-1">
-                        <span>📄 வெற்று A4 தாள்கள் / 4-மூலை அடையாள அட்டைகள் (செயல்பாடு 1A)</span>
-                    </label>
-                    <label class="check-item">
-                        <input type="checkbox" id="chk-2">
-                        <span>📜 7 தலைமுறை மரபுப் படிவத் தாள்கள் (செயல்பாடு 1B)</span>
-                    </label>
-                    <label class="check-item">
-                        <input type="checkbox" id="chk-3">
-                        <span>✍️ எழுதுகோல் / பேனாக்கள் & மார்க்கர்கள் (செயல்பாடுகள் 1A, 1B & 3)</span>
-                    </label>
-                    <label class="check-item">
-                        <input type="checkbox" id="chk-4">
-                        <span>📝 3 வண்ண Sticky Notes (பழுப்பு, பச்சை, மஞ்சள்) (செயல்பாடு 2)</span>
-                    </label>
-                    <label class="check-item">
-                        <input type="checkbox" id="chk-5">
-                        <span>🥤 காகிதக் குவளைகள் (10 Paper Cups) (செயல்பாடு 3)</span>
-                    </label>
-                    <label class="check-item">
-                        <input type="checkbox" id="chk-6">
-                        <span>📦 2 கெட்டியான அட்டைப் பலகைகள் / தட்டுகள் (2 Cardboard sheets / plates) (செயல்பாடு 3)</span>
-                    </label>
-                    <label class="check-item">
-                        <input type="checkbox" id="chk-7">
-                        <span>⏱️ 10 நிமிட நேரக் கண்காணிப்பு டைமர்</span>
-                    </label>
+                <div class="activity-checklist-container">
+
+                    <!-- Activity 1A Checklist -->
+                    <div class="act-checklist-card card-namma">
+                        <div class="act-chk-header">
+                            <span class="act-chk-badge badge-namma">செயல்பாடு 1A</span>
+                            <h4>தங்க அடையாள அட்டை (4-Corner Identity)</h4>
+                        </div>
+                        <div class="act-chk-list">
+                            <label class="check-item">
+                                <input type="checkbox" id="chk-1a-1">
+                                <span>📄 வெற்று A4 வெள்ளைத் தாள்கள் (பங்கேற்பாளர் தலா 1 தாள்)</span>
+                            </label>
+                            <label class="check-item">
+                                <input type="checkbox" id="chk-1a-2">
+                                <span>✍️ எழுதும் பேனாக்கள் / பென்சில்கள் (4 மூலைகளில் விவரங்களை எழுத)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Activity 1B Checklist -->
+                    <div class="act-checklist-card card-namma">
+                        <div class="act-chk-header">
+                            <span class="act-chk-badge badge-namma">செயல்பாடு 1B</span>
+                            <h4>7 தலைமுறை மரபுப் பட்டியல் (7-Gen Lineage Chart)</h4>
+                        </div>
+                        <div class="act-chk-list">
+                            <label class="check-item">
+                                <input type="checkbox" id="chk-1b-1">
+                                <span>📜 7 தலைமுறை மரபுப் படிவத் தாள்கள் (Lineage Worksheets)</span>
+                            </label>
+                            <label class="check-item">
+                                <input type="checkbox" id="chk-1b-2">
+                                <span>✍️ எழுதுகோல்கள் / பேனாக்கள் (முன்னோர் பெயர்களை எழுத)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Activity 2 Checklist -->
+                    <div class="act-checklist-card card-sami">
+                        <div class="act-chk-header">
+                            <span class="act-chk-badge badge-sami">செயல்பாடு 2</span>
+                            <h4>3 வண்ணத் தாள் வழிபாடு &amp; தற்சோதனை (3-Tier Divinity Self-Audit)</h4>
+                        </div>
+                        <div class="act-chk-list">
+                            <label class="check-item">
+                                <input type="checkbox" id="chk-2-1">
+                                <span>🟫 பழுப்பு வண்ணத் தாள் / Sticky Note (தாள் 1 - குலதெய்வம் / வேர்)</span>
+                            </label>
+                            <label class="check-item">
+                                <input type="checkbox" id="chk-2-2">
+                                <span>🟩 பச்சை வண்ணத் தாள் / Sticky Note (தாள் 2 - கிராம தெய்வம் / வேலி)</span>
+                            </label>
+                            <label class="check-item">
+                                <input type="checkbox" id="chk-2-3">
+                                <span>🟨 மஞ்சள் வண்ணத் தாள் / Sticky Note (தாள் 3 - இஷ்ட தெய்வம் / கனி)</span>
+                            </label>
+                            <label class="check-item">
+                                <input type="checkbox" id="chk-2-4">
+                                <span>✍️ பேனாக்கள் (தெய்வப் பெயர்கள் எழுத &amp; ✔ டிக் செய்ய)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Activity 3 Checklist -->
+                    <div class="act-checklist-card card-kovil">
+                        <div class="act-chk-header">
+                            <span class="act-chk-badge badge-kovil">செயல்பாடு 3</span>
+                            <h4>10 தூண்கள் தாங்கும் சமுதாயக் கூரை (3-Tier Temple Model &amp; Sacred Pledge)</h4>
+                        </div>
+                        <div class="act-chk-list">
+                            <label class="check-item">
+                                <input type="checkbox" id="chk-3-1">
+                                <span>🥤 10 வெற்று காகிதக் குவளைகள் (Empty Paper Cups - அடியில் எழுதக்கூடியவை)</span>
+                            </label>
+                            <label class="check-item">
+                                <input type="checkbox" id="chk-3-2">
+                                <span>📦 2 கெட்டியான அட்டைப் பலகைகள் / தட்டுகள் (Roof 1 &amp; Roof 2 கூரைகளுக்காக)</span>
+                            </label>
+                            <label class="check-item">
+                                <input type="checkbox" id="chk-3-3">
+                                <span>🖊️ தடித்த மார்க்கர் பேனா (குவளைகளின் அடிப்பகுதியில் 10 பணிகளை எழுத)</span>
+                            </label>
+                            <label class="check-item">
+                                <input type="checkbox" id="chk-3-4">
+                                <span>🙏 அறம்வளர்த்தநாயகி சேவை மையப் புனித உறுதிமொழி வாசக அட்டை / பிரதி</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Common Facilitator Tools -->
+                    <div class="act-checklist-card card-general">
+                        <div class="act-chk-header">
+                            <span class="act-chk-badge badge-general">பொது உபகரணங்கள்</span>
+                            <h4>பயிற்றுநரின் பொதுப் பயிற்சி மேலாண்மை (Trainer Essentials)</h4>
+                        </div>
+                        <div class="act-chk-list">
+                            <label class="check-item">
+                                <input type="checkbox" id="chk-gen-1">
+                                <span>⏱️ 10 நிமிட நேரக் கண்காணிப்பு கவுண்டவுன் டைமர் (Activity Timer)</span>
+                            </label>
+                            <label class="check-item">
+                                <input type="checkbox" id="chk-gen-2">
+                                <span>🏷️ மாதிரி வைக்கும் நடு மேசை / தளம் (கோவில் மாதிரியை வலம் வரக்கூடிய வசதி)</span>
+                            </label>
+                        </div>
+                    </div>
+
                 </div>
             </section>
 
@@ -1517,10 +1671,8 @@
         }
 
         function resetChecklist() {
-            for (let i = 1; i <= 7; i++) {
-                const el = document.getElementById(`chk-${i}`);
-                if (el) el.checked = false;
-            }
+            const chks = document.querySelectorAll('.checklist-section input[type="checkbox"]');
+            chks.forEach(chk => { chk.checked = false; });
         }
 
         // Copy Sacred Pledge
