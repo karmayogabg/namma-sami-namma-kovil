@@ -2,354 +2,602 @@
 <html lang="ta">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>நம்ம சாமி நம்ம கோவில் - Interactive Reports & Analytics Hub (v10.2)</title>
-    <meta name="description" content="Dedicated Analytics & Reports Hub for Namma Sami Namma Kovil dataset featuring Pincode Grade Analysis, Geographic Hierarchies, Image Exports, and WhatsApp Sharing.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>நம்ம சாமி நம்ம கோவில் - தரவு அறிக்கை (Reports)</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Noto+Sans+Tamil:wght@400;600;700&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Noto+Sans+Tamil:wght@400;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Libraries: Lucide Icons, SheetJS, Chart.js & html2canvas -->
+    <!-- External Libraries: Lucide Icons & SheetJS -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     
-    <!-- Stylesheet -->
+    <!-- Base Stylesheet -->
     <link rel="stylesheet" href="dashboard.css">
     
     <style>
-        .report-tab-btn {
-            padding: 10px 18px;
+        /* Compact Clean Reports Styles */
+        :root {
+            --panel-bg: rgba(15, 23, 42, 0.75);
+            --panel-border: rgba(139, 92, 246, 0.35);
+            --input-bg: rgba(15, 23, 42, 0.9);
+            --input-border: rgba(255, 255, 255, 0.15);
+            --table-head-bg: rgba(30, 41, 59, 0.95);
+        }
+
+        [data-theme="light"] {
+            --panel-bg: #ffffff;
+            --panel-border: rgba(124, 58, 237, 0.25);
+            --input-bg: #f8fafc;
+            --input-border: rgba(15, 23, 42, 0.2);
+            --table-head-bg: #e2e8f0;
+        }
+
+        /* Loading */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(7, 9, 19, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+        }
+        [data-theme="light"] .loading-overlay { background: rgba(241, 245, 249, 0.9); }
+        .spin { animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* Filter Panel */
+        .simple-filter-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
             border-radius: var(--radius-md);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-muted);
-            font-weight: 600;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(12px);
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .filter-group label {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-select {
+            width: 100%;
+            height: 48px;
+            padding: 0 12px;
             font-size: 0.92rem;
+            font-family: inherit;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: var(--radius-sm);
+            color: var(--text-main);
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        .filter-select:focus {
+            border-color: var(--accent-primary);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn-apply {
+            height: 46px;
+            padding: 0 24px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            box-shadow: 0 4px 12px var(--accent-primary-glow);
         }
-        .report-tab-btn:hover {
-            background: rgba(139, 92, 246, 0.15);
-            border-color: rgba(139, 92, 246, 0.35);
-            color: var(--text-main);
+
+        .btn-reset {
+            height: 46px;
+            padding: 0 18px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
-        .report-tab-btn.active {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.35), rgba(6, 182, 212, 0.35));
-            border-color: rgba(139, 92, 246, 0.7);
+        [data-theme="light"] .btn-reset { background: rgba(15, 23, 42, 0.06); color: var(--text-main); }
+
+        /* Action Toolbar */
+        .action-toolbar {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px 18px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .count-badge {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #10b981;
+            font-family: var(--font-heading);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-export {
+            height: 44px;
+            padding: 0 20px;
+            background: linear-gradient(135deg, #10b981, #059669);
             color: #fff;
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.25);
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 0.92rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
         }
-        .report-table-container {
+
+        /* Responsive Views: Desktop Table & Mobile Cards */
+        .desktop-table-box {
             width: 100%;
             overflow-x: auto;
             border-radius: var(--radius-md);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--border-color);
+            background: var(--panel-bg);
+            -webkit-overflow-scrolling: touch;
         }
-        .report-table {
+
+        .data-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.88rem;
             text-align: left;
         }
-        .report-table th {
-            background: rgba(30, 41, 59, 0.9);
-            color: #c4b5fd;
+
+        .data-table th {
+            background: var(--table-head-bg);
+            color: var(--text-main);
             padding: 12px 14px;
             font-weight: 700;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-            position: sticky;
-            top: 0;
+            border-bottom: 1px solid var(--border-color);
             white-space: nowrap;
         }
-        .report-table td {
+
+        .data-table td {
             padding: 10px 14px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid var(--border-color);
             color: var(--text-main);
             white-space: nowrap;
         }
-        .report-table tr:hover {
-            background: rgba(255, 255, 255, 0.04);
+
+        .data-table tr:hover td {
+            background: rgba(255, 255, 255, 0.03);
         }
-        .share-btn-wa {
-            background: linear-gradient(135deg, #25D366, #128C7E);
-            color: #fff;
-            border: none;
-            padding: 10px 18px;
+
+        /* Mobile Card Styles */
+        .mobile-cards-box {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .person-item-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .person-item-card:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .person-title {
+            margin: 0;
+            font-size: 1.1rem;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-family: var(--font-tamil);
+            color: var(--text-main);
+        }
+
+        .card-contacts {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-call, .btn-wa {
+            flex: 1;
+            height: 38px;
+            border-radius: 6px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-call {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.35);
+            color: #60a5fa;
+        }
+
+        .btn-wa {
+            background: rgba(37, 211, 102, 0.15);
+            border: 1px solid rgba(37, 211, 102, 0.35);
+            color: #25D366;
+        }
+
+        .card-geo {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.18);
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+        }
+        [data-theme="light"] .card-geo { background: rgba(15, 23, 42, 0.04); }
+
+        .btn-modal-link {
+            padding: 4px 10px;
+            font-size: 0.78rem;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            color: #c4b5fd;
+            border-radius: 6px;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            gap: 4px;
         }
-        .share-btn-wa:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
-        }
-        .export-img-btn {
-            background: linear-gradient(135deg, #ec4899, #8b5cf6);
-            color: #fff;
-            border: none;
-            padding: 10px 18px;
-            border-radius: var(--radius-md);
-            font-weight: 700;
-            font-size: 0.9rem;
-            cursor: pointer;
-            display: inline-flex;
+        [data-theme="light"] .btn-modal-link { background: rgba(124, 58, 237, 0.1); color: #6d28d9; }
+
+        /* Pagination */
+        .pagination-bar {
+            display: flex;
             align-items: center;
-            gap: 8px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 14px 18px;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            margin-top: 16px;
         }
-        .export-img-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
-        }
-        .col-filter-input {
-            width: 100%;
-            padding: 4px 6px;
-            font-size: 0.76rem;
+
+        .page-btn {
+            height: 36px;
+            padding: 0 14px;
             background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-            color: #fff;
-            outline: none;
-            box-sizing: border-box;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
-        .col-filter-input:focus {
-            border-color: #8b5cf6;
-            background: rgba(139, 92, 246, 0.2);
+        [data-theme="light"] .page-btn { background: rgba(15, 23, 42, 0.06); }
+        .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(7, 9, 19, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .modal-overlay.active { display: flex; }
+
+        .modal-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--accent-primary);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            max-width: 540px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        [data-theme="light"] .modal-card { background: #fff; }
+
+        /* Toast */
+        .app-toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #10b981;
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 0.9rem;
+            z-index: 3000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        .app-toast.visible { transform: translateY(0); opacity: 1; }
+
+        /* Mobile Adaptations */
+        @media (max-width: 768px) {
+            .filter-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .filter-buttons {
+                display: grid;
+                grid-template-columns: 2fr 1fr;
+                width: 100%;
+            }
+            .btn-apply, .btn-reset, .btn-export {
+                width: 100%;
+                justify-content: center;
+            }
+            .action-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .desktop-table-box { display: none; }
+            .mobile-cards-box { display: flex; }
+            .pagination-bar {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            .app-toast { left: 16px; right: 16px; text-align: center; }
         }
     </style>
 </head>
 <body>
 
+    <!-- Loading Indicator -->
+    <div id="loading-state" class="loading-overlay">
+        <i data-lucide="loader-2" class="spin" style="width:40px; height:40px; color:var(--accent-primary);"></i>
+        <div id="loading-text" style="font-size:1rem; font-weight:700; color:var(--text-main);">
+            தரவு ஏற்றப்படுகிறது... Loading Records...
+        </div>
+    </div>
+
     <!-- Header Navbar -->
     <header class="navbar">
         <div class="container navbar-inner">
-            <a href="dashboard.html" class="brand">
+            <a href="index.html" class="brand" title="Home">
                 <div class="brand-logo">
-                    <i data-lucide="pie-chart"></i>
+                    <i data-lucide="database"></i>
                 </div>
                 <div class="brand-text">
                     <h1>நம்ம சாமி நம்ம கோவில்</h1>
-                    <p>Reports & Analytics Hub / அறிக்கை மையம்</p>
+                    <p>தரவு அறிக்கை (Reports)</p>
                 </div>
             </a>
-            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-                <a href="NSNK-ProgramBrief/NSNK-ProgramBriefing.html" class="toggle-btn" style="text-decoration:none; background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.4); color: #fbbf24; font-weight:700;">
-                    <i data-lucide="book-open" style="width:14px; height:14px; vertical-align:middle;"></i> <span>விளக்கக் கையேடு & படங்கள்</span>
-                </a>
+            
+            <div style="display:flex; align-items:center; gap:10px;">
                 <a href="index.html" class="toggle-btn" style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.2); color: var(--text-main); text-decoration:none;">
-                    <i data-lucide="arrow-left" style="width:14px; height:14px; vertical-align:middle;"></i> <span>Back to Search</span>
+                    <i data-lucide="arrow-left" style="width:14px; height:14px; vertical-align:middle;"></i> <span>Search</span>
                 </a>
-                <button id="theme-toggle-btn" class="toggle-btn" style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.2); color: var(--text-main);" onclick="toggleTheme()">
+                
+                <button id="theme-toggle-btn" class="toggle-btn" style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.2); color: var(--text-main);" onclick="toggleTheme()" title="Toggle Theme">
                     <i data-lucide="moon" id="theme-icon" style="width:14px; height:14px; vertical-align:middle;"></i> <span id="theme-text">Dark</span>
                 </button>
+                
                 <div class="brand-badge" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); color: #6ee7b7; font-weight:700;">
-                    v10.2
+                    v10.3
                 </div>
             </div>
         </div>
     </header>
 
     <!-- Main Container -->
-    <main class="container" style="padding-top: 24px; padding-bottom: 40px;">
+    <main class="container" style="padding-top: 16px; padding-bottom: 30px;">
 
-        <!-- Top Selectable Reports Navigation Bar -->
-        <section style="margin-bottom: 24px; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 12px; padding: 16px;">
-            <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
-                <i data-lucide="list-filter" style="width:14px; height:14px; color:#a78bfa;"></i> Select Available Report / அறிக்கை தேர்வு செய்க:
-            </div>
-            <div style="display:flex; gap:12px; flex-wrap:wrap;">
-                <button id="tab-report-1" class="report-tab-btn active" onclick="switchReport(1)">
-                    <i data-lucide="map-pin" style="width:16px; height:16px;"></i>
-                    Report 1: Pincode Distribution & Grade Analysis (பின்கோடு அறிக்கை)
-                </button>
-                <button id="tab-report-2" class="report-tab-btn" onclick="switchReport(2)">
-                    <i data-lucide="layers" style="width:16px; height:16px;"></i>
-                    Report 2: Geographic Hierarchy (மண்டலம் ➔ மாவட்டம் ➔ ஒன்றியம் ➔ பின்கோடு)
-                </button>
-            </div>
-        <!-- Export & Share Action Toolbar -->
-        <section style="margin-bottom: 24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 12px; padding: 16px;">
-            <div style="font-size: 0.88rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 6px;">
-                <i data-lucide="share-2" style="width:16px; height:16px; color:#a78bfa;"></i> Report Export & Sharing Options:
-            </div>
-            <div style="display:flex; gap:12px; flex-wrap:wrap;">
-                <button class="export-img-btn" onclick="exportReportAsImage()">
-                    <i data-lucide="image" style="width:18px; height:18px;"></i> Export as Image (PNG/JPG) 🖼️
-                </button>
-                <button class="share-btn-wa" onclick="shareReportOnWhatsApp()">
-                    <i data-lucide="send" style="width:18px; height:18px;"></i> Share Report on WhatsApp 📱
-                </button>
-                <button class="toggle-btn" style="background: rgba(59, 130, 246, 0.2); border-color: rgba(59, 130, 246, 0.4); color: #93c5fd; padding:10px 18px; font-weight:700;" onclick="exportReportToExcel()">
-                    <i data-lucide="download" style="width:16px; height:16px; vertical-align:middle;"></i> Export Excel (.xlsx) 📊
-                </button>
-            </div>
-        </section>
-
-        <!-- Interactive AI Report Assistant Chat Box -->
-        <section id="ai-assistant-card" style="margin-bottom: 24px; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(139, 92, 246, 0.4); border-radius: 12px; padding: 18px; box-shadow: 0 8px 32px rgba(139, 92, 246, 0.15);">
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom: 12px;">
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <div style="width:10px; height:10px; border-radius:50%; background:#10b981; box-shadow:0 0 10px #10b981;"></div>
-                    <span style="font-weight:700; font-family:'Outfit'; font-size:1.05rem; color:#f8fafc; display:flex; align-items:center; gap:6px;">
-                        <i data-lucide="bot" style="width:20px; height:20px; color:#c4b5fd;"></i> AI Report Assistant / செயற்கை நுண்ணறிவு உதவி
-                    </span>
-                </div>
-                <div style="font-size:0.78rem; color:var(--text-muted);">
-                    Type natural questions to update graphs & tables live!
-                </div>
-            </div>
-
-            <!-- Quick Suggestion Chips -->
-            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom: 14px;">
-                <span style="font-size:0.78rem; font-weight:700; color:var(--text-muted); display:flex; align-items:center; gap:4px; margin-right:2px;">Quick Shortcuts:</span>
-                <button class="chip-btn" onclick="sendAiChipQuery('Filter all A Grade')" style="padding:4px 10px; font-size:0.78rem; background:rgba(16,185,129,0.15); border-color:rgba(16,185,129,0.35); color:#6ee7b7;">🟢 Grade A Only</button>
-                <button class="chip-btn" onclick="sendAiChipQuery('Show data without pincode')" style="padding:4px 10px; font-size:0.78rem; background:rgba(239,68,68,0.15); border-color:rgba(239,68,68,0.35); color:#fca5a5;">📍 Missing Pincodes</button>
-                <button class="chip-btn" onclick="sendAiChipQuery('Switch to horizontal bar chart')" style="padding:4px 10px; font-size:0.78rem; background:rgba(6,182,212,0.15); border-color:rgba(6,182,212,0.35); color:#67e8f9;">📊 Horizontal Bar</button>
-                <button class="chip-btn" onclick="sendAiChipQuery('Switch to doughnut chart')" style="padding:4px 10px; font-size:0.78rem; background:rgba(245,158,11,0.15); border-color:rgba(245,158,11,0.35); color:#fde047;">🍩 Donut Chart</button>
-                <button class="chip-btn" onclick="sendAiChipQuery('Switch to Report 2')" style="padding:4px 10px; font-size:0.78rem; background:rgba(139,92,246,0.15); border-color:rgba(139,92,246,0.35); color:#c4b5fd;">🗺️ Geographic Hierarchy</button>
-                <button class="chip-btn" onclick="sendAiChipQuery('Reset all filters')" style="padding:4px 10px; font-size:0.78rem; background:rgba(148,163,184,0.15); border-color:rgba(148,163,184,0.35); color:#cbd5e1;">🔄 Reset All</button>
-            </div>
-
-            <!-- Chat History Log -->
-            <div id="ai-chat-log" style="max-height: 160px; overflow-y: auto; background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 12px; margin-bottom: 12px; display:flex; flex-direction:column; gap:8px;">
-                <div style="font-size:0.84rem; color:#c4b5fd; background:rgba(139,92,246,0.12); border:1px solid rgba(139,92,246,0.25); padding:8px 12px; border-radius:6px; align-self:flex-start;">
-                    <strong>🤖 AI Assistant:</strong> Welcome! Ask me any question like <em>"filter Grade A"</em> or <em>"show data without pincode"</em> to update graphs & tables instantly.
-                </div>
-            </div>
-
-            <!-- Chat Input Area -->
-            <form onsubmit="event.preventDefault(); submitAiChat();" style="display:flex; gap:10px;">
-                <input type="text" id="ai-chat-input" class="search-input" style="flex:1; padding:10px 14px; font-size:0.9rem;" placeholder="Ask AI Assistant (e.g. 'filter all Grade A without pincode')..." autocomplete="off">
-                <button type="submit" class="toggle-btn" style="background: linear-gradient(135deg, #8b5cf6, #06b6d4); color:#fff; border:none; padding:10px 18px; font-weight:700; cursor:pointer;">
-                    Ask AI ✨
-                </button>
-            </form>
-        </section>
-
-        <!-- Report Controls & Customization Toolbar -->
-        <section style="margin-bottom: 20px; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 16px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;">
-                
-                <!-- Left: View Mode Switcher -->
-                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                    <span style="font-size:0.85rem; font-weight:700; color:var(--text-muted);">View Mode:</span>
-                    <button id="btn-view-both" class="toggle-btn active" style="padding:6px 12px; font-size:0.82rem;" onclick="setViewMode('both')">
-                        <i data-lucide="layout-grid" style="width:13px; height:13px; vertical-align:middle;"></i> Combined View
-                    </button>
-                    <button id="btn-view-chart" class="toggle-btn" style="padding:6px 12px; font-size:0.82rem;" onclick="setViewMode('chart')">
-                        <i data-lucide="bar-chart-2" style="width:13px; height:13px; vertical-align:middle;"></i> Graphical Only
-                    </button>
-                    <button id="btn-view-table" class="toggle-btn" style="padding:6px 12px; font-size:0.82rem;" onclick="setViewMode('table')">
-                        <i data-lucide="table" style="width:13px; height:13px; vertical-align:middle;"></i> Data Table Only
-                    </button>
-                </div>
-
-                <!-- Middle: Chart Type Switcher -->
-                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                    <span style="font-size:0.85rem; font-weight:700; color:var(--text-muted);">Chart Format:</span>
-                    <select id="select-chart-type" class="select-custom" style="padding:6px 10px; font-size:0.82rem;" onchange="changeChartType(this.value)">
-                        <option value="bar">Vertical Bar 📊</option>
-                        <option value="horizontalBar">Horizontal Bar 📊</option>
-                        <option value="line">Line Chart 📈</option>
-                        <option value="doughnut">Doughnut / Pie 🍩</option>
-                    </select>
-                </div>
-
-                <!-- Right: Filters & Options -->
-                <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-                    <label id="wrapper-grade-toggle" style="display:inline-flex; align-items:center; gap:6px; font-size:0.85rem; font-weight:700; color:#6ee7b7; cursor:pointer; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); padding:6px 12px; border-radius:6px;">
-                        <input type="checkbox" id="chk-include-grade" checked onchange="toggleGradeOption(this.checked)" style="accent-color:#10b981; width:15px; height:15px;">
-                        Include Grade Breakdown (A/B/C)
+        <!-- 3 Filter Columns: Region -> District -> Pincode -->
+        <section class="simple-filter-card">
+            <div class="filter-grid">
+                <!-- 1. Region -->
+                <div class="filter-group">
+                    <label for="filter-region">
+                        <i data-lucide="map" style="width:16px; height:16px; color:#c4b5fd;"></i>
+                        1. மண்டலம் (Region):
                     </label>
-
-                    <select id="filter-report-region" class="select-custom" style="padding:6px 10px; font-size:0.82rem;" onchange="applyReportFilters()">
-                        <option value="">All Regions / மண்டலம்</option>
+                    <select id="filter-region" class="filter-select" onchange="onRegionChange()">
+                        <option value="">-- அனைத்து மண்டலங்களும் (All Regions) --</option>
                     </select>
-
-                    <select id="filter-report-district" class="select-custom" style="padding:6px 10px; font-size:0.82rem;" onchange="applyReportFilters()">
-                        <option value="">All Districts / மாவட்டம்</option>
-                    </select>
-
-                    <input type="text" id="report-search-input" class="search-input" style="padding:6px 12px; font-size:0.82rem; width:180px;" placeholder="Search report rows..." oninput="filterReportTable(this.value)">
                 </div>
 
+                <!-- 2. District -->
+                <div class="filter-group">
+                    <label for="filter-district">
+                        <i data-lucide="building-2" style="width:16px; height:16px; color:#67e8f9;"></i>
+                        2. மாவட்டம் (District):
+                    </label>
+                    <select id="filter-district" class="filter-select" onchange="onDistrictChange()">
+                        <option value="">-- அனைத்து மாவட்டங்களும் (All Districts) --</option>
+                    </select>
+                </div>
+
+                <!-- 3. Pincode -->
+                <div class="filter-group">
+                    <label for="filter-pincode">
+                        <i data-lucide="map-pin" style="width:16px; height:16px; color:#6ee7b7;"></i>
+                        3. பின்கோடு (Pincode):
+                    </label>
+                    <select id="filter-pincode" class="filter-select" onchange="onPincodeChange()">
+                        <option value="">-- அனைத்து பின்கோடுகளும் (All Pincodes) --</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Filter Buttons -->
+            <div class="filter-buttons">
+                <button type="button" class="btn-apply" onclick="applyFilters(true)">
+                    <i data-lucide="filter" style="width:16px; height:16px;"></i>
+                    <span>வடிகட்டு (Apply Filter)</span>
+                </button>
+                <button type="button" class="btn-reset" onclick="resetFilters()">
+                    <i data-lucide="rotate-ccw" style="width:15px; height:15px;"></i>
+                    <span>மீட்டமை (Reset)</span>
+                </button>
             </div>
         </section>
 
-        <!-- Capture Area Container (Target for Export as Image) -->
-        <div id="report-capture-area" style="background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(139, 92, 246, 0.35); border-radius: 12px; padding: 24px; margin-bottom: 24px;">
-            
-            <!-- Report Title & Summary Header -->
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 16px; margin-bottom: 20px;">
-                <div>
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <span class="brand-badge" style="background:rgba(139,92,246,0.2); border-color:rgba(139,92,246,0.4); color:#c4b5fd; font-weight:700;" id="report-badge-id">REPORT #1</span>
-                        <h2 style="font-family:var(--font-heading); font-size:1.35rem; color:#f8fafc; margin:0;" id="report-main-title">Pincode Distribution & Grade Analysis</h2>
-                    </div>
-                    <p style="margin:6px 0 0 0; font-size:0.85rem; color:var(--text-muted);" id="report-sub-title">Showing total headcount, percentage distribution, and Grade A/B/C breakdown per Pincode across 62,521 records.</p>
+        <!-- Action Toolbar: Count & XLS Export -->
+        <section id="results-section">
+            <div class="action-toolbar">
+                <div id="stat-match-count" class="count-badge">
+                    0 பதிவுகள் / Records
                 </div>
-                <div style="text-align:right;">
-                    <div style="font-size:1.3rem; font-weight:800; color:#6ee7b7; font-family:'Outfit';" id="report-stat-count">0 Records</div>
-                    <div style="font-size:0.75rem; color:var(--text-muted);" id="report-timestamp">Generated live • NSNK v10.2</div>
-                </div>
+                
+                <button id="btn-export-xls" class="btn-export" onclick="exportToXLS()" title="Download Excel Sheet">
+                    <i data-lucide="file-spreadsheet" style="width:18px; height:18px;"></i>
+                    <span>XLS வடிவில் பதிவிறக்கு (Export to XLS) 📊</span>
+                </button>
             </div>
 
-            <!-- Graphical View Section -->
-            <div id="section-chart" style="margin-bottom: 28px; background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 16px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                    <h3 style="margin:0; font-size:0.95rem; color:#c4b5fd; display:flex; align-items:center; gap:6px;">
-                        <i data-lucide="bar-chart-2" style="width:16px; height:16px;"></i> Graphical Analytics Visualization
-                    </h3>
-                    <span style="font-size:0.78rem; color:var(--text-muted);" id="chart-caption-info">Top 30 Records Displayed</span>
-                </div>
-                <div style="position:relative; height: 340px; width: 100%;">
-                    <canvas id="report-chart-canvas"></canvas>
-                </div>
+            <!-- Empty State -->
+            <div id="empty-state" style="display:none; text-align:center; padding:40px 20px; background:var(--panel-bg); border-radius:var(--radius-md); margin-bottom:16px;">
+                <i data-lucide="inbox" style="width:40px; height:40px; color:var(--text-muted); margin-bottom:10px;"></i>
+                <div style="font-size:1rem; color:var(--text-main); font-weight:700;">பதிவுகள் எதுவும் கிடைக்கவில்லை (No Records Found)</div>
             </div>
 
-            <!-- Table Data View Section -->
-            <div id="section-table">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                    <h3 style="margin:0; font-size:0.95rem; color:#6ee7b7; display:flex; align-items:center; gap:6px;">
-                        <i data-lucide="table" style="width:16px; height:16px;"></i> Data Table Format
-                    </h3>
-                    <span style="font-size:0.78rem; color:var(--text-muted);" id="table-row-count-info">0 rows</span>
-                </div>
-
-                <div class="report-table-container" style="max-height: 500px; overflow-y: auto;">
-                    <table class="report-table" id="report-data-table">
-                        <thead id="report-table-head">
-                            <!-- Injected dynamically -->
+            <!-- Data Content Area -->
+            <div id="data-content-area">
+                <!-- Desktop Table View -->
+                <div id="table-view-container" class="desktop-table-box">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th style="width:36px; text-align:center;">#</th>
+                                <th>பெயர் (Name)</th>
+                                <th>தொடர்பு எண் (Mobile)</th>
+                                <th>மண்டலம் (Region)</th>
+                                <th>மாவட்டம் (District)</th>
+                                <th>ஒன்றியம் (Union)</th>
+                                <th>பின்கோடு (Pincode)</th>
+                                <th>தரம் (Grade)</th>
+                                <th>பெயர் விளக்கம் (Meaning)</th>
+                            </tr>
                         </thead>
                         <tbody id="report-table-body">
-                            <!-- Injected dynamically -->
+                            <!-- Injected by reports.js -->
                         </tbody>
                     </table>
                 </div>
-            </div>
 
-        </div>
+                <!-- Mobile Cards View -->
+                <div id="cards-view-container" class="mobile-cards-box">
+                    <!-- Injected by reports.js -->
+                </div>
+
+                <!-- Pagination -->
+                <div id="pagination-container" class="pagination-bar">
+                    <!-- Injected by reports.js -->
+                </div>
+            </div>
+        </section>
 
     </main>
 
-    <!-- Dedicated Reports Hub Logic Script -->
+    <!-- Meaning Detail Modal -->
+    <div id="meaning-modal" class="modal-overlay">
+        <div class="modal-card">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <div>
+                    <h3 id="modal-person-name" style="margin:0; font-family:var(--font-tamil); font-size:1.3rem; color:var(--text-main);">-</h3>
+                    <div id="modal-person-phone" style="font-size:0.86rem; margin-top:3px;">-</div>
+                </div>
+                <div id="modal-person-grade"></div>
+            </div>
+
+            <div id="modal-person-location" style="font-size:0.8rem; color:var(--text-muted); background:rgba(255,255,255,0.05); padding:6px 10px; border-radius:6px;">-</div>
+
+            <div id="modal-meaning-text" style="font-family:var(--font-tamil); font-size:0.96rem; line-height:1.7; color:var(--text-main); background:rgba(0,0,0,0.25); padding:14px; border-radius:6px; max-height:240px; overflow-y:auto; word-break:break-word;">-</div>
+
+            <div style="display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+                <button type="button" id="btn-modal-copy" class="btn-apply" style="height:40px; padding:0 16px; font-size:0.86rem;" onclick="copyModalMeaning()">
+                    <i data-lucide="copy" style="width:14px; height:14px;"></i>
+                    <span>நகலெடு (Copy Meaning)</span>
+                </button>
+                <button type="button" class="btn-reset" style="height:40px; padding:0 16px; font-size:0.86rem;" onclick="closeMeaningModal()">
+                    மூடு (Close)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Reporting Logic -->
     <script src="reports.js"></script>
     <script>
-        // Initialize Lucide Icons
-        lucide.createIcons();
+        if (window.lucide) lucide.createIcons();
     </script>
 </body>
 </html>

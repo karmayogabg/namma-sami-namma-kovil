@@ -1,38 +1,35 @@
 /**
  * reports.js
- * Dedicated Reporting & Interactive Analytics Engine for Namma Sami Namma Kovil
- * Supports Pincode Grade Analysis (Report 1), Geographic Hierarchy (Report 2),
- * Multi-format Chart.js visualizer, Image Exporter (PNG), WhatsApp Sharing (Graph Image + Link),
- * Per-Column Sorting & Filtering, and AI Assistant Chat Box with Natural Language Query Parsing.
+ * Streamlined Data Reports & XLS Exporter for Namma Sami Namma Kovil
+ * Filter Hierarchy: Region (மண்டலம்) -> District (மாவட்டம்) -> Pincode (பின்கோடு)
+ * Data Display: Desktop Table View / Mobile Cards View with Pagination
+ * Export: SheetJS XLS (.xlsx)
+ * Version: v10.3
  */
 
-let dataset = [];
-let currentReportId = 1;
-let currentChartType = 'bar';
-let viewMode = 'both'; // 'both', 'chart', 'table'
-let includeGrade = true;
-let chartInstance = null;
-let currentReportRows = [];
-let filteredReportRows = [];
+// Global State
+let fullDataset = [];
+let filteredData = [];
+let selectedRegion = '';
+let selectedDistrict = '';
+let selectedPincode = '';
+let currentPage = 1;
+let pageSize = 25;
+let currentModalItem = null;
 
-// Column Sorting & Filtering State
-let sortKey = 'count';
-let sortOrder = 'desc'; // 'asc' or 'desc'
-let columnFilters = {};
+// Natural Sort Comparator (handles "1. ...", "2. ...", "10. ...")
+function naturalCompare(a, b) {
+    return String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' });
+}
 
-// AI Assistant State Variables
-let aiPincodeCondition = 'all'; // 'all', 'missing', 'present'
-let aiGradeFilter = '';          // '', 'A', 'B', 'C', 'Ungraded'
-
-// DOM Elements
+// DOM Initialization
 document.addEventListener('DOMContentLoaded', async () => {
     initTheme();
+    setupEventListeners();
     await loadDataset();
-    setupFilters();
-    renderActiveReport();
 });
 
-// Theme Toggle System
+// Theme Management
 function initTheme() {
     const savedTheme = localStorage.getItem('nsnk_theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
@@ -45,7 +42,6 @@ function toggleTheme() {
     document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('nsnk_theme', newTheme);
     updateThemeIcon(newTheme);
-    renderChart();
 }
 
 function updateThemeIcon(theme) {
@@ -62,1018 +58,667 @@ function updateThemeIcon(theme) {
     if (window.lucide) lucide.createIcons();
 }
 
-// Load JSON Dataset
-async function loadDataset() {
-    try {
-        const response = await fetch('namma_sami_namma_kovil_full.json');
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        dataset = await response.json();
-        console.log(`✅ Loaded ${dataset.length} records into Reports Hub.`);
-    } catch (err) {
-        console.error('❌ Failed to load JSON dataset:', err);
-        alert('Failed to load dataset for reports. Please ensure namma_sami_namma_kovil_full.json exists.');
+// Setup Event Listeners
+function setupEventListeners() {
+    // Close modal on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeMeaningModal();
+    });
+
+    // Modal background click
+    const modalOverlay = document.getElementById('meaning-modal');
+    if (modalOverlay) {
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closeMeaningModal();
+        });
     }
 }
 
-// Populate Region & District Dropdown Filters
-function setupFilters() {
-    const regionSelect = document.getElementById('filter-report-region');
-    const districtSelect = document.getElementById('filter-report-district');
-    if (!regionSelect || !districtSelect) return;
+// Load Dataset
+async function loadDataset() {
+    const loadingOverlay = document.getElementById('loading-state');
+    const loadingText = document.getElementById('loading-text');
 
+    try {
+        if (loadingOverlay) loadingOverlay.style.display = 'flex';
+        if (loadingText) loadingText.textContent = 'தரவு ஏற்றப்படுகிறது... Loading 62,521 Records...';
+
+        const response = await fetch('namma_sami_namma_kovil_full.json');
+        if (!response.ok) throw new Error(`HTTP ${response.status}: Failed to fetch dataset.`);
+        
+        fullDataset = await response.json();
+        filteredData = [...fullDataset];
+        
+        console.log(`✅ Loaded ${fullDataset.length} records.`);
+
+        // Initialize Filter Dropdowns
+        initFilterDropdowns();
+
+        // Initial Data Render
+        applyFilters(false);
+
+    } catch (err) {
+        console.error('❌ Error loading dataset:', err);
+        if (loadingText) {
+            loadingText.innerHTML = `
+                <span style="color:#ef4444; font-weight:700;">தரவு ஏற்றுவதில் பிழை / Failed to load dataset.</span><br>
+                <small style="color:var(--text-muted);">${err.message}</small>
+            `;
+        }
+    } finally {
+        if (loadingOverlay) {
+            setTimeout(() => {
+                loadingOverlay.style.display = 'none';
+            }, 300);
+        }
+    }
+}
+
+// Initialize Filter Dropdowns
+function initFilterDropdowns() {
+    const regionSelect = document.getElementById('filter-region');
+    if (!regionSelect) return;
+
+    // Collect Unique Regions
     const regions = new Set();
-    const districts = new Set();
-
-    dataset.forEach(item => {
-        if (item.region) regions.add(item.region.trim());
-        if (item.district) districts.add(item.district.trim());
+    fullDataset.forEach(row => {
+        const r = (row.region || '').trim();
+        if (r) regions.add(r);
     });
 
-    Array.from(regions).sort().forEach(reg => {
+    const sortedRegions = Array.from(regions).sort(naturalCompare);
+
+    regionSelect.innerHTML = `<option value="">-- அனைத்து மண்டலங்களும் (${sortedRegions.length}) / All Regions --</option>`;
+    sortedRegions.forEach(reg => {
         const opt = document.createElement('option');
         opt.value = reg;
         opt.textContent = reg;
         regionSelect.appendChild(opt);
     });
 
-    Array.from(districts).sort().forEach(dist => {
+    // Populate Districts & Pincodes for initial state
+    updateDistrictDropdown();
+    updatePincodeDropdown();
+}
+
+// Update District Dropdown based on Selected Region
+function updateDistrictDropdown() {
+    const districtSelect = document.getElementById('filter-district');
+    if (!districtSelect) return;
+
+    const districts = new Set();
+    fullDataset.forEach(row => {
+        const r = (row.region || '').trim();
+        const d = (row.district || '').trim();
+        if (d) {
+            if (!selectedRegion || r === selectedRegion) {
+                districts.add(d);
+            }
+        }
+    });
+
+    const sortedDistricts = Array.from(districts).sort(naturalCompare);
+
+    const prevDistrict = selectedDistrict;
+    districtSelect.innerHTML = `<option value="">-- அனைத்து மாவட்டங்களும் (${sortedDistricts.length}) / All Districts --</option>`;
+    
+    sortedDistricts.forEach(dist => {
         const opt = document.createElement('option');
         opt.value = dist;
         opt.textContent = dist;
+        if (dist === prevDistrict) opt.selected = true;
         districtSelect.appendChild(opt);
     });
+
+    if (selectedDistrict && !districts.has(selectedDistrict)) {
+        selectedDistrict = '';
+        districtSelect.value = '';
+    }
 }
 
-// Switch Active Report with Synchronized AI Assistant Context
-function switchReport(reportId) {
-    if (currentReportId === reportId) {
-        renderActiveReport();
+// Update Pincode Dropdown based on Selected Region & District
+function updatePincodeDropdown() {
+    const pincodeSelect = document.getElementById('filter-pincode');
+    if (!pincodeSelect) return;
+
+    const pincodes = new Set();
+    let hasEmptyPincode = false;
+
+    fullDataset.forEach(row => {
+        const r = (row.region || '').trim();
+        const d = (row.district || '').trim();
+        const p = String(row.pincode || '').trim();
+
+        const regionMatch = !selectedRegion || r === selectedRegion;
+        const districtMatch = !selectedDistrict || d === selectedDistrict;
+
+        if (regionMatch && districtMatch) {
+            if (p && p !== '-' && p !== 'null' && p !== 'undefined') {
+                pincodes.add(p);
+            } else {
+                hasEmptyPincode = true;
+            }
+        }
+    });
+
+    const sortedPincodes = Array.from(pincodes).sort((a, b) => {
+        const numA = parseInt(a, 10);
+        const numB = parseInt(b, 10);
+        if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+        return naturalCompare(a, b);
+    });
+
+    const prevPincode = selectedPincode;
+    pincodeSelect.innerHTML = `<option value="">-- அனைத்து பின்கோடுகளும் (${sortedPincodes.length}) / All Pincodes --</option>`;
+
+    if (hasEmptyPincode) {
+        const optEmpty = document.createElement('option');
+        optEmpty.value = "__EMPTY__";
+        optEmpty.textContent = "📍 பின்கோடு இல்லாதவை / No Pincode";
+        if (prevPincode === "__EMPTY__") optEmpty.selected = true;
+        pincodeSelect.appendChild(optEmpty);
+    }
+
+    sortedPincodes.forEach(pin => {
+        const opt = document.createElement('option');
+        opt.value = pin;
+        opt.textContent = pin;
+        if (pin === prevPincode) opt.selected = true;
+        pincodeSelect.appendChild(opt);
+    });
+
+    if (selectedPincode && selectedPincode !== "__EMPTY__" && !pincodes.has(selectedPincode)) {
+        selectedPincode = '';
+        pincodeSelect.value = '';
+    }
+}
+
+// Dropdown Change Handlers
+function onRegionChange() {
+    const regionSelect = document.getElementById('filter-region');
+    selectedRegion = regionSelect ? regionSelect.value.trim() : '';
+    
+    updateDistrictDropdown();
+    updatePincodeDropdown();
+}
+
+function onDistrictChange() {
+    const districtSelect = document.getElementById('filter-district');
+    selectedDistrict = districtSelect ? districtSelect.value.trim() : '';
+
+    updatePincodeDropdown();
+}
+
+function onPincodeChange() {
+    const pincodeSelect = document.getElementById('filter-pincode');
+    selectedPincode = pincodeSelect ? pincodeSelect.value.trim() : '';
+}
+
+// Apply Filters Action
+function applyFilters(shouldScroll = true) {
+    const regionSelect = document.getElementById('filter-region');
+    const districtSelect = document.getElementById('filter-district');
+    const pincodeSelect = document.getElementById('filter-pincode');
+
+    selectedRegion = regionSelect ? regionSelect.value.trim() : '';
+    selectedDistrict = districtSelect ? districtSelect.value.trim() : '';
+    selectedPincode = pincodeSelect ? pincodeSelect.value.trim() : '';
+
+    filteredData = fullDataset.filter(row => {
+        // Region Filter
+        if (selectedRegion && (row.region || '').trim() !== selectedRegion) {
+            return false;
+        }
+
+        // District Filter
+        if (selectedDistrict && (row.district || '').trim() !== selectedDistrict) {
+            return false;
+        }
+
+        // Pincode Filter
+        if (selectedPincode) {
+            const rowPin = String(row.pincode || '').trim();
+            if (selectedPincode === '__EMPTY__') {
+                if (rowPin && rowPin !== '-' && rowPin !== 'null') return false;
+            } else {
+                if (rowPin !== selectedPincode) return false;
+            }
+        }
+
+        return true;
+    });
+
+    currentPage = 1;
+    renderData();
+
+    // Smooth scroll to results on mobile
+    if (shouldScroll) {
+        const resultsSection = document.getElementById('results-section');
+        if (resultsSection) {
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+}
+
+// Reset All Filters
+function resetFilters() {
+    selectedRegion = '';
+    selectedDistrict = '';
+    selectedPincode = '';
+
+    const regionSelect = document.getElementById('filter-region');
+    const districtSelect = document.getElementById('filter-district');
+    const pincodeSelect = document.getElementById('filter-pincode');
+
+    if (regionSelect) regionSelect.value = '';
+    if (districtSelect) districtSelect.value = '';
+    if (pincodeSelect) pincodeSelect.value = '';
+
+    initFilterDropdowns();
+    applyFilters(false);
+}
+
+// Render Data (Table + Cards + Counts + Pagination)
+function renderData() {
+    const totalCount = filteredData.length;
+    
+    // Update Match Count Badge
+    const countBadge = document.getElementById('stat-match-count');
+    if (countBadge) {
+        countBadge.textContent = `${totalCount.toLocaleString()} பதிவுகள் / Records`;
+    }
+
+    // Update XLS Export Button State
+    const exportBtn = document.getElementById('btn-export-xls');
+    if (exportBtn) {
+        exportBtn.disabled = (totalCount === 0);
+        exportBtn.style.opacity = totalCount === 0 ? '0.5' : '1';
+        exportBtn.style.cursor = totalCount === 0 ? 'not-allowed' : 'pointer';
+    }
+
+    // Empty State vs Data
+    const emptyState = document.getElementById('empty-state');
+    const contentArea = document.getElementById('data-content-area');
+    const paginationArea = document.getElementById('pagination-container');
+
+    if (totalCount === 0) {
+        if (emptyState) emptyState.style.display = 'block';
+        if (contentArea) contentArea.style.display = 'none';
+        if (paginationArea) paginationArea.style.display = 'none';
         return;
     }
 
-    currentReportId = reportId;
-    columnFilters = {}; // Reset per-column filters on report switch
-    sortKey = 'count';
-    sortOrder = 'desc';
-    
-    // Update Tab UI
-    document.getElementById('tab-report-1').classList.toggle('active', reportId === 1);
-    document.getElementById('tab-report-2').classList.toggle('active', reportId === 2);
-    
-    // Toggle Report 1 Grade Checkbox visibility
-    const gradeWrapper = document.getElementById('wrapper-grade-toggle');
-    if (gradeWrapper) {
-        gradeWrapper.style.display = reportId === 1 ? 'inline-flex' : 'none';
+    if (emptyState) emptyState.style.display = 'none';
+    if (contentArea) contentArea.style.display = 'block';
+    if (paginationArea) paginationArea.style.display = 'flex';
+
+    // Calculate Slice Range
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = Math.min(startIndex + pageSize, totalCount);
+    const pageRows = filteredData.slice(startIndex, endIndex);
+
+    // Render Table & Cards
+    renderTableView(pageRows, startIndex);
+    renderCardsView(pageRows, startIndex);
+
+    // Render Pagination
+    renderPagination(totalCount, startIndex, endIndex);
+
+    // Initialize Lucide Icons
+    if (window.lucide) lucide.createIcons();
+}
+
+// Helper: Grade Badge HTML
+function getGradeBadge(grade) {
+    const g = (grade || 'Ungraded').trim();
+    if (g === 'Grade A') {
+        return `<span class="grade-badge grade-badge-a">A Grade</span>`;
+    } else if (g === 'Grade B') {
+        return `<span class="grade-badge grade-badge-b">B Grade</span>`;
+    } else if (g === 'Grade C') {
+        return `<span class="grade-badge grade-badge-c">C Grade</span>`;
     }
-
-    // Notify AI Assistant & Update Chat Placeholder & Context
-    const aiInput = document.getElementById('ai-chat-input');
-    if (reportId === 1) {
-        if (aiInput) aiInput.placeholder = "Ask AI Assistant (e.g. 'filter Grade A without pincode')...";
-        appendAiChatMessage('assistant', `🔄 <strong>AI Context Switched to Report #1</strong>: Pincode Distribution & Grade Analysis.<br>Ask me about pincodes, missing pincodes, or Grade A/B/C filters!`);
-    } else if (reportId === 2) {
-        if (aiInput) aiInput.placeholder = "Ask AI Assistant (e.g. 'show Top 10 districts in தென்காசி region')...";
-        appendAiChatMessage('assistant', `🔄 <strong>AI Context Switched to Report #2</strong>: Geographic Hierarchy Breakdown (மண்டலம் ➔ மாவட்டம் ➔ ஒன்றியம் ➔ பின்கோடு).<br>Ask me about specific regions, districts, or union headcounts!`);
-    }
-
-    renderActiveReport();
+    return `<span class="grade-badge grade-badge-u">Ungraded</span>`;
 }
 
-// Set View Mode (Combined, Chart Only, Table Only)
-function setViewMode(mode) {
-    viewMode = mode;
-    document.getElementById('btn-view-both').classList.toggle('active', mode === 'both');
-    document.getElementById('btn-view-chart').classList.toggle('active', mode === 'chart');
-    document.getElementById('btn-view-table').classList.toggle('active', mode === 'table');
-
-    const chartSec = document.getElementById('section-chart');
-    const tableSec = document.getElementById('section-table');
-
-    if (mode === 'both') {
-        chartSec.style.display = 'block';
-        tableSec.style.display = 'block';
-    } else if (mode === 'chart') {
-        chartSec.style.display = 'block';
-        tableSec.style.display = 'none';
-    } else if (mode === 'table') {
-        chartSec.style.display = 'none';
-        tableSec.style.display = 'block';
-    }
+// Helper: Clean phone number
+function cleanPhone(phone) {
+    if (!phone) return '';
+    return String(phone).replace(/\D/g, '');
 }
 
-// Change Chart Format (Vertical Bar, Horizontal Bar, Line, Donut)
-function changeChartType(type) {
-    currentChartType = type;
-    renderChart();
-}
-
-// Toggle Grade Option for Report 1
-function toggleGradeOption(checked) {
-    includeGrade = checked;
-    renderActiveReport();
-}
-
-// Apply Filters (Region & District)
-function applyReportFilters() {
-    renderActiveReport();
-}
-
-// Global Filter Report Table rows live via search input
-function filterReportTable(query) {
-    applyColumnSortingAndFiltering();
-}
-
-// ==========================================
-// COLUMN SORTING & PER-COLUMN FILTERING ENGINE
-// ==========================================
-function sortTableByColumn(key) {
-    if (sortKey === key) {
-        sortOrder = sortOrder === 'desc' ? 'asc' : 'desc';
-    } else {
-        sortKey = key;
-        sortOrder = 'desc';
-    }
-    applyColumnSortingAndFiltering();
-}
-
-function onColumnFilterInput(colKey, val) {
-    columnFilters[colKey] = val.trim().toLowerCase();
-    applyColumnSortingAndFiltering();
-}
-
-function applyColumnSortingAndFiltering() {
-    let rows = [...currentReportRows];
-
-    // Global Search Bar Query
-    const searchInput = document.getElementById('report-search-input');
-    const globalQuery = searchInput ? searchInput.value.toLowerCase().trim() : '';
-
-    if (globalQuery) {
-        rows = rows.filter(r => Object.values(r).some(v => String(v).toLowerCase().includes(globalQuery)));
-    }
-
-    // Per-Column Filters
-    Object.keys(columnFilters).forEach(colKey => {
-        const filterVal = columnFilters[colKey];
-        if (!filterVal) return;
-
-        rows = rows.filter(r => {
-            const val = r[colKey];
-            if (val === undefined || val === null) return false;
-
-            // Numeric comparisons (e.g. >50, <100, 50-100, 50)
-            if (typeof val === 'number' || !isNaN(val)) {
-                const numVal = parseFloat(val);
-                if (filterVal.startsWith('>=')) {
-                    return numVal >= parseFloat(filterVal.substring(2));
-                } else if (filterVal.startsWith('>')) {
-                    return numVal > parseFloat(filterVal.substring(1));
-                } else if (filterVal.startsWith('<=')) {
-                    return numVal <= parseFloat(filterVal.substring(2));
-                } else if (filterVal.startsWith('<')) {
-                    return numVal < parseFloat(filterVal.substring(1));
-                } else if (filterVal.includes('-')) {
-                    const parts = filterVal.split('-').map(p => parseFloat(p));
-                    if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
-                        return numVal >= parts[0] && numVal <= parts[1];
-                    }
-                } else {
-                    const targetNum = parseFloat(filterVal);
-                    if (!isNaN(targetNum)) return numVal >= targetNum;
-                }
-            }
-
-            // String substring comparison
-            return String(val).toLowerCase().includes(filterVal);
-        });
-    });
-
-    // Sorting
-    rows.sort((a, b) => {
-        let valA = a[sortKey];
-        let valB = b[sortKey];
-
-        if (valA === undefined) valA = '';
-        if (valB === undefined) valB = '';
-
-        let cmp = 0;
-        if (typeof valA === 'number' && typeof valB === 'number') {
-            cmp = valA - valB;
-        } else if (!isNaN(valA) && !isNaN(valB) && valA !== '' && valB !== '') {
-            cmp = parseFloat(valA) - parseFloat(valB);
-        } else {
-            cmp = String(valA).localeCompare(String(valB));
-        }
-
-        return sortOrder === 'desc' ? -cmp : cmp;
-    });
-
-    filteredReportRows = rows;
-    renderChart();
-    renderTable();
-}
-
-// Main Render Function for Active Report
-function renderActiveReport() {
-    const selectedRegion = document.getElementById('filter-report-region')?.value || '';
-    const selectedDistrict = document.getElementById('filter-report-district')?.value || '';
-
-    // Filter Dataset Scope by Region, District, AI Pincode Condition, and AI Grade Filter
-    let scopedData = dataset;
-    if (selectedRegion) {
-        scopedData = scopedData.filter(d => d.region && d.region.trim() === selectedRegion);
-    }
-    if (selectedDistrict) {
-        scopedData = scopedData.filter(d => d.district && d.district.trim() === selectedDistrict);
-    }
-
-    // AI Pincode Condition Filter
-    if (aiPincodeCondition === 'missing') {
-        scopedData = scopedData.filter(d => !d.pincode || d.pincode.trim() === '' || d.pincode.trim() === '-');
-    } else if (aiPincodeCondition === 'present') {
-        scopedData = scopedData.filter(d => d.pincode && d.pincode.trim() !== '' && d.pincode.trim() !== '-');
-    }
-
-    // AI Grade Filter
-    if (aiGradeFilter) {
-        scopedData = scopedData.filter(d => {
-            const g = d.grade ? d.grade.trim() : 'Ungraded';
-            if (aiGradeFilter === 'Ungraded') return g === 'Ungraded' || g === 'UnClassified' || g === '';
-            return g === `Grade ${aiGradeFilter}` || g === aiGradeFilter;
-        });
-    }
-
-    if (currentReportId === 1) {
-        generateReport1Pincode(scopedData);
-    } else if (currentReportId === 2) {
-        generateReport2GeoHierarchy(scopedData);
-    }
-
-    applyColumnSortingAndFiltering();
-}
-
-// ==========================================
-// REPORT 1: Pincode Distribution & Grade Analysis
-// ==========================================
-function generateReport1Pincode(scopedData) {
-    const reportBadge = document.getElementById('report-badge-id');
-    const reportTitle = document.getElementById('report-main-title');
-    const reportSubtitle = document.getElementById('report-sub-title');
-    const reportStat = document.getElementById('report-stat-count');
-
-    if (reportBadge) reportBadge.textContent = 'REPORT #1';
-    if (reportTitle) reportTitle.textContent = 'Pincode Distribution & Grade Analysis (பின்கோடு அறிக்கை)';
-    if (reportSubtitle) reportSubtitle.textContent = `Pincode headcount breakdown with Grade A/B/C classification across ${scopedData.length.toLocaleString()} records.`;
-    if (reportStat) reportStat.textContent = `${scopedData.length.toLocaleString()} Records`;
-
-    const pinMap = new Map();
-
-    scopedData.forEach(item => {
-        const pin = item.pincode && item.pincode.trim() !== '-' ? item.pincode.trim() : 'Unspecified / பின்கோடு இல்லை';
-        if (!pinMap.has(pin)) {
-            pinMap.set(pin, {
-                pincode: pin,
-                count: 0,
-                gradeA: 0,
-                gradeB: 0,
-                gradeC: 0,
-                ungraded: 0
-            });
-        }
-        const rec = pinMap.get(pin);
-        rec.count++;
-
-        const g = item.grade ? item.grade.trim() : 'Ungraded';
-        if (g === 'Grade A' || g === 'A') rec.gradeA++;
-        else if (g === 'Grade B' || g === 'B') rec.gradeB++;
-        else if (g === 'Grade C' || g === 'C') rec.gradeC++;
-        else rec.ungraded++;
-    });
-
-    const totalCount = scopedData.length || 1;
-    currentReportRows = Array.from(pinMap.values()).map(r => ({
-        ...r,
-        pct: parseFloat(((r.count / totalCount) * 100).toFixed(2)),
-        pctA: parseFloat(((r.gradeA / (r.count || 1)) * 100).toFixed(1)),
-        pctB: parseFloat(((r.gradeB / (r.count || 1)) * 100).toFixed(1)),
-        pctC: parseFloat(((r.gradeC / (r.count || 1)) * 100).toFixed(1)),
-    }));
-}
-
-// ==========================================
-// REPORT 2: Geographic Hierarchy Breakdown (மண்டலம் ➔ மாவட்டம் ➔ ஒன்றியம் ➔ பின்கோடு)
-// ==========================================
-function generateReport2GeoHierarchy(scopedData) {
-    const reportBadge = document.getElementById('report-badge-id');
-    const reportTitle = document.getElementById('report-main-title');
-    const reportSubtitle = document.getElementById('report-sub-title');
-    const reportStat = document.getElementById('report-stat-count');
-
-    if (reportBadge) reportBadge.textContent = 'REPORT #2';
-    if (reportTitle) reportTitle.textContent = 'Geographic Hierarchy Breakdown (மண்டலம் ➔ மாவட்டம் ➔ ஒன்றியம் ➔ பின்கோடு)';
-    if (reportSubtitle) reportSubtitle.textContent = `Hierarchical breakdown of headcounts and grades structured by Region, District, Union, and Pincode.`;
-    if (reportStat) reportStat.textContent = `${scopedData.length.toLocaleString()} Records`;
-
-    const geoMap = new Map();
-
-    scopedData.forEach(item => {
-        const reg = item.region ? item.region.trim() : 'Unspecified Region';
-        const dist = item.district ? item.district.trim() : 'Unspecified District';
-        const union = item.union ? item.union.trim() : 'Unspecified Union';
-        const pin = item.pincode ? item.pincode.trim() : '-';
-
-        const key = `${reg} | ${dist} | ${union} | ${pin}`;
-        if (!geoMap.has(key)) {
-            geoMap.set(key, {
-                key,
-                region: reg,
-                district: dist,
-                union: union,
-                pincode: pin,
-                count: 0,
-                gradeA: 0,
-                gradeB: 0,
-                gradeC: 0,
-                ungraded: 0
-            });
-        }
-        const rec = geoMap.get(key);
-        rec.count++;
-
-        const g = item.grade ? item.grade.trim() : 'Ungraded';
-        if (g === 'Grade A' || g === 'A') rec.gradeA++;
-        else if (g === 'Grade B' || g === 'B') rec.gradeB++;
-        else if (g === 'Grade C' || g === 'C') rec.gradeC++;
-        else rec.ungraded++;
-    });
-
-    const totalCount = scopedData.length || 1;
-    currentReportRows = Array.from(geoMap.values()).map(r => ({
-        ...r,
-        pct: parseFloat(((r.count / totalCount) * 100).toFixed(2)),
-        pctA: parseFloat(((r.gradeA / (r.count || 1)) * 100).toFixed(1)),
-        pctB: parseFloat(((r.gradeB / (r.count || 1)) * 100).toFixed(1)),
-        pctC: parseFloat(((r.gradeC / (r.count || 1)) * 100).toFixed(1)),
-    }));
-}
-
-// ==========================================
-// CHART.JS RENDERING ENGINE
-// ==========================================
-function renderChart() {
-    const canvas = document.getElementById('report-chart-canvas');
-    if (!canvas) return;
-
-    if (chartInstance) {
-        chartInstance.destroy();
-        chartInstance = null;
-    }
-
-    const topRows = filteredReportRows.slice(0, 35); // Display top 35 in chart for high visual clarity
-    const labels = topRows.map(r => currentReportId === 1 ? r.pincode : `${r.district} - ${r.union}`);
-    const counts = topRows.map(r => r.count);
-
-    const captionInfo = document.getElementById('chart-caption-info');
-    if (captionInfo) {
-        captionInfo.textContent = `Displaying Top ${topRows.length} Categories (Total: ${filteredReportRows.length.toLocaleString()})`;
-    }
-
-    const ctx = canvas.getContext('2d');
-    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-    const textColor = isLight ? '#334155' : '#94a3b8';
-    const gridColor = isLight ? 'rgba(15, 23, 42, 0.08)' : 'rgba(255, 255, 255, 0.08)';
-    const legendColor = isLight ? '#0f172a' : '#f8fafc';
-    let chartConfig = {};
-
-    if (currentChartType === 'doughnut') {
-        const top5 = topRows.slice(0, 8);
-        chartConfig = {
-            type: 'doughnut',
-            data: {
-                labels: top5.map(r => currentReportId === 1 ? `Pincode ${r.pincode}` : r.district),
-                datasets: [{
-                    data: top5.map(r => r.count),
-                    backgroundColor: ['#8b5cf6', '#06b6d4', '#f59e0b', '#10b981', '#ec4899', '#3b82f6', '#84cc16', '#a855f7'],
-                    borderWidth: 2,
-                    borderColor: isLight ? '#ffffff' : '#0f172a'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'right', labels: { color: legendColor, font: { family: 'Outfit' } } }
-                }
-            }
-        };
-    } else if (currentChartType === 'line') {
-        chartConfig = {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Person Count',
-                    data: counts,
-                    borderColor: '#06b6d4',
-                    backgroundColor: 'rgba(6, 182, 212, 0.15)',
-                    fill: true,
-                    tension: 0.3,
-                    pointRadius: 4,
-                    pointBackgroundColor: '#8b5cf6'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: { ticks: { color: textColor, font: { size: 11 } }, grid: { color: gridColor } },
-                    y: { ticks: { color: textColor }, grid: { color: gridColor } }
-                },
-                plugins: { legend: { display: false } }
-            }
-        };
-    } else if (currentChartType === 'horizontalBar') {
-        chartConfig = {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Person Count',
-                    data: counts,
-                    backgroundColor: 'rgba(139, 92, 246, 0.7)',
-                    borderColor: '#8b5cf6',
-                    borderWidth: 1,
-                    borderRadius: 4
-                }]
-            },
-            options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: { ticks: { color: textColor }, grid: { color: gridColor } },
-                    y: { ticks: { color: textColor, font: { size: 11 } }, grid: { color: gridColor } }
-                },
-                plugins: { legend: { display: false } }
-            }
-        };
-    } else { // Vertical Bar (default)
-        chartConfig = {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Person Count',
-                    data: counts,
-                    backgroundColor: 'rgba(6, 182, 212, 0.7)',
-                    borderColor: '#06b6d4',
-                    borderWidth: 1,
-                    borderRadius: 4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: { ticks: { color: textColor, font: { size: 11 }, maxRotation: 45 }, grid: { color: gridColor } },
-                    y: { ticks: { color: textColor }, grid: { color: gridColor } }
-                },
-                plugins: { legend: { display: false } }
-            }
-        };
-    }
-
-    chartInstance = new Chart(ctx, chartConfig);
-}
-
-// Helper: Format Sort Arrow Indicator
-function getSortArrow(key) {
-    if (sortKey !== key) return '';
-    return sortOrder === 'desc' ? ' ▼' : ' ▲';
-}
-
-// ==========================================
-// DATA TABLE RENDERING ENGINE (SORT + PER-COLUMN FILTER)
-// ==========================================
-function renderTable() {
-    const thead = document.getElementById('report-table-head');
+// Render Table View (Desktop / Laptop)
+function renderTableView(rows, startIndex) {
     const tbody = document.getElementById('report-table-body');
-    const countInfo = document.getElementById('table-row-count-info');
+    if (!tbody) return;
 
-    if (!thead || !tbody) return;
+    let html = '';
+    rows.forEach((item, idx) => {
+        const globalIndex = startIndex + idx;
+        const rowNum = globalIndex + 1;
+        const phone = cleanPhone(item.mobile);
+        const pincodeDisplay = item.pincode ? escapeHtml(String(item.pincode)) : '-';
+        const unionDisplay = item.union ? escapeHtml(item.union) : '-';
+        const meaningSnippet = item.meaning ? (escapeHtml(item.meaning.substring(0, 60)) + '...') : '-';
 
-    if (countInfo) {
-        countInfo.textContent = `${filteredReportRows.length.toLocaleString()} rows displayed`;
-    }
-
-    thead.innerHTML = '';
-    tbody.innerHTML = '';
-
-    if (currentReportId === 1) {
-        // REPORT 1: Pincode Table Header (Row 1: Sort Titles, Row 2: Per-column Filter Inputs)
-        let headHtml = `
+        html += `
             <tr>
-                <th style="width:40px;">#</th>
-                <th onclick="sortTableByColumn('pincode')" style="cursor:pointer;" title="Click to sort by Pincode">
-                    Pincode (பின்கோடு)${getSortArrow('pincode')}
-                </th>
-                <th onclick="sortTableByColumn('count')" style="cursor:pointer;" title="Click to sort by Total Persons">
-                    Total Persons${getSortArrow('count')}
-                </th>
-                <th onclick="sortTableByColumn('pct')" style="cursor:pointer;" title="Click to sort by Share %">
-                    Share %${getSortArrow('pct')}
-                </th>
-        `;
-        if (includeGrade) {
-            headHtml += `
-                <th onclick="sortTableByColumn('gradeA')" style="cursor:pointer; color:#6ee7b7;" title="Click to sort by Grade A">🟢 Grade A${getSortArrow('gradeA')}</th>
-                <th onclick="sortTableByColumn('gradeB')" style="cursor:pointer; color:#67e8f9;" title="Click to sort by Grade B">🔵 Grade B${getSortArrow('gradeB')}</th>
-                <th onclick="sortTableByColumn('gradeC')" style="cursor:pointer; color:#fde047;" title="Click to sort by Grade C">🟠 Grade C${getSortArrow('gradeC')}</th>
-                <th onclick="sortTableByColumn('ungraded')" style="cursor:pointer; color:#cbd5e1;" title="Click to sort by UnClassified">⚪ UnClassified${getSortArrow('ungraded')}</th>
-            `;
-        }
-        headHtml += `</tr>`;
-
-        // Row 2: Per-column Filter Inputs
-        headHtml += `<tr style="background: rgba(15, 23, 42, 0.95);">
-            <th></th>
-            <th><input type="text" class="col-filter-input" placeholder="Filter..." value="${columnFilters.pincode || ''}" oninput="onColumnFilterInput('pincode', this.value)"></th>
-            <th><input type="text" class="col-filter-input" placeholder="Min count..." value="${columnFilters.count || ''}" oninput="onColumnFilterInput('count', this.value)"></th>
-            <th><input type="text" class="col-filter-input" placeholder="Min %..." value="${columnFilters.pct || ''}" oninput="onColumnFilterInput('pct', this.value)"></th>
-        `;
-        if (includeGrade) {
-            headHtml += `
-                <th><input type="text" class="col-filter-input" placeholder="Grade A..." value="${columnFilters.gradeA || ''}" oninput="onColumnFilterInput('gradeA', this.value)"></th>
-                <th><input type="text" class="col-filter-input" placeholder="Grade B..." value="${columnFilters.gradeB || ''}" oninput="onColumnFilterInput('gradeB', this.value)"></th>
-                <th><input type="text" class="col-filter-input" placeholder="Grade C..." value="${columnFilters.gradeC || ''}" oninput="onColumnFilterInput('gradeC', this.value)"></th>
-                <th><input type="text" class="col-filter-input" placeholder="Filter U..." value="${columnFilters.ungraded || ''}" oninput="onColumnFilterInput('ungraded', this.value)"></th>
-            `;
-        }
-        headHtml += `</tr>`;
-        thead.innerHTML = headHtml;
-
-        tbody.innerHTML = filteredReportRows.map((r, idx) => {
-            let rowHtml = `
-                <tr>
-                    <td style="color:var(--text-muted); font-weight:600;">${idx + 1}</td>
-                    <td style="font-weight:700; color:#c4b5fd;">${r.pincode}</td>
-                    <td style="font-weight:700;">${r.count.toLocaleString()}</td>
-                    <td><span class="brand-badge" style="padding:2px 8px; font-size:0.75rem;">${r.pct}%</span></td>
-            `;
-            if (includeGrade) {
-                rowHtml += `
-                    <td><span style="color:#6ee7b7; font-weight:700;">${r.gradeA.toLocaleString()}</span> <span style="font-size:0.75rem; color:var(--text-muted);">(${r.pctA}%)</span></td>
-                    <td><span style="color:#67e8f9; font-weight:700;">${r.gradeB.toLocaleString()}</span> <span style="font-size:0.75rem; color:var(--text-muted);">(${r.pctB}%)</span></td>
-                    <td><span style="color:#fde047; font-weight:700;">${r.gradeC.toLocaleString()}</span> <span style="font-size:0.75rem; color:var(--text-muted);">(${r.pctC}%)</span></td>
-                    <td><span style="color:#cbd5e1; font-weight:600;">${r.ungraded.toLocaleString()}</span></td>
-                `;
-            }
-            rowHtml += `</tr>`;
-            return rowHtml;
-        }).join('');
-
-    } else if (currentReportId === 2) {
-        // REPORT 2: Geographic Hierarchy Table Header & Filter Row
-        thead.innerHTML = `
-            <tr>
-                <th style="width:40px;">#</th>
-                <th onclick="sortTableByColumn('region')" style="cursor:pointer;">மண்டலம் (Region)${getSortArrow('region')}</th>
-                <th onclick="sortTableByColumn('district')" style="cursor:pointer;">மாவட்டம் (District)${getSortArrow('district')}</th>
-                <th onclick="sortTableByColumn('union')" style="cursor:pointer;">ஒன்றியம் (Union)${getSortArrow('union')}</th>
-                <th onclick="sortTableByColumn('pincode')" style="cursor:pointer;">பின்கோடு${getSortArrow('pincode')}</th>
-                <th onclick="sortTableByColumn('count')" style="cursor:pointer;">Total Persons${getSortArrow('count')}</th>
-                <th onclick="sortTableByColumn('pct')" style="cursor:pointer;">Share %${getSortArrow('pct')}</th>
-                <th onclick="sortTableByColumn('gradeA')" style="cursor:pointer; color:#6ee7b7;">🟢 Grade A${getSortArrow('gradeA')}</th>
-                <th onclick="sortTableByColumn('gradeB')" style="cursor:pointer; color:#67e8f9;">🔵 Grade B${getSortArrow('gradeB')}</th>
-                <th onclick="sortTableByColumn('gradeC')" style="cursor:pointer; color:#fde047;">🟠 Grade C${getSortArrow('gradeC')}</th>
-            </tr>
-            <tr style="background: rgba(15, 23, 42, 0.95);">
-                <th></th>
-                <th><input type="text" class="col-filter-input" placeholder="Region..." value="${columnFilters.region || ''}" oninput="onColumnFilterInput('region', this.value)"></th>
-                <th><input type="text" class="col-filter-input" placeholder="District..." value="${columnFilters.district || ''}" oninput="onColumnFilterInput('district', this.value)"></th>
-                <th><input type="text" class="col-filter-input" placeholder="Union..." value="${columnFilters.union || ''}" oninput="onColumnFilterInput('union', this.value)"></th>
-                <th><input type="text" class="col-filter-input" placeholder="Pincode..." value="${columnFilters.pincode || ''}" oninput="onColumnFilterInput('pincode', this.value)"></th>
-                <th><input type="text" class="col-filter-input" placeholder="Min count..." value="${columnFilters.count || ''}" oninput="onColumnFilterInput('count', this.value)"></th>
-                <th><input type="text" class="col-filter-input" placeholder="Min %..." value="${columnFilters.pct || ''}" oninput="onColumnFilterInput('pct', this.value)"></th>
-                <th><input type="text" class="col-filter-input" placeholder="Grade A..." value="${columnFilters.gradeA || ''}" oninput="onColumnFilterInput('gradeA', this.value)"></th>
-                <th><input type="text" class="col-filter-input" placeholder="Grade B..." value="${columnFilters.gradeB || ''}" oninput="onColumnFilterInput('gradeB', this.value)"></th>
-                <th><input type="text" class="col-filter-input" placeholder="Grade C..." value="${columnFilters.gradeC || ''}" oninput="onColumnFilterInput('gradeC', this.value)"></th>
+                <td style="text-align:center; color:var(--text-muted); font-size:0.8rem;">${rowNum}</td>
+                <td style="font-weight:700; font-family:var(--font-tamil); font-size:0.95rem; color:var(--text-main);">
+                    ${escapeHtml(item.name || '-')}
+                </td>
+                <td>
+                    ${phone ? `
+                        <div style="display:flex; align-items:center; gap:6px;">
+                            <a href="tel:${phone}" style="color:#60a5fa; text-decoration:none;" title="Call">
+                                <i data-lucide="phone" style="width:13px; height:13px; vertical-align:middle;"></i>
+                                <span>${escapeHtml(item.mobile)}</span>
+                            </a>
+                            <a href="https://wa.me/91${phone}" target="_blank" rel="noopener" style="display:inline-flex; align-items:center;" title="WhatsApp">
+                                <i data-lucide="message-circle" style="width:13px; height:13px; color:#25D366;"></i>
+                            </a>
+                        </div>
+                    ` : '<span style="color:var(--text-dim);">-</span>'}
+                </td>
+                <td style="color:var(--text-muted); font-size:0.85rem;">${escapeHtml(item.region || '-')}</td>
+                <td style="color:var(--text-main); font-weight:600; font-size:0.85rem;">${escapeHtml(item.district || '-')}</td>
+                <td style="color:var(--text-muted); font-size:0.85rem;">${unionDisplay}</td>
+                <td style="font-family:monospace; font-weight:700; color:#10b981;">${pincodeDisplay}</td>
+                <td>${getGradeBadge(item.grade)}</td>
+                <td>
+                    <button type="button" class="btn-modal-link" onclick="openMeaningModal(${globalIndex})" title="View Meaning">
+                        <i data-lucide="book-open" style="width:12px; height:12px;"></i> விளக்கம்
+                    </button>
+                </td>
             </tr>
         `;
+    });
 
-        tbody.innerHTML = filteredReportRows.map((r, idx) => `
-            <tr>
-                <td style="color:var(--text-muted); font-weight:600;">${idx + 1}</td>
-                <td style="font-weight:600; color:#c4b5fd;">${r.region}</td>
-                <td style="font-weight:600; color:#6ee7b7;">${r.district}</td>
-                <td>${r.union}</td>
-                <td style="color:var(--text-muted);">${r.pincode}</td>
-                <td style="font-weight:700;">${r.count.toLocaleString()}</td>
-                <td><span class="brand-badge" style="padding:2px 8px; font-size:0.75rem;">${r.pct}%</span></td>
-                <td><span style="color:#6ee7b7; font-weight:700;">${r.gradeA.toLocaleString()}</span></td>
-                <td><span style="color:#67e8f9; font-weight:700;">${r.gradeB.toLocaleString()}</span></td>
-                <td><span style="color:#fde047; font-weight:700;">${r.gradeC.toLocaleString()}</span></td>
-            </tr>
-        `).join('');
-    }
+    tbody.innerHTML = html;
 }
 
-// ==========================================
-// AI REPORT ASSISTANT CHAT ENGINE
-// ==========================================
-function sendAiChipQuery(text) {
-    const input = document.getElementById('ai-chat-input');
-    if (input) input.value = text;
-    submitAiChat();
+// Render Cards View (Mobile Phones)
+function renderCardsView(rows, startIndex) {
+    const container = document.getElementById('cards-view-container');
+    if (!container) return;
+
+    let html = '';
+    rows.forEach((item, idx) => {
+        const globalIndex = startIndex + idx;
+        const rowNum = globalIndex + 1;
+        const phone = cleanPhone(item.mobile);
+        const pincodeDisplay = item.pincode ? escapeHtml(String(item.pincode)) : 'இல்லை';
+        const unionDisplay = item.union ? escapeHtml(item.union) : '-';
+
+        html += `
+            <div class="person-item-card">
+                <div class="card-top">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">#${rowNum}</span>
+                        <h4 class="person-title">${escapeHtml(item.name || '-')}</h4>
+                    </div>
+                    <div>${getGradeBadge(item.grade)}</div>
+                </div>
+
+                <div class="card-contacts">
+                    ${phone ? `
+                        <a href="tel:${phone}" class="btn-call">
+                            <i data-lucide="phone" style="width:13px; height:13px;"></i>
+                            <span>${escapeHtml(item.mobile)}</span>
+                        </a>
+                        <a href="https://wa.me/91${phone}" target="_blank" rel="noopener" class="btn-wa">
+                            <i data-lucide="send" style="width:13px; height:13px;"></i>
+                            <span>WhatsApp</span>
+                        </a>
+                    ` : '<span style="color:var(--text-dim); font-size:0.82rem;">எண் இல்லை</span>'}
+                </div>
+
+                <div class="card-geo">
+                    <div><span style="color:var(--text-muted);">மண்டலம்:</span> <strong>${escapeHtml(item.region || '-')}</strong></div>
+                    <div><span style="color:var(--text-muted);">மாவட்டம்:</span> <strong>${escapeHtml(item.district || '-')}</strong></div>
+                    <div><span style="color:var(--text-muted);">ஒன்றியம்:</span> <strong>${unionDisplay}</strong></div>
+                    <div><span style="color:var(--text-muted);">பின்கோடு:</span> <strong style="color:#10b981;">${pincodeDisplay}</strong></div>
+                </div>
+
+                <div>
+                    <button type="button" class="btn-modal-link" style="width:100%; justify-content:center; padding:8px;" onclick="openMeaningModal(${globalIndex})">
+                        <i data-lucide="book-open" style="width:13px; height:13px;"></i>
+                        <span>விளக்கம் வாசிக்க (View Meaning)</span>
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
 }
 
-function submitAiChat() {
-    const input = document.getElementById('ai-chat-input');
-    if (!input) return;
-    const query = input.value.trim();
-    if (!query) return;
-    input.value = '';
+// Render Pagination Controls
+function renderPagination(totalCount, startIndex, endIndex) {
+    const container = document.getElementById('pagination-container');
+    if (!container) return;
 
-    appendAiChatMessage('user', query);
-    processAiUserQuery(query);
+    const totalPages = Math.ceil(totalCount / pageSize) || 1;
+
+    let jumpOptions = '';
+    const maxSelectPages = Math.min(totalPages, 500);
+    for (let p = 1; p <= maxSelectPages; p++) {
+        jumpOptions += `<option value="${p}" ${p === currentPage ? 'selected' : ''}>Page ${p}</option>`;
+    }
+
+    container.innerHTML = `
+        <div style="font-size:0.86rem; color:var(--text-muted);">
+            காட்டுவது: <strong>${startIndex + 1} - ${endIndex}</strong> / மொத்தம்: <strong>${totalCount.toLocaleString()}</strong> 
+            (பக்கம் ${currentPage} / ${totalPages})
+        </div>
+
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+                <i data-lucide="chevron-left" style="width:15px; height:15px;"></i> முந்தையது
+            </button>
+
+            <select class="filter-select" style="height:36px; width:auto; padding:0 8px; font-size:0.82rem;" onchange="changePage(parseInt(this.value, 10))">
+                ${jumpOptions}
+            </select>
+
+            <button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+                அடுத்தது <i data-lucide="chevron-right" style="width:15px; height:15px;"></i>
+            </button>
+
+            <select class="filter-select" style="height:36px; width:auto; padding:0 8px; font-size:0.82rem;" onchange="changePageSize(this.value)">
+                <option value="25" ${pageSize === 25 ? 'selected' : ''}>25 Rows</option>
+                <option value="50" ${pageSize === 50 ? 'selected' : ''}>50 Rows</option>
+                <option value="100" ${pageSize === 100 ? 'selected' : ''}>100 Rows</option>
+                <option value="250" ${pageSize === 250 ? 'selected' : ''}>250 Rows</option>
+            </select>
+        </div>
+    `;
 }
 
-function appendAiChatMessage(sender, text) {
-    const log = document.getElementById('ai-chat-log');
-    if (!log) return;
+function changePage(newPage) {
+    const totalPages = Math.ceil(filteredData.length / pageSize) || 1;
+    if (newPage < 1 || newPage > totalPages) return;
+    currentPage = newPage;
+    renderData();
 
-    const div = document.createElement('div');
-    div.style.fontSize = '0.84rem';
-    div.style.padding = '8px 12px';
-    div.style.borderRadius = '6px';
-    div.style.maxWidth = '88%';
-
-    if (sender === 'user') {
-        div.style.background = 'rgba(6, 182, 212, 0.18)';
-        div.style.border = '1px solid rgba(6, 182, 212, 0.35)';
-        div.style.color = '#67e8f9';
-        div.style.alignSelf = 'flex-end';
-        div.innerHTML = `<strong>👤 You:</strong> ${escapeHtml(text)}`;
-    } else {
-        div.style.background = 'rgba(139, 92, 246, 0.15)';
-        div.style.border = '1px solid rgba(139, 92, 246, 0.35)';
-        div.style.color = '#c4b5fd';
-        div.style.alignSelf = 'flex-start';
-        div.innerHTML = `<strong>🤖 AI Assistant:</strong> ${text}`;
-    }
-
-    log.appendChild(div);
-    log.scrollTop = log.scrollHeight;
+    const resultsSec = document.getElementById('results-section');
+    if (resultsSec) resultsSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function processAiUserQuery(query) {
-    const q = query.toLowerCase();
-    const actions = [];
-
-    // Report switching
-    if (q.includes('report 2') || q.includes('geographic') || q.includes('hierarchy') || q.includes('மண்டலம்')) {
-        if (currentReportId !== 2) {
-            switchReport(2);
-            actions.push('Switched to <strong>Report 2: Geographic Hierarchy</strong>');
-        }
-    } else if (q.includes('report 1') || q.includes('pincode report')) {
-        if (currentReportId !== 1) {
-            switchReport(1);
-            actions.push('Switched to <strong>Report 1: Pincode Distribution</strong>');
-        }
-    }
-
-    // Reset command
-    if (q.includes('reset') || q.includes('clear') || q.includes('show all')) {
-        aiPincodeCondition = 'all';
-        aiGradeFilter = '';
-        columnFilters = {};
-        const regEl = document.getElementById('filter-report-region');
-        const distEl = document.getElementById('filter-report-district');
-        if (regEl) regEl.value = '';
-        if (distEl) distEl.value = '';
-        const chk = document.getElementById('chk-include-grade');
-        if (chk) chk.checked = true;
-        includeGrade = true;
-        actions.push('Reset all filters to default dataset');
-    }
-
-    // Pincode condition
-    if (q.includes('without pincode') || q.includes('missing pincode') || q.includes('no pincode') || q.includes('pincode இல்லை')) {
-        aiPincodeCondition = 'missing';
-        actions.push('Filter: Records <strong>Without Pincode</strong>');
-    } else if (q.includes('with pincode') || q.includes('has pincode')) {
-        aiPincodeCondition = 'present';
-        actions.push('Filter: Records <strong>With Valid Pincode</strong>');
-    }
-
-    // Grade filter
-    if (q.includes('grade a') || q.includes('a grade') || q.includes('a தர') || q.includes('grade 🟢')) {
-        aiGradeFilter = 'A';
-        actions.push('Filter: <strong>🟢 Grade A Records Only</strong>');
-    } else if (q.includes('grade b') || q.includes('b grade') || q.includes('b தர')) {
-        aiGradeFilter = 'B';
-        actions.push('Filter: <strong>🔵 Grade B Records Only</strong>');
-    } else if (q.includes('grade c') || q.includes('c grade') || q.includes('c தர')) {
-        aiGradeFilter = 'C';
-        actions.push('Filter: <strong>🟠 Grade C Records Only</strong>');
-    } else if (q.includes('ungraded') || q.includes('unclassified') || q.includes('pending')) {
-        aiGradeFilter = 'Ungraded';
-        actions.push('Filter: <strong>⚪ UnClassified Records</strong>');
-    }
-
-    // Dynamic Region & District matching
-    const regSelect = document.getElementById('filter-report-region');
-    const distSelect = document.getElementById('filter-report-district');
-
-    if (regSelect) {
-        for (let i = 1; i < regSelect.options.length; i++) {
-            const val = regSelect.options[i].value;
-            if (val && q.includes(val.toLowerCase())) {
-                regSelect.value = val;
-                actions.push(`Region Filter: <strong>${val}</strong>`);
-                break;
-            }
-        }
-    }
-
-    if (distSelect) {
-        for (let i = 1; i < distSelect.options.length; i++) {
-            const val = distSelect.options[i].value;
-            if (val && q.includes(val.toLowerCase())) {
-                distSelect.value = val;
-                actions.push(`District Filter: <strong>${val}</strong>`);
-                break;
-            }
-        }
-    }
-
-    // Chart Format commands
-    if (q.includes('horizontal') || q.includes('landscape bar')) {
-        currentChartType = 'horizontalBar';
-        const sel = document.getElementById('select-chart-type');
-        if (sel) sel.value = 'horizontalBar';
-        actions.push('Chart: Switched to <strong>Horizontal Bar Chart</strong>');
-    } else if (q.includes('donut') || q.includes('pie') || q.includes('doughnut')) {
-        currentChartType = 'doughnut';
-        const sel = document.getElementById('select-chart-type');
-        if (sel) sel.value = 'doughnut';
-        actions.push('Chart: Switched to <strong>Donut Chart</strong>');
-    } else if (q.includes('line') || q.includes('trend')) {
-        currentChartType = 'line';
-        const sel = document.getElementById('select-chart-type');
-        if (sel) sel.value = 'line';
-        actions.push('Chart: Switched to <strong>Line Chart</strong>');
-    } else if (q.includes('vertical bar') || (q.includes('bar') && !q.includes('horizontal'))) {
-        currentChartType = 'bar';
-        const sel = document.getElementById('select-chart-type');
-        if (sel) sel.value = 'bar';
-        actions.push('Chart: Switched to <strong>Vertical Bar Chart</strong>');
-    }
-
-    // Apply & re-render
-    renderActiveReport();
-
-    const activeReportLabel = currentReportId === 1 ? 'Report 1 (Pincode & Grade)' : 'Report 2 (Geographic Hierarchy)';
-    const resultCount = filteredReportRows.reduce((acc, r) => acc + r.count, 0);
-
-    const summaryMsg = actions.length > 0
-        ? `Applied AI Commands in <strong>${activeReportLabel}</strong>:<br>• ${actions.join('<br>• ')}<br><span style="color:#6ee7b7; font-weight:700;">✨ Found ${resultCount.toLocaleString()} matching records! Graphs & tables updated below.</span>`
-        : `Active Context: <strong>${activeReportLabel}</strong>. Could not parse explicit filter parameters. Try asking: <em>"filter Grade A in Report 2"</em> or <em>"show data without pincode"</em>.`;
-
-    appendAiChatMessage('assistant', summaryMsg);
+function changePageSize(size) {
+    pageSize = parseInt(size, 10) || 25;
+    currentPage = 1;
+    renderData();
 }
 
-function escapeHtml(str) {
-    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+// Meaning Modal Logic
+function openMeaningModal(index) {
+    const item = filteredData[index];
+    if (!item) return;
+
+    currentModalItem = item;
+
+    const modal = document.getElementById('meaning-modal');
+    const nameEl = document.getElementById('modal-person-name');
+    const phoneEl = document.getElementById('modal-person-phone');
+    const gradeEl = document.getElementById('modal-person-grade');
+    const locEl = document.getElementById('modal-person-location');
+    const textEl = document.getElementById('modal-meaning-text');
+    const copyBtn = document.getElementById('btn-modal-copy');
+
+    if (nameEl) nameEl.textContent = item.name || '-';
+    if (phoneEl) {
+        const phone = cleanPhone(item.mobile);
+        phoneEl.innerHTML = phone ? `
+            <a href="tel:${phone}" style="color:#60a5fa; text-decoration:none;">
+                <i data-lucide="phone" style="width:13px; height:13px; vertical-align:middle;"></i> ${escapeHtml(item.mobile)}
+            </a>
+        ` : 'எண் இல்லை';
+    }
+    if (gradeEl) gradeEl.innerHTML = getGradeBadge(item.grade);
+    if (locEl) {
+        locEl.textContent = `${item.region || '-'} ➔ ${item.district || '-'} ➔ ${item.union || '-'} (${item.pincode || 'பின்கோடு இல்லை'})`;
+    }
+    if (textEl) textEl.textContent = item.meaning || 'விளக்கம் இல்லை.';
+
+    if (copyBtn) {
+        copyBtn.innerHTML = `<i data-lucide="copy" style="width:14px; height:14px;"></i> <span>நகலெடு (Copy Meaning)</span>`;
+    }
+
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    if (window.lucide) lucide.createIcons();
 }
 
-// ==========================================
-// EXPORT AS IMAGE (PNG) ENGINE
-// ==========================================
-async function exportReportAsImage() {
-    const captureArea = document.getElementById('report-capture-area');
-    if (!captureArea) return;
-
-    const btn = event ? event.currentTarget : null;
-    const originalText = btn ? btn.innerHTML : '';
-    if (btn) {
-        btn.innerHTML = `⏳ Generating Image...`;
-        btn.disabled = true;
+function closeMeaningModal() {
+    const modal = document.getElementById('meaning-modal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
     }
-
-    try {
-        const canvas = await html2canvas(captureArea, {
-            scale: 2, // High resolution output
-            backgroundColor: '#070913',
-            useCORS: true,
-            logging: false
-        });
-
-        const link = document.createElement('a');
-        const reportName = currentReportId === 1 ? 'Pincode_Grade_Analysis' : 'Geographic_Hierarchy';
-        const timestamp = new Date().toISOString().split('T')[0];
-        link.download = `NSNK_Report_${reportName}_${timestamp}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-
-        console.log('✅ Exported report as PNG image successfully!');
-    } catch (err) {
-        console.error('❌ Failed to generate report image:', err);
-        alert('Failed to generate report image. Please try again.');
-    } finally {
-        if (btn) {
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-        }
-    }
+    currentModalItem = null;
 }
 
-// ==========================================
-// WHATSAPP SHARE ENGINE (IMAGE FILE + LINK)
-// ==========================================
-async function shareReportOnWhatsApp() {
-    const btn = event ? event.currentTarget : null;
-    const originalText = btn ? btn.innerHTML : '';
-    if (btn) {
-        btn.innerHTML = `⏳ Capturing Graph & Link...`;
-        btn.disabled = true;
-    }
+function copyModalMeaning() {
+    if (!currentModalItem || !currentModalItem.meaning) return;
 
-    try {
-        const reportName = currentReportId === 1 ? '📍 Pincode Distribution & Grade Analysis' : '🗺️ Geographic Hierarchy Breakdown';
-        const totalRecords = dataset.length.toLocaleString();
-        const dateStr = new Date().toLocaleDateString();
-        const reportUrl = 'https://karmayogabg.github.io/namma-sami-namma-kovil/reports.html';
+    const copyText = `${currentModalItem.name}\n${currentModalItem.meaning}\n(நம்ம சாமி நம்ம கோவில்)`;
 
-        const top5 = filteredReportRows.slice(0, 5);
-        let topListText = '';
-
-        if (currentReportId === 1) {
-            topListText = top5.map((r, i) => `${i + 1}. Pincode *${r.pincode}*: ${r.count.toLocaleString()} persons (Grade A: ${r.gradeA})`).join('\n');
-        } else {
-            topListText = top5.map((r, i) => `${i + 1}. *${r.district}* (${r.union}): ${r.count.toLocaleString()} persons`).join('\n');
-        }
-
-        const totalGradeA = filteredReportRows.reduce((sum, r) => sum + r.gradeA, 0);
-        const totalGradeB = filteredReportRows.reduce((sum, r) => sum + r.gradeB, 0);
-        const totalGradeC = filteredReportRows.reduce((sum, r) => sum + r.gradeC, 0);
-
-        const message = `📊 *நம்ம சாமி நம்ம கோவில் - Analytics Report*
-
-📋 *Report*: ${reportName}
-📅 *Date*: ${dateStr}
-👥 *Total Dataset Records*: ${totalRecords}
-
-🏆 *Top High-Density Categories*:
-${topListText}
-
-📊 *Grade Summary*:
-🟢 Grade A (Interested to know more): ${totalGradeA.toLocaleString()}
-🔵 Grade B (Interested but no time): ${totalGradeB.toLocaleString()}
-🟠 Grade C (Not interested): ${totalGradeC.toLocaleString()}
-
-👉 *View Live Report & Interactive Graphs*:
-${reportUrl}
-
-Shared via Namma Sami Namma Kovil Reports Hub (v10.2)`;
-
-        // 1. Capture High-Res Canvas Image of Graph + Summary Table
-        const captureArea = document.getElementById('report-capture-area');
-        let imageFile = null;
-
-        if (captureArea && typeof html2canvas !== 'undefined') {
-            try {
-                const canvas = await html2canvas(captureArea, {
-                    scale: 2,
-                    backgroundColor: '#070913',
-                    useCORS: true,
-                    logging: false
-                });
-
-                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-                if (blob) {
-                    const reportSlug = currentReportId === 1 ? 'Pincode_Grade_Analysis' : 'Geographic_Hierarchy';
-                    imageFile = new File([blob], `NSNK_Report_Graph_${reportSlug}.png`, { type: 'image/png' });
-
-                    // Copy PNG Image Blob to System Clipboard if supported
-                    if (navigator.clipboard && window.ClipboardItem) {
-                        try {
-                            await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-                            console.log('✅ Graph image copied to clipboard.');
-                        } catch (clipErr) {
-                            console.warn('Clipboard write note:', clipErr);
-                        }
-                    }
+    navigator.clipboard.writeText(copyText).then(() => {
+        const copyBtn = document.getElementById('btn-modal-copy');
+        if (copyBtn) {
+            copyBtn.innerHTML = `<i data-lucide="check" style="width:14px; height:14px; color:#10b981;"></i> <span style="color:#10b981;">நகலெடுக்கப்பட்டது!</span>`;
+            if (window.lucide) lucide.createIcons();
+            setTimeout(() => {
+                if (copyBtn) {
+                    copyBtn.innerHTML = `<i data-lucide="copy" style="width:14px; height:14px;"></i> <span>நகலெடு (Copy Meaning)</span>`;
+                    if (window.lucide) lucide.createIcons();
                 }
-            } catch (e) {
-                console.warn('Graph canvas capture note:', e.message);
-            }
+            }, 2000);
         }
-
-        // 2. Mobile Native Share Sheet (attaches BOTH Image File AND Text/Link to WhatsApp!)
-        if (imageFile && navigator.canShare && navigator.canShare({ files: [imageFile] })) {
-            await navigator.share({
-                title: 'NSNK Analytics Report',
-                text: message,
-                url: reportUrl,
-                files: [imageFile]
-            });
-            console.log('✅ Shared Graph PNG Image + Text Link via Native Web Share!');
-            return;
-        }
-
-        // 3. Desktop / Fallback: Open WhatsApp Web / App directly with text & link
-        const encodedMsg = encodeURIComponent(message);
-        const waUrl = `https://api.whatsapp.com/send?text=${encodedMsg}`;
-        window.open(waUrl, '_blank');
-
-        showToastNotification('📋 Graph Image copied to Clipboard! Press Ctrl+V (Paste) in WhatsApp to attach the graph image with your link!');
-
-    } catch (err) {
-        console.error('WhatsApp share error:', err);
-    } finally {
-        if (btn) {
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-        }
-    }
+    }).catch(err => {
+        console.error('Copy failed:', err);
+    });
 }
 
-// Toast Notification Engine
-function showToastNotification(text) {
-    let toast = document.getElementById('nsnk-toast');
-    if (!toast) {
-        toast = document.createElement('div');
-        toast.id = 'nsnk-toast';
-        toast.style.position = 'fixed';
-        toast.style.bottom = '30px';
-        toast.style.left = '50%';
-        toast.style.transform = 'translateX(-50%)';
-        toast.style.background = 'linear-gradient(135deg, #1e1b4b, #311b92)';
-        toast.style.color = '#fff';
-        toast.style.padding = '12px 24px';
-        toast.style.borderRadius = '30px';
-        toast.style.border = '1px solid rgba(168, 85, 247, 0.4)';
-        toast.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.5)';
-        toast.style.zIndex = '9999';
-        toast.style.fontSize = '0.88rem';
-        toast.style.fontWeight = '600';
-        toast.style.transition = 'all 0.3s ease';
-        document.body.appendChild(toast);
+// Export to XLS (SheetJS)
+function exportToXLS() {
+    if (!filteredData || filteredData.length === 0) {
+        alert('பதிவுகள் எதுவும் இல்லை! (No records to export)');
+        return;
     }
-    toast.innerHTML = text;
-    toast.style.opacity = '1';
-    toast.style.visibility = 'visible';
+
+    const exportBtn = document.getElementById('btn-export-xls');
+    const originalBtnText = exportBtn ? exportBtn.innerHTML : '';
+
+    if (exportBtn) {
+        exportBtn.innerHTML = `<i data-lucide="loader-2" class="spin" style="width:16px; height:16px;"></i> <span>பதிவிறக்கம் ஆகிறது...</span>`;
+        exportBtn.disabled = true;
+        if (window.lucide) lucide.createIcons();
+    }
 
     setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.visibility = 'hidden';
-    }, 5000);
+        try {
+            const rows = filteredData.map((item, idx) => ({
+                'வரிசை எண் (S.No)': idx + 1,
+                'பெயர் (Name)': item.name || '',
+                'தொடர்பு எண் (Mobile)': item.mobile || '',
+                'மண்டலம் (Region)': item.region || '',
+                'மாவட்டம் (District)': item.district || '',
+                'ஒன்றியம் (Union)': item.union || '',
+                'பின்கோடு (Pincode)': item.pincode || '',
+                'தரம் (Grade)': item.grade || '',
+                'தமிழ் பெயர் விளக்கம் (Meaning)': item.meaning || ''
+            }));
+
+            const worksheet = XLSX.utils.json_to_sheet(rows);
+
+            worksheet['!cols'] = [
+                { wch: 10 },
+                { wch: 22 },
+                { wch: 16 },
+                { wch: 22 },
+                { wch: 24 },
+                { wch: 22 },
+                { wch: 12 },
+                { wch: 14 },
+                { wch: 65 }
+            ];
+
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'NSNK_Report');
+
+            const sanitize = (str) => (str || 'All').replace(/[^\w\u0B80-\u0BFF]/g, '_').substring(0, 20);
+            const rTag = sanitize(selectedRegion);
+            const dTag = sanitize(selectedDistrict);
+            const pTag = sanitize(selectedPincode);
+            const today = new Date().toISOString().slice(0, 10);
+
+            const filename = `NSNK_Data_${rTag}_${dTag}_${pTag}_${today}.xlsx`;
+
+            XLSX.writeFile(workbook, filename);
+
+            showToast(`✅ ${filteredData.length.toLocaleString()} பதிவுகள் XLS கோப்பாக பதிவிறக்கம் செய்யப்பட்டன!`);
+
+        } catch (err) {
+            console.error('❌ Failed to export XLS:', err);
+            alert(`XLS பதிவிறக்கத்தில் பிழை: ${err.message}`);
+        } finally {
+            if (exportBtn) {
+                exportBtn.innerHTML = originalBtnText;
+                exportBtn.disabled = false;
+                if (window.lucide) lucide.createIcons();
+            }
+        }
+    }, 100);
 }
 
-// ==========================================
-// EXPORT REPORT TO EXCEL (.XLSX)
-// ==========================================
-function exportReportToExcel() {
-    if (typeof XLSX === 'undefined') {
-        alert('XLSX library not loaded.');
-        return;
+// Toast Notification
+function showToast(message) {
+    let toast = document.getElementById('app-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'app-toast';
+        toast.className = 'app-toast';
+        document.body.appendChild(toast);
     }
+    toast.textContent = message;
+    toast.classList.add('visible');
+    setTimeout(() => {
+        toast.classList.remove('visible');
+    }, 3500);
+}
 
-    const exportRows = filteredReportRows.map((r, idx) => {
-        if (currentReportId === 1) {
-            return {
-                'S.No': idx + 1,
-                'Pincode / பின்கோடு': r.pincode,
-                'Total Persons / நபர்கள் எண்ணிக்கை': r.count,
-                'Share Percentage (%)': r.pct + '%',
-                'Grade A Count': r.gradeA,
-                'Grade B Count': r.gradeB,
-                'Grade C Count': r.gradeC,
-                'UnClassified Count': r.ungraded
-            };
-        } else {
-            return {
-                'S.No': idx + 1,
-                'Region / மண்டலம்': r.region,
-                'District / மாவட்டம்': r.district,
-                'Union / interim': r.union,
-                'Pincode / பின்கோடு': r.pincode,
-                'Total Persons / நபர்கள் எண்ணிக்கை': r.count,
-                'Share Percentage (%)': r.pct + '%',
-                'Grade A Count': r.gradeA,
-                'Grade B Count': r.gradeB,
-                'Grade C Count': r.gradeC
-            };
-        }
-    });
-
-    const worksheet = XLSX.utils.json_to_sheet(exportRows);
-    const workbook = XLSX.utils.book_new();
-    const sheetName = currentReportId === 1 ? 'Pincode_Report' : 'Geographic_Report';
-    XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
-
-    const timestamp = new Date().toISOString().split('T')[0];
-    XLSX.writeFile(workbook, `NSNK_Report_${sheetName}_${timestamp}.xlsx`);
+// HTML Escaping utility
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
 }
