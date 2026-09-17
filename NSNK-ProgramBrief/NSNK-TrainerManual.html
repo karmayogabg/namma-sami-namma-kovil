@@ -817,6 +817,177 @@
             color: var(--saffron-primary);
         }
 
+        /* 3-Tier Temple Cup Model Diagram */
+        .temple-tier-model {
+            background: rgba(20, 184, 166, 0.05);
+            border: 1px solid rgba(20, 184, 166, 0.25);
+            border-radius: var(--radius-md);
+            padding: 18px 16px;
+            margin: 16px 0 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .temple-tier-label {
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+        .temple-tier-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+        }
+        .temple-cup-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+            transition: transform 0.2s ease;
+        }
+        .temple-cup-chip:hover {
+            transform: translateY(-2px);
+        }
+        .cup-top {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #1a1003;
+            font-size: 0.95rem;
+            padding: 9px 20px;
+            border-radius: 8px;
+            font-weight: 800;
+            border: 2px solid #fef08a;
+            box-shadow: 0 0 16px rgba(245, 158, 11, 0.35);
+        }
+        .cup-middle {
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.4);
+            color: #818cf8;
+        }
+        .cup-base {
+            background: rgba(20, 184, 166, 0.15);
+            border: 1px solid rgba(20, 184, 166, 0.4);
+            color: #2dd4bf;
+        }
+        .temple-plate-divider {
+            width: 90%;
+            height: 8px;
+            background: linear-gradient(90deg, #475569, #cbd5e1, #475569);
+            border-radius: 4px;
+            position: relative;
+            margin: 4px 0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+        }
+        .temple-plate-divider::after {
+            content: attr(data-label);
+            position: absolute;
+            right: 12px;
+            top: -9px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 1px 8px;
+            border-radius: 4px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+        body.light-theme .cup-middle {
+            background: rgba(99, 102, 241, 0.1);
+            color: #4338ca;
+        }
+        body.light-theme .cup-base {
+            background: rgba(20, 184, 166, 0.12);
+            color: #0f766e;
+        }
+
+        /* Sacred Pledge Box */
+        .sacred-pledge-card {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(180, 83, 9, 0.14));
+            border: 2px solid #f59e0b;
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin: 20px 0 16px 0;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.15);
+        }
+        .sacred-pledge-card::before {
+            content: '🙏 புனித உறுதிமொழி (Sacred Pledge)';
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: #d97706;
+            color: #ffffff;
+            padding: 2px 14px;
+            border-radius: 12px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+        }
+        .pledge-instructions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 0.86rem;
+            color: #fbbf24;
+            font-weight: 700;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed rgba(245, 158, 11, 0.3);
+        }
+        .pledge-text {
+            font-size: 0.98rem;
+            line-height: 1.85;
+            color: #fffbeb;
+            font-weight: 600;
+            font-family: var(--font-body);
+            background: rgba(0, 0, 0, 0.25);
+            padding: 18px 20px;
+            border-radius: 8px;
+            border-left: 4px solid #f59e0b;
+        }
+        body.light-theme .pledge-text {
+            background: rgba(245, 158, 11, 0.08);
+            color: #78350f;
+        }
+        body.light-theme .pledge-instructions {
+            color: #b45309;
+        }
+        .btn-copy-pledge {
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid #f59e0b;
+            color: #fef08a;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+        .btn-copy-pledge:hover {
+            background: #f59e0b;
+            color: #1a1003;
+        }
+        body.light-theme .btn-copy-pledge {
+            color: #92400e;
+            background: rgba(245, 158, 11, 0.15);
+        }
+
         /* Tables */
         .custom-table {
             width: 100%;
@@ -1781,33 +1952,126 @@
                 <div class="activity-feature-box" id="kovil-activity" style="border-color:rgba(20,184,166,0.35);">
                     <div class="activity-header-bar">
                         <div class="activity-title-group">
-                            <div class="activity-icon-badge" style="background:#14b8a6; color:#fff;"><i data-lucide="columns"></i></div>
+                            <div class="activity-icon-badge" style="background:#14b8a6; color:#fff;"><i data-lucide="landmark"></i></div>
                             <div>
-                                <h3 style="font-size:1.2rem; color:var(--text-main); margin:0;">தலைப்பு 3 செயல்பாடு: 10 தூண்கள் தாங்கும் சமுதாயக் கூரை (Community Roof Model)</h3>
-                                <span style="font-size:0.85rem; color:var(--text-muted);">கோவிலின் 10 சமுதாயப் பணிகளை விளையாட்டு முறையில் 10 நிமிடங்களில் உணரும் செயல்பாடு</span>
+                                <h3 style="font-size:1.2rem; color:var(--text-main); margin:0;">தலைப்பு 3 செயல்பாடு: 10 தூண்கள் தாங்கும் சமுதாயக் கூரை (3-Tier Temple Model)</h3>
+                                <span style="font-size:0.85rem; color:var(--text-muted);">3 அடுக்கு திருக்கோவில் மாதிரி &amp; சமுதாய அறப்பணிப் புனித உறுதிமொழி (10 நிமிடம்)</span>
                             </div>
                         </div>
-                        <div class="activity-meta-badge" style="background:rgba(20,184,166,0.15); color:#5eead4; border-color:rgba(20,184,166,0.3);">நேரம்: 10 நிமிடம் • பொருட்கள்: அட்டைத்தாள் / புத்தகம்</div>
+                        <div class="activity-meta-badge" style="background:rgba(20,184,166,0.15); color:#5eead4; border-color:rgba(20,184,166,0.3);">நேரம்: 10 நிமிடம் • 10 குவளைகள் + 2 அட்டைப் பலகைகள் + மார்க்கர்</div>
+                    </div>
+
+                    <!-- 3-Tier Temple Structure Visual Diagram -->
+                    <div class="temple-tier-model">
+                        <div style="font-size:0.8rem; font-weight:800; color:#5eead4; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+                            <i data-lucide="layers" style="width:14px; height:14px;"></i> 3 அடுக்கு கோவில் கட்டமைப்பு மாதிரி (The 3-Tier Temple Hierarchy)
+                        </div>
+
+                        <!-- Top Tier: Kovil -->
+                        <div class="temple-tier-row">
+                            <span class="temple-cup-chip cup-top">
+                                <i data-lucide="sparkles" style="width:16px; height:16px;"></i> 10. கோவில் (புற வடிவம் / சிகரம்)
+                            </span>
+                        </div>
+
+                        <!-- Upper Divider Plate -->
+                        <div class="temple-plate-divider" data-label="2-ஆம் கூரை பலகை (Roof 2)"></div>
+
+                        <!-- Middle Tier: 4 Social Pillars -->
+                        <div class="temple-tier-label" style="color:#818cf8;">நடுத் தளம் (Middle Floor - 4 சமுதாயத் தூண்கள்)</div>
+                        <div class="temple-tier-row">
+                            <span class="temple-cup-chip cup-middle">6. கல்வி</span>
+                            <span class="temple-cup-chip cup-middle">7. மருத்துவம்</span>
+                            <span class="temple-cup-chip cup-middle">8. கலை</span>
+                            <span class="temple-cup-chip cup-middle">9. பொருளாதாரம்</span>
+                        </div>
+
+                        <!-- Lower Divider Plate -->
+                        <div class="temple-plate-divider" data-label="1-ஆம் கூரை பலகை (Roof 1)"></div>
+
+                        <!-- Base Tier: 5 Foundation Pillars -->
+                        <div class="temple-tier-label" style="color:#2dd4bf;">அடித் தளம் (Base Floor - 5 அடித்தளத் தூண்கள்)</div>
+                        <div class="temple-tier-row">
+                            <span class="temple-cup-chip cup-base">1. ஆகமம்</span>
+                            <span class="temple-cup-chip cup-base">2. அர்ச்சகர்</span>
+                            <span class="temple-cup-chip cup-base">3. சமுதாய ஒருங்கிணைப்பு</span>
+                            <span class="temple-cup-chip cup-base">4. சத்சங்கம்</span>
+                            <span class="temple-cup-chip cup-base">5. பஞ்சபூதம் பாதுகாப்பு</span>
+                        </div>
                     </div>
 
                     <div class="activity-steps-list">
                         <div class="act-step">
                             <div class="act-step-num">1</div>
-                            <div class="act-step-text"><strong>10 பேர் வட்டம்:</strong> 10 பங்கேற்பாளர்களை ஒரு வட்டமாக நிற்க வைத்து, அவர்களது கைகளில் ஒரு பெரிய அட்டைத்தாளை (சமுதாயக் கூரை) ஒவ்வொருவரும் ஒற்றை விரலால் தாங்கிப் பிடிக்கச் சொல்லவும்.</div>
+                            <div class="act-step-text">
+                                <strong>படி 1: குவளைகளில் எழுதுதல் (Preparation &amp; Words) (2 நிமி):</strong> 10 பங்கேற்பாளர்களை மேடைக்கு அழைக்கவும். ஒவ்வொருவருக்கும் அடியில் வெற்றிடமுள்ள வெற்று காகிதக் குவளை வழங்கி, குவளையின் அடிப்பகுதியில் (bottom of the cup) வரிசையாக 10 சொற்களை எழுதச் சொல்லவும்:
+                                <ul style="margin:4px 0 0 16px; font-size:0.88rem; line-height:1.6;">
+                                    <li><strong>அடித்தளம் (Base - 5 பேர்):</strong> 1. ஆகமம் • 2. அர்ச்சகர் • 3. சமுதாய ஒருங்கிணைப்பு • 4. சத்சங்கம் • 5. பஞ்சபூதம் பாதுகாப்பு</li>
+                                    <li><strong>நடுத்தளம் (Middle - 4 பேர்):</strong> 6. கல்வி • 7. மருத்துவம் • 8. கலை • 9. பொருளாதாரம்</li>
+                                    <li><strong>உச்சி (Crown - 1 நபர்):</strong> 10. கோவில்</li>
+                                </ul>
+                            </div>
                         </div>
                         <div class="act-step">
                             <div class="act-step-num">2</div>
-                            <div class="act-step-text"><strong>தூண்களுக்குப் பெயர் சூட்டுதல்:</strong> 10 பேருக்கும் 10 பணிகள் பெயரிடப்படும் (1. நீர் மேலாண்மை, 2. தானியக் களஞ்சியம், 3. கல்வி/கலைகள், 4. உள்ளூர்ப் பொருளாதாரம், 5. ஒற்றுமை...).</div>
+                            <div class="act-step-text">
+                                <strong>படி 2: 3 அடுக்குக் கோவில் மாதிரி அமைத்தல் (Constructing 3-Tier Temple) (3 நிமி):</strong>
+                                <ul style="margin:4px 0 0 16px; font-size:0.88rem; line-height:1.6;">
+                                    <li>முதல் 5 நபர்கள் வந்து தங்கள் 5 குவளைகளையும் மேசையில் சம இடைவெளியில் வைக்க, மற்றொரு நபர் முதல் அட்டைப் பலகையை (Roof 1) மேல் வைப்பார் — <em>"கோவிலின் முதல் கூரை உருவானது!"</em></li>
+                                    <li>அடுத்த 4 நபர்கள் அட்டைப் பலகையின் மேல் தங்கள் குவளைகளை வைக்க, மற்றொரு நபர் இரண்டாவது அட்டைப் பலகை / தட்டை (Roof 2) மேல் வைப்பார்.</li>
+                                    <li>இறுதியாக 10-வது நபர் 'கோவில்' என்று எழுதப்பட்ட குவளையை உச்சி சிகரமாக வைப்பார்.</li>
+                                </ul>
+                                <div style="margin-top:6px; font-size:0.88rem; color:#fef08a; background:rgba(245,158,11,0.12); padding:8px 12px; border-radius:6px; border-left:3px solid #f59e0b;">
+                                    <strong>💡 பயிற்றுநர் உரை:</strong> "வெளியிலிருந்து பார்ப்பவர்களுக்கு உச்சியில் இருக்கும் 'கோவில்' என்ற உருவம் மட்டுமே கண்களுக்குத் தெரிகிறது; ஆனால் அதன் கீழே இருக்கும் 9 தூண்கள்தான் ஒட்டுமொத்தக் கோவிலையும் கம்பீரமாகத் தாங்கி நிற்கின்றன!"
+                                </div>
+                            </div>
                         </div>
                         <div class="act-step">
                             <div class="act-step-num">3</div>
-                            <div class="act-step-text"><strong>தூண் விலகுதல் பரிசோதனை:</strong> பயிற்றுநர் "குளம் தூர்ந்துவிட்டது!", "திருவிழா நின்றுவிட்டது!" என்று கூறும்போது, அந்தந்த நபர் கையை விலக்கிக் கொள்ள வேண்டும். 3 பேர் விலகியதும் அட்டைத்தாள் ஒருபுறமாகச் சரிந்து கீழே விழும்.</div>
+                            <div class="act-step-text">
+                                <strong>படி 3: சரிவின் சோதனை &amp; வரலாற்று விழிப்புணர்வு (Deconstruction &amp; Awakening) (2 நிமி):</strong>
+                                <ul style="margin:4px 0 0 16px; font-size:0.88rem; line-height:1.6;">
+                                    <li>பங்கேற்பாளர்களை ஒருவர் பின் ஒருவராக அழைத்து, கோவில் சாயாமல் மிகக் கவனமாக குவளைகளை ஒவ்வொன்றாக அகற்றச் சொல்லவும்.</li>
+                                    <li>அடித்தளத்தில் 4 குவளைகள் அகற்றப்பட்டு 1 குவளையாகக் குறைகிறது; நடுத்தளத்தில் 3 குவளைகள் அகற்றப்பட்டு 1 குவளையாகக் குறைகிறது.</li>
+                                    <li>இப்போது 3 அடுக்குக் கோவில் அமைப்பு, தளம் ஒன்றுக்கு ஒற்றைக் குவளையின் மீது மிக ஆபத்தான நிலையில் தள்ளாடிக் கொண்டு நிற்கிறது!</li>
+                                </ul>
+                                <div style="margin-top:6px; font-size:0.88rem; color:#5eead4; background:rgba(20,184,166,0.12); padding:8px 12px; border-radius:6px; border-left:3px solid #14b8a6;">
+                                    <strong>📜 வரலாற்று உண்மை:</strong> "ஆதிகாலத்தில் கோவில்கள் இந்த அனைத்துச் சமுதாயப் பெருமைகளையும் தாங்கி நின்றன. ஆனால் காலப்போக்கில் கல்வி, மருத்துவம், கலை, பொருளாதாரம் அனைத்தும் கோவில்களிடமிருந்து பறிக்கப்பட்டு, கோவில்கள் வெறும் வழிபாட்டு இடமாக பலவீனப்படுத்தப்பட்டுவிட்டன. இப்போது நமது பணி — இழந்த தூண்களை மீண்டும் ஒன்றிணைத்துக் கோவிலையும் சமுதாயத்தையும் மறுசீரமைப்பதே (Rebuild)!"
+                                </div>
+                            </div>
+                        </div>
+                        <div class="act-step">
+                            <div class="act-step-num">4</div>
+                            <div class="act-step-text">
+                                <strong>படி 4: கோவில் வலம் &amp; புனித உறுதிமொழி (Pradakshina &amp; Sacred Pledge) (3 நிமி):</strong>
+                                <ul style="margin:4px 0 0 16px; font-size:0.88rem; line-height:1.6;">
+                                    <li><strong>வலம் வருதல் (Pradakshina):</strong> அரங்கில் உள்ள அனைவரும் எழுந்து நின்று, மேசையில் உள்ள இந்த 3 அடுக்குக் கோவில் மாதிரியை பக்தி சிரத்தையுடன் <strong>ஒரு முறை வலம் வர வேண்டும் (Pradakshina)</strong>.</li>
+                                    <li><strong>உறுதிமொழி ஏற்குதல்:</strong> பின்னர் அனைவரும் கோவில் மாதிரியை நோக்கி இரு கைகளையும் ஏந்தி/வணங்கி நிற்க வேண்டும். பயிற்றுநர் உறுதிமொழியை வாசிக்க, அனைவரும் அதைத் திருப்பிச் சொல்லி மனப்பூர்வமாக உறுதி ஏற்க வேண்டும்.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sacred Pledge Card -->
+                    <div class="sacred-pledge-card">
+                        <button class="btn-copy-pledge" onclick="copyPledgeText('pledge-manual-content')">
+                            <i data-lucide="copy" style="width:13px; height:13px;"></i> நகலெடு
+                        </button>
+                        <div class="pledge-instructions">
+                            <span><i data-lucide="hand-heart" style="width:16px; height:16px; display:inline; vertical-align:middle;"></i> அனைவரும் கரம் கூப்பி / ஏந்தி ஒருமித்த குரலில் உறுதிமொழி கூறுதல்:</span>
+                        </div>
+                        <div class="pledge-text" id="pledge-manual-content">
+"வணக்கம்! அருள்நிறை அறம்வளர்த்தநாயகியின் பேரருளாலும், வழிபாட்டிற்குரிய சுவாமி தயானந்த சரஸ்வதி அவர்களின் ஆசிகளாலும், சுவாமி சாக்ஷாத்கிருதானந்தா அவர்களின் வழிகாட்டுதலில் அறம்வளர்த்தநாயகி சேவை மையத்தின் கீழ் அறத்தை வளர்க்கும் பெரும்பணியை நான் ஆற்றிவருகிறேன்.
+
+அறத்தை வளர்க்கும் இறை பணியின் பகுதியாக நமது திட்டமான நம்ம சாமி நம்ம கோவிலில் இணைந்து தேவையான ஊழியர்களுக்கு பயிற்சி அளிக்கும் சிறப்பு பணியை ஆற்றுவேன் என அறம்வளர்த்தநாயகியின் முன் நான் உறுதி ஏற்கிறேன்.
+
+இந்த பெரும் பணியின் வெற்றிக்கு தேவையான அறிவையும், ஆற்றலையும், வழங்கி அருள்புரிய அறம்வளர்த்தநாயகியின் திருவடிகளை பணிந்து வேண்டுகிறேன்."
                         </div>
                     </div>
 
                     <div class="activity-debrief" style="border-left-color:#14b8a6; background:rgba(20,184,166,0.1);">
                         <strong style="color:#5eead4;"><i data-lucide="check-circle-2" style="width:16px; height:16px;"></i> பயிற்றுநரின் நிறைவுரை (Aha! Debrief Message):</strong>
-                        <p>"பார்த்தீர்களா? கோவில் என்பது ஏதோ ஒரு சடங்கு அல்ல. ஒரு ஊரின் குளமும், பொருளாதாரமும், ஒற்றுமையும் கெட்டுப்போனால் ஒட்டுமொத்த சமுதாயக் கூரையே சரிந்துவிடும். கோவிலைப் பாதுகாப்பதே சமுதாயத்தைப் பாதுகாப்பதாகும்!"</p>
+                        <p>"கோவில் என்பது வெறும் கட்டடமல்ல; அது சமுதாயத்தின் கல்வி, மருத்துவம், கலை, பொருளாதாரம், ஆன்மீகத்தைத் தாங்கி நிற்கும் வாழ்வியல் கூடம். உறுதிமொழி ஏற்று களமிறங்குவோம், நமது சமுதாயத்தின் பெருந்தூண்களை மீண்டும் நிலைநிறுத்துவோம்!"</p>
                     </div>
 
                     <!-- Timer Widget -->
@@ -2090,6 +2354,18 @@
             const text = document.getElementById(elementId).innerText;
             navigator.clipboard.writeText(text).then(() => {
                 alert('ஸ்லோகம் / பாடல் வெற்றிகரமாக நகலெடுக்கப்பட்டது!');
+            });
+        }
+
+        // Copy Sacred Pledge
+        function copyPledgeText(elementId) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            const text = el.innerText.trim();
+            navigator.clipboard.writeText(text).then(() => {
+                alert('அறப்பணிப் புனித உறுதிமொழி வெற்றிகரமாக நகலெடுக்கப்பட்டது!');
+            }).catch(err => {
+                console.error('Clipboard copy failed:', err);
             });
         }
 
